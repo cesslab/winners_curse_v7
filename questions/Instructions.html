@@ -1,0 +1,22 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Instructions for Part Two
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+    <p>In each round you will see a lottery ticket.</p>
+
+    <p>In some rounds you will also see a signal about the
+        {% if treatment == 'cp' %} Selected Probability {% else %} Selected Value {% endif %} of the lottery.
+        Below we will tell you how to correctly interpret your signal.</p>
+
+    <p>State your willingness to pay for the lottery.</p>
+
+    <p>You will buy the lottery ticket if the lottery price lies below your willingness to pay.</p>
+    {% next_button %}
+{% endblock %}
