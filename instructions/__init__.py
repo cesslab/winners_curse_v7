@@ -7,6 +7,8 @@ from exp.models import (
     save_bid_history_for_all_players
 )
 
+from exp.db import close_db
+
 from .views import Instructions
 from .constants import Constants
 
@@ -18,6 +20,7 @@ Instructions
 def creating_session(subsession):
     create_player_bid_histories(subsession)
     save_bid_history_for_all_players(subsession.get_players())
+    close_db()
 
 
 class Subsession(BaseSubsession, ExperimentSubSession):

@@ -5,7 +5,6 @@ from .constants import ExperimentConstants
 
 class ExperimentSubSession:
     def get_lottery_ids(self):
-        lottery_ids = []
         return [
             int(self.session.config[lottery_key])
             for lottery_key in [
