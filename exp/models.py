@@ -46,7 +46,7 @@ def save_bid_history_to_player(player, player_bid_history: PlayerBidHistory):
     player.previous_highest_bid = bid_history.highest_bid
 
 
-def create_player_bid_histories(subsession):
+def create_player_bid_histories(subsession, phase):
     if subsession.round_number == 1:
         BidHistory.excel_to_db()
         PlayerBidHistory.create_db()
@@ -72,16 +72,18 @@ def create_player_bid_histories(subsession):
                         lottery_id=lottery_id,
                         lottery_order=index + 1,
                         treatment_code=treatment_code,
+                        phase=phase
                     )
 
 
-def save_bid_history_for_all_players(players):
+def save_bid_history_for_all_players(players, phase):
     for player in players:
         player_bid_history: PlayerBidHistory = PlayerBidHistory.get_player_bid_history(
             session_id=player.subsession.session.id,
             lottery_round_number=player.get_lottery_round_number(),
             lottery_order=player.get_lottery_order(),
             participant_id=player.participant.id,
+            phase=phase
         )
         save_bid_history_to_player(player, player_bid_history)
 

@@ -4,7 +4,10 @@ from exp.models import (
     BidHistoryPlayer,
     save_bid_history_for_all_players,
     ExperimentSubSession,
+    create_player_bid_histories,
 )
+
+from exp.db import Phase, close_db
 
 from .views import (
     Instructions,
@@ -21,7 +24,9 @@ Part Three
 
 
 def creating_session(subsession):
-    save_bid_history_for_all_players(subsession.get_players())
+    create_player_bid_histories(subsession, Phase.QUESTION_PHASE)
+    save_bid_history_for_all_players(subsession.get_players(), Phase.QUESTION_PHASE)
+    close_db()
 
 
 class Subsession(BaseSubsession, ExperimentSubSession):
