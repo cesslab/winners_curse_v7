@@ -3,8 +3,11 @@ from otree.api import BaseGroup, BaseSubsession, models, BasePlayer
 from exp.models import (
     BidHistoryPlayer,
     save_bid_history_for_all_players,
+    create_player_bid_histories,
     ExperimentSubSession,
 )
+
+from exp.db import Phase, close_db
 
 from .views import Instructions, LotteryValuation, Update
 from .constants import Constants
@@ -16,7 +19,9 @@ Part Two
 
 
 def creating_session(subsession):
-    save_bid_history_for_all_players(subsession.get_players())
+    create_player_bid_histories(subsession, Phase.VALUATION_PHASE)
+    save_bid_history_for_all_players(subsession.get_players(), Phase.VALUATION_PHASE)
+    close_db()
 
 
 class Subsession(BaseSubsession, ExperimentSubSession):
