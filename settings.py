@@ -3,7 +3,7 @@ from os import environ, getenv
 SESSION_CONFIGS = [
     {
         "name": "wc",
-        "app_sequence": ["instructions", "bid", "questions", "valuation"],
+        "app_sequence": ["instructions", "bid", "questions"],
         "num_demo_participants": 2,
         "treatment": "cp",
         "lottery_1": "1",
