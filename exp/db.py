@@ -1,9 +1,9 @@
 import os
 import pandas as pd
-
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy_utils.types.choice import ChoiceType
 
 # class DBWrapper():
 #     db: sqlalchemy.orm.Session =
@@ -14,7 +14,14 @@ session = Session()
 Base = declarative_base()
 
 
+class Phase:
+    BID_PHASE = 'bid'
+    QUESTION_PHASE = 'question'
+    VALUATION_PHASE = 'valuation'
+
+
 class PlayerBidHistory(Base):
+    PHASES = [(Phase.BID_PHASE, 'Bid'), (Phase.QUESTION_PHASE, 'Question'), (Phase.VALUATION_PHASE, 'Valuation')]
     __tablename__ = "player_bid_history"
     id = Column(Integer, primary_key=True)
     bid_history_id = Column(Integer, ForeignKey("bid_history.id"), nullable=False)
@@ -23,16 +30,17 @@ class PlayerBidHistory(Base):
     lottery_round_number = Column(Integer, nullable=False)
     session_id = Column(Integer, nullable=False)
     participant_id = Column(Integer, nullable=False)
+    phase = Column(ChoiceType(PHASES))
 
     def __repr__(self):
         return f"""
             <PlayerBidHistory(
                 bid_history_id={self.bid_history_id}, lottery_oder={self.lottery_order} lottery_round_number={self.lottery_round_number},
-                session_id={self.session_id}, participant_id={self.participant_id})>"""
+                session_id={self.session_id}, participant_id={self.participant_id}, phase={self.phase})>"""
 
     @staticmethod
     def get_player_bid_history(
-        session_id, lottery_round_number, lottery_order, participant_id
+        session_id, lottery_round_number, lottery_order, participant_id, phase
     ):
         player_bid_history = (
             session.query(PlayerBidHistory)
@@ -40,6 +48,7 @@ class PlayerBidHistory(Base):
             .filter(PlayerBidHistory.lottery_round_number == lottery_round_number)
             .filter(PlayerBidHistory.lottery_order == lottery_order)
             .filter(PlayerBidHistory.participant_id == participant_id)
+            .filter(PlayerBidHistory.phase == phase)
             .first()
         )
         return player_bid_history
@@ -57,13 +66,13 @@ class PlayerBidHistory(Base):
         lottery_id,
         lottery_order,
         treatment_code,
+        phase,
     ):
         unused_bid_histories = BidHistory.get_unused_bid_histories(
             lottery_id, treatment_code, session_id, participant_id
         )
 
         bid_history = unused_bid_histories[0]
-        print(f"Setting bid history {bid_history}")
 
         player_bid_history = PlayerBidHistory(
             lottery_round_number=lottery_round_number,
@@ -71,9 +80,7 @@ class PlayerBidHistory(Base):
             session_id=session_id,
             bid_history=bid_history,
             lottery_order=lottery_order,
-        )
-        print(
-            f"Saving PlayerBidHistory lottery_round_number={lottery_round_number}, participant_id={participant_id}, session_id={session_id}, bid_history_id={bid_history.id}"
+            phase=phase
         )
         session.add(player_bid_history)
         bid_history.times_used += 1
@@ -82,7 +89,6 @@ class PlayerBidHistory(Base):
 
 def close_db():
     session.close()
-
 
 
 class BidHistory(Base):
