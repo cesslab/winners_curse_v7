@@ -94,6 +94,6 @@ class Update(Page):
     @staticmethod
     def vars_for_template(player):
         return {
-            "treatment": "cp",
+            "player": player,
             "rounds_per_lottery": Constants.ROUNDS_PER_LOTTERY,
         }

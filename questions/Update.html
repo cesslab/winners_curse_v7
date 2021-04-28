@@ -11,7 +11,7 @@
 {% block content %}
     <p>
         In the next {{ rounds_per_lottery }} rounds you will see a lottery with the same initial information.
-        {% if treatment == 'cp' %}
+        {% if player.is_probability_treatment %}
             That means, the value v and the range for the probability p will be the same.</p>
             <p>The Selected Probability (and the signal), however, may change from round to round.</p>
         {% else %}

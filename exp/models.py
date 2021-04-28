@@ -117,11 +117,15 @@ class BidHistoryPlayer:
 
     @property
     def is_probability_treatment(self):
-        return self.treatment == "cp"
+        return self.session_treatment == "cp"
 
     @property
     def is_value_treatment(self):
-        return self.treatment == "cv"
+        return self.session_treatment == "cp"
+
+    @property
+    def session_treatment(self):
+        return self.subsession.session.config["treatment"]
 
     @property
     def min_signal(self):
