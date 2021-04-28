@@ -1,0 +1,70 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+  Round {{ player.lottery_round_number }} of {{ player.rounds_per_lottery }}
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'global/outcome.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div id="outcome-header">
+        <h3 class="text-center">Outcome</h3>
+    </div>
+
+    <div class="lottery-header">
+    </div>
+
+    <div class="two-column-container">
+        <div class="item text-center">
+            <h5>Your Willingness to Pay</h5>
+            <p>{{ player.bid }}</p>
+        </div>
+        <div class="item text-center">
+            <h5>Lottery Price</h5>
+            <span>X</span>
+        </div>
+    </div>
+    <div class="text-center">
+        <span>
+          If your bid of {{ player.bid }} is greater than the lottery price of X, then you will buy the lottery otherwise you will not.
+        </span>
+    </div>
+
+    <div class="text-center lottery-header">
+        {% if player.treatment == 'cv' %}
+        <h4>Actual Lottery with Selected Value</h4>
+        {% else %}
+            <h4>Actual Lottery with Selected Probability</h4>
+        {% endif %}
+    </div>
+    <div id="lottery-ticket-header" class="text-center">
+        <p>
+            {% if player.treatment == 'cv' %}
+                The Selected Value was {{ player.fixed_value }}. Therefore, the actual lottery ticket was:
+            {% else %}
+                The Selected Probability was {{ player.ticket_probability }}%. Therefore, the actual lottery ticket was:
+            {% endif %}
+        </p>
+    </div>
+    <div class="lottery">
+        <p>
+            With a probability p of {{ player.ticket_probability }}% you get a value v = C credits, <br>otherwise you get 0 credits.
+        </p>
+    </div>
+
+    <div id="played-outcome" class="text-center">
+        <p>If the lottery was played, and a number drawn between 1 and 100 drawn, the outcome would be C if the randomly drawn number were less than or equal to 30, otherwise the outcome would be 0.</p>
+    </div>
+
+    <div class="lottery-header text-center">
+        <h4>Your Earnings</h4>
+    </div>
+    <div id="earnings-header" class="text-center">
+        <p>Your earnings would be shown here.</p>
+    </div>
+
+    {% next_button %}
+{% endblock %}
