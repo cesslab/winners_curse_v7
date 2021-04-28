@@ -4,7 +4,8 @@ from exp.models import (
     BidHistoryPlayer,
 )
 
-from bid.views import Instructions, Bid, Outcome
+from .views import Instructions, Outcome
+from bid.views import Bid
 
 c = Currency
 
@@ -46,15 +47,15 @@ class Player(BasePlayer, BidHistoryPlayer):
     others_group_id = models.IntegerField(initial=1)
     others_player_id = models.IntegerField(initial=1)
     others_bid = models.IntegerField(initial=50)
-    signal = models.IntegerField(initial=90)
+    signal = models.IntegerField(initial=23)
     alpha = models.IntegerField(initial=10)
-    beta = models.IntegerField(initial=80)
-    epsilon = models.IntegerField(initial=30)
-    ticket_value_before = models.IntegerField(initial=30)
-    ticket_probability = models.IntegerField(initial=30)
-    fixed_value = models.IntegerField(initial=15)
-    ticket_value_after = models.IntegerField(initial=30)
-    previous_highest_bid = models.IntegerField(initial=99)
+    beta = models.IntegerField(initial=30)
+    epsilon = models.IntegerField(initial=4)
+    ticket_value_before = models.IntegerField(initial=0)
+    ticket_probability = models.IntegerField(initial=75)
+    fixed_value = models.IntegerField(initial=75)
+    ticket_value_after = models.IntegerField(initial=0)
+    previous_highest_bid = models.IntegerField(initial=0)
     # Player Bid History
     rounds_per_lottery = models.IntegerField(initial=1)
     player_bid_history_id = models.IntegerField(initial=0)
