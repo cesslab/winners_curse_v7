@@ -1,0 +1,99 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+Round {{ player.lottery_round_number }} of {{ player.rounds_per_lottery }}
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'valuation/bid.css' %}">
+<link rel="stylesheet" href="{% static 'valuation/progress.css' %}">
+
+<link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{% static 'valuation/font-awesome.css' %}">
+{% endblock %}
+
+  {% block content %}
+  <div class="grid-container">
+    <div>
+      <div class="lottery-header">
+        <h4 class="text-center"><u>Lottery of type {{ player.lottery_order }}</u></h4>
+      </div>
+      <div>
+        <p>Consider the following lottery ticket with two possible prizes,
+          0 and a value v.</p>
+      </div>
+      <div class="lottery">
+        <p class="text-center">
+          {% if player.is_value_treatment %}
+          With a probability of {{ player.ticket_probability }}% you get a value v between {{ player.alpha }} and {{ player.beta }} credits,
+          <br>otherwise you get 0 credits.
+          {% else %}
+          With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get a value v = {{ player.fixed_value }} credits, <br>otherwise
+          you get 0 credits.
+          {% endif %}
+        </p>
+      </div>
+
+      <div>
+        <h4 class="text-center lottery-header"><u>Your Signal</u></h4>
+        <p class="text-center">
+          {% if player.is_value_treatment %}
+          Your signal about v is: {{ player.signal }}
+          {% else %}
+          Your signal about p is: {{ player.signal }}%
+          {% endif %} (with x = {{ player.epsilon }}).
+        </p>
+      </div>
+
+      <div>
+        <h5 class=""><u>Signal Interpretation</u></h5>
+        <p>
+          {% if player.is_value_treatment %}
+          The Selected Value v is at most {{ player.epsilon }} units away from your signal about v.
+          Given your signal, the Selected Value must lie between {{ player.min_signal }} and {{ player.max_signal }}.
+          {% else %}
+          The Selected Probability p is at most {{ player.epsilon }} percentage points away from your signal about p.
+          <br>
+        Given your signal, the Selected Probability must lie between {{ player.min_signal }}% and {{ player.max_signal }}%.
+        {% endif %}
+        </p>
+      </div>
+      {% next_button %}
+  </div>
+  <div>
+    <div class="valuation-grid-wrapper">
+      <div></div>
+      <div class="text-center">
+        <h5></h5>
+      </div>
+      <div class="">
+        <span>Your Bid</span>
+      </div>
+      <div class="text-center">
+        <h5></h5>
+      </div>
+      <div class="text-center">
+        <h5></h5>
+      </div>
+      <div>
+      </div>
+      <div>
+        <input type="number" id="id_probability_highest_signal" name="bid" min="0" max="100" step="1"
+          class="center-input form-control" value="{{ form.bid.object_data }}" placeholder=""
+          data-for="bid-selected-probability" required>
+
+        {% if form.bid.errors %}
+        <div class="alert alert-danger">
+          {{ form.bid.errors }}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
