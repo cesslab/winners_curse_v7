@@ -12,7 +12,7 @@ class Instructions(Page):
 
     @staticmethod
     def vars_for_template(player):
-        return {"treatment": player.subsession.session.config["treatment"]}
+        return {"treatment": player.session_treatment}
 
 
 class Bid(Page):
@@ -61,7 +61,9 @@ class Outcome(Page):
 
     @staticmethod
     def vars_for_template(player):
+        earnings = player.ticket_value_after - player.bid
         return {
+            "earnings": earnings,
             "player": player,
         }
 
