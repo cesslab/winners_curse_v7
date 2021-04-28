@@ -8,4 +8,5 @@ class Instructions(Page):
 
     @staticmethod
     def vars_for_template(player):
-        return {"treatment": player.treatment}
+        treatment = player.subsession.get_treatment_code()
+        return {"treatment": treatment}
