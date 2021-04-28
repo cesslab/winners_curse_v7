@@ -4,13 +4,18 @@ from exp.models import (
     BidHistoryPlayer,
 )
 
-from .views import Instructions, Bid, Outcome
+from bid.views import Instructions, Bid, Outcome
 
 c = Currency
 
 doc = """
 Your app description
 """
+
+
+def creating_session(subsession):
+    for player in subsession.get_players():
+        player.treatment = player.session_treatment
 
 
 class Constants(BaseConstants):
@@ -35,7 +40,7 @@ class Player(BasePlayer, BidHistoryPlayer):
     bid_history_id = models.IntegerField(initial=0)
     previous_session_id = models.IntegerField(initial=0)
     lottery_id = models.IntegerField(initial=0)
-    treatment = models.StringField(choices=["cp", "cv"], initial="cp")
+    treatment = models.StringField(choices=["cp", "cv"])
     lottery_round_number = models.IntegerField(initial=1)
     lottery_order = models.IntegerField(initial=1)
     others_group_id = models.IntegerField(initial=1)
@@ -54,11 +59,6 @@ class Player(BasePlayer, BidHistoryPlayer):
     rounds_per_lottery = models.IntegerField(initial=1)
     player_bid_history_id = models.IntegerField(initial=0)
     part_round_number = models.IntegerField(initial=0)
-
-
-# PAGES
-class MyPage(Page):
-    pass
 
 
 page_sequence = [Instructions, Bid, Outcome]
