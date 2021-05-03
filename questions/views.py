@@ -21,6 +21,8 @@ class Worth(Page):
     def vars_for_template(player):
         return {
             "player": player,
+            "num_rounds": range(1, Constants.ROUNDS_PER_LOTTERY+1),
+            "num_lotteries": range(1, Constants.NUM_LOTTERIES+1),
             "min_valuation": Constants.MIN_VALUATION,
             "max_valuation": Constants.MAX_VALUATION,
         }
@@ -43,6 +45,8 @@ class Probability(Page):
     def vars_for_template(player):
         return {
             "player": player,
+            "num_rounds": range(1, Constants.ROUNDS_PER_LOTTERY+1),
+            "num_lotteries": range(1, Constants.NUM_LOTTERIES+1),
             "min_valuation": Constants.MIN_VALUATION,
             "max_valuation": Constants.MAX_VALUATION,
         }
@@ -69,6 +73,8 @@ class UpdatedWorth(Page):
     def vars_for_template(player):
         return {
             "player": player,
+            "num_rounds": range(1, Constants.ROUNDS_PER_LOTTERY+1),
+            "num_lotteries": range(1, Constants.NUM_LOTTERIES+1),
             "min_valuation": Constants.MIN_VALUATION,
             "max_valuation": Constants.MAX_VALUATION,
         }
