@@ -112,6 +112,10 @@ class BidHistoryPlayer:
         return ((self.round_number - 1) // ExperimentConstants.ROUNDS_PER_LOTTERY) + 1
 
     @property
+    def lottery_number(self):
+        return self.get_lottery_order()
+
+    @property
     def rounds_per_lottery(self):
         return ExperimentConstants.ROUNDS_PER_LOTTERY
 
