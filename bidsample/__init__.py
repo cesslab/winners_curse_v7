@@ -4,8 +4,8 @@ from exp.models import (
     BidHistoryPlayer,
 )
 
-from .views import Instructions, Outcome
-from bid.views import Bid
+from .constants import Constants
+from .views import Instructions, Outcome, Bid
 
 c = Currency
 
@@ -17,12 +17,6 @@ Your app description
 def creating_session(subsession):
     for player in subsession.get_players():
         player.treatment = player.session_treatment
-
-
-class Constants(BaseConstants):
-    name_in_url = 'bidsample'
-    players_per_group = None
-    num_rounds = 1
 
 
 class Subsession(BaseSubsession):
