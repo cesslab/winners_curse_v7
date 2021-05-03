@@ -1,20 +1,21 @@
 {% extends "global/Page.html" %}
 {% load otree static %}
 
-{% block title %}
-Round {{ player.lottery_round_number }} of {{ player.rounds_per_lottery }}
-{% endblock %}
-
 {% block styles %}
 <link rel="stylesheet" href="{% static 'global/css/bid.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/progress.css' %}">
+j
+<link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
 
 <link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/nouislider.css' %}">
 
 {% endblock %}
 
 {% block content %}
+{% include 'global/LotteryRoundNavbar.html' %}
 <div class="grid-container">
   <div>
     <div class="lottery-header">
@@ -59,6 +60,7 @@ Round {{ player.lottery_round_number }} of {{ player.rounds_per_lottery }}
         {% endif %}
       </p>
     </div>
+    <div id="plot-container"></div>
 
     {% next_button %}
 
@@ -95,80 +97,178 @@ Round {{ player.lottery_round_number }} of {{ player.rounds_per_lottery }}
         <span class="progress-left-text">Question 1</span>
         <span class="progress-middle-text">Question 2</span>
         <span class="progress-right-text">Question 3</span>
-
-        <!-- <li class="progress__circle progress--done progress--active"></li>
-        <li class="progress__bar progress--done"></li>
-        <li class="progress__circle progress--active progress--done"></li>
-        <li class="progress__bar progress--done"></li>
-        <li class="progress__circle progress--active"></li>
-        <li class="progress__bar"></li>
-        <li class="progress__circle"></li>
-        <li class="progress__bar"></li>
-        <li class="progress__circle"></li> -->
       </div>
     </div>
-    <div class="valuation-grid-wrapper">
-      <div></div>
-      <div class="text-center">
-        <span>Minimum Worth</span>
-      </div>
-      <div class="text-center">
-        <span>Your Willingness to Pay</span>
-      </div>
-      <div class="text-center">
-        <span>Maximum Worth</span>
-      </div>
-      <div>
-        <span>Worth of the Lottery</span>
-      </div>
-      <div>
-        <input type="number" id="id_min_worth" name="updated_min_worth" min="0" max="100" step="1" class="center-input form-control" value="{{ form.updated_min_worth.object_data }}" placeholder="" data-for="min-selected-probability" required>
-
-        {% if form.updated_min_worth.errors %}
-        <div class="alert alert-danger">
-          {{ form.updated_min_worth.errors }}
-        </div>
-        {% endif %}
-      </div>
-      <div>
-        <input type="number" id="id_bid" name="updated_worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
-          class="center-input form-control" value="{{ form.updated_worth.object_data }}" placeholder=""
-          data-for="bid-selected-probability" required>
-
-        {% if form.updated_worth.errors %}
-        <div class="alert alert-danger">
-          {{ form.updated_worth.errors }}
-        </div>
-        {% endif %}
-      </div>
-      <div>
-        <input type="number" id="id_max_worth" name="updated_max_worth" min="0" max="100" step="1" class="center-input form-control"
-          value="{{ form.updated_max_worth.object_data }}" placeholder="" data-for="max-selected-probability" required>
-
-        {% if form.updated_max_worth.errors %}
-        <div class="alert alert-danger">
-          {{ form.updated_max_worth.errors }}
-        </div>
-        {% endif %}
-      </div>
-      <div class="selected-probability">
-        {% if player.is_probability_treatment %}
-        <span>Selected Probability</span>
-        {% else %}
-        <span>Selected Value</span>
-        {% endif %}
-      </div>
-      <div class="text-center selected-probability"><span id="min-selected-probability"></span></div>
-      <div class="text-center selected-probability"><span id="bid-selected-probability"></span></div>
-      <div class="text-center selected-probability"><span id="max-selected-probability"></span></div>
+    <div id="slider">
     </div>
+    <div class="worth-table">
+      <table>
+        <thead>
+        <tr>
+          <th class="text-center">
+          </th>
+          <th class="text-center">
+            <span>Your Willingness to Pay</span>
+          </th>
+          <th class="text-center">
+            <span>Maximum Worth</span>
+          </th>
+          <th>
+            <span>Worth of the Lottery</span>
+          </th>
+        </tr>
+        </thead>
+        <tr>
+          <th>
+            <span>Minimum Worth</span>
+          </th>
+          <td class="text-center">
+            <input type="hidden" id="id_min_worth" name="updated_min_worth" min="0" max="100" step="1" class="center-input form-control" value="{{ form.updated_min_worth.object_data }}" placeholder="" data-for="min-selected-probability" required>
+            <span id="min_worth_display"></span>
 
+            {% if form.updated_min_worth.errors %}
+            <div class="alert alert-danger">
+              {{ form.updated_min_worth.errors }}
+            </div>
+            {% endif %}
+          </td>
+          <td class="text-center">
+            <input type="hidden" id="id_bid" name="updated_worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
+                   class="center-input form-control" value="{{ form.updated_worth.object_data }}" placeholder=""
+                   data-for="bid-selected-probability" required>
+            <span id="worth_display"></span>
+
+            {% if form.updated_worth.errors %}
+            <div class="alert alert-danger">
+              {{ form.updated_worth.errors }}
+            </div>
+            {% endif %}
+          </td>
+          <td class="text-center">
+            <input type="hidden" id="id_max_worth" name="updated_max_worth" min="0" max="100" step="1" class="center-input form-control"
+                   value="{{ form.updated_max_worth.object_data }}" placeholder="" data-for="max-selected-probability" required>
+            <span id="max_worth_display"></span>
+
+            {% if form.updated_max_worth.errors %}
+            <div class="alert alert-danger">
+              {{ form.updated_max_worth.errors }}
+            </div>
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th class="selected-probability">
+            {% if player.is_probability_treatment %}
+            <span>Selected Probability</span>
+            {% else %}
+            <span>Selected Value</span>
+            {% endif %}
+          </th>
+          <td id="min_worth_prob" class="text-center selected-probability"><span id="min-selected-probability"></span></td>
+          <td id="worth_prob" class="text-center selected-probability"><span id="bid-selected-probability"></span></td>
+          <td id="max_worth_prob" class="text-center selected-probability"><span id="max-selected-probability"></span></td>
+        </tr>
+      </table>
+    </div>
   </div>
-
 </div>
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdn.anychart.com/releases/8.9.0/js/anychart-base.min.js"></script>
+<script src="{% static 'global/js/wNumb.js' %}"></script>
+<script src="{% static 'global/js/nouislider.js' %}"></script>
+<script>
+  // create data
+  var data = [
+    {x: "", low: 10, q1: 22-4, median: 22, q3: 22+4, high: 30},
+  ];
+
+  // create a chart
+  chart = anychart.vertical();
+
+  // create a box series and set the data
+  series = chart.box(data);
+  series.whiskerWidth(30)
+
+  // set the container id
+  chart.container("plot-container");
+
+  // initiate drawing the chart
+  chart.draw();
+</script>
+<script>
+  let slider = document.getElementById('slider');
+  let minWorthDisplay = document.getElementById('min_worth_display');
+  let minWorthInput = document.getElementById('id_min_worth');
+  let worthDisplay = document.getElementById('worth_display');
+
+  let minWorthProbDisplay = document.getElementById('min_worth_prob');
+  let worthProbDisplay = document.getElementById('worth_prob');
+  let maxWorthProbDisplay = document.getElementById('max_worth_prob');
+
+  let worthInput = document.getElementById('id_bid');
+  let maxWorthDisplay = document.getElementById('max_worth_display');
+  let maxWorthInput = document.getElementById('id_max_worth');
+
+  let formatter = {
+    to: function(value) {
+      let prob = parseInt((value / js_vars.mapping_divisor) * 100);
+      let suffix = (js_vars.is_probability_treatment) ? '%' : ''
+      return '$' + value + ' (' + prob + suffix + ')';
+    },
+    from: function(value) {
+      let dollar_value = value.split(" (")[0].slice(1)
+      return Number(dollar_value)
+    },
+  }
+
+  noUiSlider.create(slider, {
+    start: [0, 50, 100],
+    direction: 'ltr',
+    connect: true,
+    step: 1,
+    range: {
+      'min': 0,
+      'max': 100,
+    },
+    behaviour: 'tap-drag',
+    tooltips: [formatter, formatter, formatter],
+    pips: {
+      mode: 'values',
+      values: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+      density: 1,
+      stepped: true,
+      format: wNumb({
+        decimals: 0,
+        prefix: '$',
+      }),
+    }
+  });
+
+
+  slider.noUiSlider.on('update', function(values, handle) {
+    minWorthDisplay.innerHTML = `$${values[0]}`
+    minWorthInput.value = parseInt(values[0])
+
+    worthDisplay.innerHTML = `$${values[1]}`
+    worthInput.value = parseInt(values[1])
+
+    maxWorthDisplay.innerHTML = `$${values[2]}`
+    maxWorthInput.value = parseInt(values[2])
+
+    let suffix = (js_vars.is_probability_treatment) ? "%" : "";
+
+    let minWorthProb = parseInt((values[0] / js_vars.mapping_divisor) * 100)
+    minWorthProbDisplay.innerHTML = `${minWorthProb}${suffix}`
+
+    let worthProb = parseInt((values[1] / js_vars.mapping_divisor) * 100)
+    worthProbDisplay.innerHTML = `${worthProb}${suffix}`
+
+    let maxWorthProb = parseInt((values[2] / js_vars.mapping_divisor) * 100)
+    maxWorthProbDisplay.innerHTML = `${maxWorthProb}%${suffix}`
+  })
+</script>
 <script>
   displayMappedValue(document.getElementById("id_min_worth"));
   displayMappedValue(document.getElementById("id_bid"));

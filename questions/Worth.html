@@ -1,14 +1,13 @@
 {% extends "global/Page.html" %}
 {% load otree static %}
 
-{% block title %}
-Round {{ player.lottery_round_number }} of {{ player.rounds_per_lottery }}
-{% endblock %}
-
 {% block styles %}
 <link rel="stylesheet" href="{% static 'global/css/bid.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/progress.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/progress.css' %}">
+
+<link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
 
 <link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
@@ -17,6 +16,7 @@ Round {{ player.lottery_round_number }} of {{ player.rounds_per_lottery }}
 {% endblock %}
 
 {% block content %}
+{% include 'global/LotteryRoundNavbar.html' %}
 <div class="grid-container">
   <div>
     <div class="lottery-header">
@@ -101,68 +101,78 @@ Round {{ player.lottery_round_number }} of {{ player.rounds_per_lottery }}
         <span class="progress-right-text">Question 3</span>
       </div>
     </div>
-    <div class="valuation-grid-wrapper">
-      <div></div>
-      <div class="text-center">
-        <span>Minimum Worth</span>
-      </div>
-      <div class="text-center">
-        <span>Your Willingness to Pay</span>
-      </div>
-      <div class="text-center">
-        <span>Maximum Worth</span>
-      </div>
-      <div>
-        <span>Worth of the Lottery</span>
-      </div>
-      <div class="text-right">
-        <input type="hidden" id="id_min_worth" name="min_worth" min="0" max="100" step="1" class="center-input form-control" value="{{ form.min_worth.object_data }}" placeholder="" data-for="min-selected-probability" required>
-        <span id="min_worth_display"></span>
-
-        {% if form.min_worth.errors %}
-        <div class="alert alert-danger">
-          {{ form.min_worth.errors }}
-        </div>
-        {% endif %}
-      </div>
-      <div>
-        <input type="hidden" id="id_bid" name="worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
-          class="center-input form-control" value="{{ form.worth.object_data }}" placeholder=""
-          data-for="bid-selected-probability" required>
-        <span id="worth_display"></span>
-
-        {% if form.worth.errors %}Cases by Country/Region/Sovereignty
-
-        <div class="alert alert-danger">
-          {{ form.worth.errors }}
-        </div>
-        {% endif %}
-      </div>
-      <div>
-        <input type="hidden" id="id_max_worth" name="max_worth" min="0" max="100" step="1" class="center-input form-control"
-          value="{{ form.max_worth.object_data }}" placeholder="" data-for="max-selected-probability" required>
-        <span id="max_worth_display"></span>
-
-        {% if form.max_worth.errors %}
-        <div class="alert alert-danger">
-          {{ form.max_worth.errors }}
-        </div>
-        {% endif %}
-      </div>
-      <div class="selected-probability">
-        {% if player.is_probability_treatment %}
-        <span>Selected Probability</span>
-        {% else %}
-        <span>Selected Value</span>
-        {% endif %}
-      </div>
-      <div id="min_worth_prob" class="text-center selected-probability"><span id="min-selected-probability"></span></div>
-      <div id="worth_prob" class="text-center selected-probability"><span id="bid-selected-probability"></span></div>
-      <div id="max_worth_prob" class="text-center selected-probability"><span id="max-selected-probability"></span></div>
-    </div>
     <div id="slider">
     </div>
+    <div class="worth-table">
+      <table>
+        <thead>
+        <tr>
+          <th class="text-center">
+          </th>
+          <th class="text-center">
+            <span>Your Willingness to Pay</span>
+          </th>
+          <th class="text-center">
+            <span>Maximum Worth</span>
+          </th>
+          <th>
+            <span>Worth of the Lottery</span>
+          </th>
+        </tr>
+        </thead>
+        <tr>
+          <th>
+            <span>Minimum Worth</span>
+          </th>
+          <td class="text-center">
+            <input type="hidden" id="id_min_worth" name="min_worth" min="0" max="100" step="1" class="center-input form-control" value="{{ form.min_worth.object_data }}" placeholder="" data-for="min-selected-probability" required>
+            <span id="min_worth_display"></span>
 
+            {% if form.min_worth.errors %}
+            <div class="alert alert-danger">
+              {{ form.min_worth.errors }}
+            </div>
+            {% endif %}
+          </td>
+          <td class="text-center">
+            <input type="hidden" id="id_bid" name="worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
+                   class="center-input form-control" value="{{ form.worth.object_data }}" placeholder=""
+                   data-for="bid-selected-probability" required>
+            <span id="worth_display"></span>
+
+            {% if form.worth.errors %}
+            <div class="alert alert-danger">
+              {{ form.worth.errors }}
+            </div>
+            {% endif %}
+          </td>
+          <td class="text-center">
+            <input type="hidden" id="id_max_worth" name="max_worth" min="0" max="100" step="1" class="center-input form-control"
+                   value="{{ form.max_worth.object_data }}" placeholder="" data-for="max-selected-probability" required>
+            <span id="max_worth_display"></span>
+
+            {% if form.max_worth.errors %}
+            <div class="alert alert-danger">
+              {{ form.max_worth.errors }}
+            </div>
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th class="selected-probability">
+            {% if player.is_probability_treatment %}
+            <span>Selected Probability</span>
+            {% else %}
+            <span>Selected Value</span>
+            {% endif %}
+          </th>
+          <td id="min_worth_prob" class="text-center selected-probability"><span id="min-selected-probability"></span></td>
+          <td id="worth_prob" class="text-center selected-probability"><span id="bid-selected-probability"></span></td>
+          <td id="max_worth_prob" class="text-center selected-probability"><span id="max-selected-probability"></span></td>
+        </tr>
+      </table>
+
+    </div>
   </div>
 
 </div>
@@ -243,22 +253,24 @@ chart.draw();
 
   slider.noUiSlider.on('update', function(values, handle) {
     minWorthDisplay.innerHTML = `$${values[0]}`
-    minWorthInput.value = values[0]
+    minWorthInput.value = parseInt(values[0])
 
     worthDisplay.innerHTML = `$${values[1]}`
-    worthInput.value = values[1]
+    worthInput.value = parseInt(values[1])
 
     maxWorthDisplay.innerHTML = `$${values[2]}`
-    maxWorthInput.value = values[2]
+    maxWorthInput.value = parseInt(values[2])
+
+    let suffix = (js_vars.is_probability_treatment) ? "%" : "";
 
     let minWorthProb = parseInt((values[0] / js_vars.mapping_divisor) * 100)
-    minWorthProbDisplay.innerHTML = `${minWorthProb}%`
+    minWorthProbDisplay.innerHTML = `${minWorthProb}%${suffix}`
 
     let worthProb = parseInt((values[1] / js_vars.mapping_divisor) * 100)
-    worthProbDisplay.innerHTML = `${worthProb}%`
+    worthProbDisplay.innerHTML = `${worthProb}%${suffix}`
 
     let maxWorthProb = parseInt((values[2] / js_vars.mapping_divisor) * 100)
-    maxWorthProbDisplay.innerHTML = `${maxWorthProb}%`
+    maxWorthProbDisplay.innerHTML = `${maxWorthProb}%${suffix}`
   })
 </script>
 

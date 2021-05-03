@@ -1,36 +1,44 @@
 {% extends "global/Page.html" %}
 {% load otree static %}
 
-{% block title %}
-  Round {{ player.lottery_round_number }} of {{ player.rounds_per_lottery }}
-{% endblock %}
-
 {% block styles %}
-    <link rel="stylesheet" href="{% static 'global/outcome.css' %}">
+    <link rel="stylesheet" href="{% static 'global/css/outcome.css' %}">
+
+    <link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
 {% endblock %}
 
 {% block content %}
+{% include 'global/LotteryRoundNavbar.html' %}
     <div id="outcome-header">
         <h3 class="text-center">Outcome</h3>
     </div>
 
     <div class="lottery-header">
+      <h4 class="text-center">Auction</h4>
     </div>
 
     <div class="two-column-container">
         <div class="item text-center">
-            <h5>Your Willingness to Pay</h5>
+            <h5>Your Bid</h5>
             <p>{{ player.bid }}</p>
         </div>
         <div class="item text-center">
-            <h5>Lottery Price</h5>
-            <span>{{ player.ticket_value_after }}</span>
+            <h5>Highest Bid</h5>
+            <span>{{ player.new_highest_bid }}</span>
         </div>
     </div>
     <div class="text-center">
         <span>
-        {% if player.bid > player.previous_highest_bid %}
+        {% if player.winner %}
             You bought the lottery.
+        {% elif player.tie %}
+            You and at least one other bidder submitted identical highest bids.
+          {% if player.win_tie_break %}
+          The computer randomly selected you as the winner.
+          {% else %}
+          The computer randomly selected one other bidder as the winner.
+          {% endif %}
         {% else %}
             You did not buy the lottery.
         {% endif %}
