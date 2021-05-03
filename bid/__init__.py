@@ -1,3 +1,5 @@
+import random
+
 from otree.api import BaseGroup, BaseSubsession, models, BasePlayer
 
 from exp.models import (
@@ -21,6 +23,10 @@ Part One
 def creating_session(subsession):
     create_player_bid_histories(subsession, Phase.BID_PHASE)
     save_bid_history_for_all_players(subsession.get_players(), Phase.BID_PHASE)
+    if subsession.round_number == 1:
+        for player in subsession.get_players():
+            player.participant.vars['payoff_lottery_number'] = random.randint(1, Constants.NUM_LOTTERIES)
+            player.participant.vars['payoff_lottery_round_number'] = random.randint(1, Constants.ROUNDS_PER_LOTTERY)
     close_db()
 
 
@@ -34,8 +40,13 @@ class Group(BaseGroup):
 
 class Player(BasePlayer, BidHistoryPlayer):
     bid = models.IntegerField(min=0, max=100)
-    tie = models.BooleanField()
-    winner = models.BooleanField()
+    tie = models.BooleanField(initial=False)
+    win_tie_break = models.BooleanField(initial=False)
+    winner = models.BooleanField(initial=False)
+    earnings = models.IntegerField()
+    new_highest_bid = models.IntegerField()
+
+    payoff_round = models.BooleanField(initial=False)
     # Bid History
     bid_history_id = models.IntegerField()
     previous_session_id = models.IntegerField()

@@ -26,8 +26,10 @@ class Player(BasePlayer):
 
 
 # PAGES
-class Payoff(Page):
-    pass
+class BidPayoff(Page):
+    @staticmethod
+    def vars_for_template(player):
+        return player.participant.vars['bid_payoff_data']
 
 
-page_sequence = [Payoff]
+page_sequence = [BidPayoff]
