@@ -47,7 +47,7 @@ class Player(BasePlayer, BidHistoryPlayer):
     others_group_id = models.IntegerField(initial=1)
     others_player_id = models.IntegerField(initial=1)
     others_bid = models.IntegerField(initial=50)
-    signal = models.IntegerField(initial=23)
+    signal = models.IntegerField(initial=22)
     alpha = models.IntegerField(initial=10)
     beta = models.IntegerField(initial=30)
     epsilon = models.IntegerField(initial=4)
