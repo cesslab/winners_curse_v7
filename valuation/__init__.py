@@ -59,6 +59,7 @@ class Player(BasePlayer, BidHistoryPlayer):
     player_bid_history_id = models.IntegerField()
     part_round_number = models.IntegerField()
     rounds_per_lottery = models.IntegerField()
+    be_bid = models.IntegerField()
 
 
 page_sequence = [Instructions, Update, LotteryValuation]

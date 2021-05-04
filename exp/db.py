@@ -113,6 +113,8 @@ class BidHistory(Base):
     alpha = Column(Integer, nullable=False)
     beta = Column(Integer, nullable=False)
     epsilon = Column(Integer, nullable=False)
+    # BEbid
+    be_bid = Column(Integer, nullable=False)
     # vLotto
     ticket_value_before = Column(Integer, nullable=False)
     # pLotto
@@ -140,7 +142,7 @@ class BidHistory(Base):
                 ticket_value_before={self.ticket_value_before},
                 ticket_probability={self.ticket_probability},
                 fixed_value={self.fixed_value}, ticket_value_after={self.ticket_value_after},
-                highest_bid={self.highest_bid})>"""
+                highest_bid={self.highest_bid}, be_bid={self.be_bid})>"""
 
     @staticmethod
     def get_unused_bid_histories(
@@ -196,6 +198,7 @@ class BidHistory(Base):
                     "subject": int,
                     "bid": int,
                     "signal": int,
+                    "BEbid": int,
                     "alpha": int,
                     "beta": int,
                     "epsilon": int,
@@ -217,6 +220,7 @@ class BidHistory(Base):
                     "subject",
                     "bid",
                     "signal",
+                    "BEbid",
                     "alpha",
                     "beta",
                     "epsilon",
@@ -240,6 +244,7 @@ class BidHistory(Base):
                     participant_id=row["subject"],
                     bid=row["bid"],
                     signal=row["signal"],
+                    be_bid=row["BEbid"],
                     alpha=row["alpha"],
                     beta=row["beta"],
                     epsilon=row["epsilon"],

@@ -44,6 +44,7 @@ def save_bid_history_to_player(player, player_bid_history: PlayerBidHistory):
     player.fixed_value = bid_history.fixed_value
     player.ticket_value_after = bid_history.ticket_value_after
     player.previous_highest_bid = bid_history.highest_bid
+    player.be_bid = bid_history.be_bid
 
 
 def create_player_bid_histories(subsession, phase):
@@ -101,7 +102,7 @@ class BidHistoryPlayer:
             ticket_value_after={self.ticket_value_after}, previous_highest_bid={self.previous_highest_bid},
             player_bid_history_id={self.player_bid_history_id},
             lottery_order={self.lottery_order}, lottery_round_number={self.lottery_round_number},
-            rounds_per_lottery={self.rounds_per_lottery}
+            rounds_per_lottery={self.rounds_per_lottery}, be_bid={self.be_bid}
             )
             """
 
