@@ -59,37 +59,27 @@
         {% endif %}
         </p>
       </div>
-      {% next_button %}
   </div>
-  <div>
-    <div class="valuation-grid-wrapper">
-      <div></div>
-      <div class="text-center">
-        <h5></h5>
-      </div>
+  <div class="h-100 row">
+    <div class="align-self-center">
       <div class="">
         <span>Your Bid</span>
       </div>
-      <div class="text-center">
-        <h5></h5>
-      </div>
-      <div class="text-center">
-        <h5></h5>
-      </div>
-      <div>
-      </div>
       <div>
         <input type="number" id="id_probability_highest_signal" name="bid" min="0" max="100" step="1"
-          class="center-input form-control" value="{{ form.bid.object_data }}" placeholder=""
-          data-for="bid-selected-probability" required>
-
-        {% if form.bid.errors %}
-        <div class="alert alert-danger">
-          {{ form.bid.errors }}
-        </div>
-        {% endif %}
+               class="center-input form-control" value="{{ form.bid.object_data }}" placeholder=""
+               data-for="bid-selected-probability" required>
       </div>
+      {% if form.bid.errors %}
+      <div class="alert alert-danger">
+        {{ form.bid.errors }}
+      </div>
+      {% endif %}
     </div>
+  </div>
+  <div></div>
+  <div>
+    {% next_button %}
   </div>
 </div>
 
