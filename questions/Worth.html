@@ -179,28 +179,8 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdn.anychart.com/releases/8.9.0/js/anychart-base.min.js"></script>
 <script src="{% static 'global/js/wNumb.js' %}"></script>
 <script src="{% static 'global/js/nouislider.js' %}"></script>
-<script>
-  // create data
-var data = [
-  {x: "", low: 10, q1: 22-4, median: 22, q3: 22+4, high: 30},
-];
-
-// create a chart
-chart = anychart.vertical();
-
-// create a box series and set the data
-series = chart.box(data);
-series.whiskerWidth(30)
-
-// set the container id
-chart.container("plot-container");
-
-// initiate drawing the chart
-chart.draw();
-</script>
 <script>
   let slider = document.getElementById('slider');
   let minWorthDisplay = document.getElementById('min_worth_display');
