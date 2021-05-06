@@ -31,5 +31,9 @@ class BidPayoff(Page):
     def vars_for_template(player):
         return player.participant.vars['bid_payoff_data']
 
+class WorthPayoff(Page):
+    @staticmethod
+    def vars_for_template(player):
+        return player.participant.vars['worth_payoff_data']
 
 page_sequence = [BidPayoff]
