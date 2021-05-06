@@ -2,13 +2,42 @@
 {% load otree static %}
 
 {% block title %}
-    Instructions for Example Bid Phase
+Part I (Auctions)
 {% endblock %}
 
 {% block styles %}
+<link rel="stylesheet" href="{% static 'global/css/bid.css' %}">
 {% endblock %}
 
 {% block content %}
-  <p>Instructions for the example bid phase...</p>
-    {% next_button %}
+<div>
+  <p>
+   This part has 40 rounds. In each round, you will participate in an auction.
+At the beginning of every auction, you will be randomly matched with three
+other participants from a previous experiment.
+  </p>
+  <h4>What is the prize?</h4>
+  <p>
+    In every round a prize will be auctioned off. The prize will be a lottery ticket, that means a device that generates a
+    non-zero amount of credits with some probability. Any lottery in this experiment is characterized by two features:
+  </p>
+  <ol type="1">
+    <li>A value (in Credits ): a non-zero amount of credits that the lottery possibly pays off and,</li>
+    <li>A probability (in %): the probability of receiving the non-zero amount of credits.</li>
+  </ol>
+  <p>For instance, consider the following lottery ticket:</p>
+
+  <div class="lottery" id="lottery-text">
+    <p class="text-center">
+      With a probability of 75% you get 20 credits, </br>otherwise (with the complementary probability of 30%) you get 0 credits.
+    </p>
+  </div>
+  <div>
+    <p>
+      In this case, 20 credits is the value and 75% is the probability. This means that this lottery pays 20 credits 75 times in
+      100 and pays 0 credits with a 25% chance. The outcome of this lottery is then either 20 credits or 0 credits.
+    </p>
+  </div>
+  {% next_button %}
+</div>
 {% endblock %}
