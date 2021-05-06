@@ -9,14 +9,25 @@
 {% endblock %}
 
 {% block content %}
-    <p>In each round you will see a lottery ticket.</p>
-
-    <p>In some rounds you will also see a signal about the
-        {% if treatment == 'cp' %} Selected Probability {% else %} Selected Value {% endif %} of the lottery.
-        Below we will tell you how to correctly interpret your signal.</p>
-
-    <p>State your willingness to pay for the lottery.</p>
-
-    <p>You will buy the lottery ticket if the lottery price lies below your willingness to pay.</p>
+<p>
+  The second Part of the experiment has again 40 rounds. Like in Part I, in each round you will see again lotteries with
+  an unknown Selected Value, about which you will receive a signal. Remember that the Selected Value is no more than x
+  numbers away from your signal.
+</p>
+<p>
+Again, you will be randomly matched with three other participants from previous experiments. Remember that the other
+  three bidders also have in- dependently from each other received a signal surrounding the same Selected Value.
+  The four of you might therefore receive different signals. That means, the four of you face the same lottery ticket,
+  but the signal-updated range for the Selected Value may be different.
+</p>
+<p>
+  In every round you will have to answer three different questions. There is a right answer to each question.
+  The closer your answer is to the truth, the more you will earn. For each question you may earn a maximum of 12 credits.
+</p>
+<p>
+  In this part you will not learn anything at the of the round. At the end of the experiment we will randomly choose one
+  question for payment and only then you will learn how close your answer was to the correct answer for that particular
+  question.
+</p>
     {% next_button %}
 {% endblock %}
