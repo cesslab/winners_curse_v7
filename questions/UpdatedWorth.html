@@ -108,19 +108,19 @@ j
           <th class="text-center">
           </th>
           <th class="text-center">
-            <span>Your Willingness to Pay</span>
+            <span>Minimum</span>
           </th>
           <th class="text-center">
-            <span>Maximum Worth</span>
+            <span>Average</span>
           </th>
           <th>
-            <span>Worth of the Lottery</span>
+            <span>Maximum</span>
           </th>
         </tr>
         </thead>
         <tr>
           <th>
-            <span>Minimum Worth</span>
+            <span>Lottery Worth</span>
           </th>
           <td class="text-center">
             <input type="hidden" id="id_min_worth" name="updated_min_worth" min="0" max="100" step="1" class="center-input form-control" value="{{ form.updated_min_worth.object_data }}" placeholder="" data-for="min-selected-probability" required>
@@ -266,7 +266,7 @@ j
     worthProbDisplay.innerHTML = `${worthProb}${suffix}`
 
     let maxWorthProb = parseInt((values[2] / js_vars.mapping_divisor) * 100)
-    maxWorthProbDisplay.innerHTML = `${maxWorthProb}%${suffix}`
+    maxWorthProbDisplay.innerHTML = `${maxWorthProb}${suffix}`
   })
 </script>
 <script>
