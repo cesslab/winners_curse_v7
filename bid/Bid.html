@@ -7,6 +7,7 @@
 
 <link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/footer.css' %}">
 
 <link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
@@ -80,6 +81,85 @@
   <div></div>
   <div>
     {% next_button %}
+  </div>
+</div>
+
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Instructions
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <h4>Part I</h4>
+        <p>
+          This part has 40 rounds. In each round, you will participate in an auction.
+          At the beginning of every auction, you will be randomly matched with three
+          other participants from a previous experiment.
+        </p>
+        <h4>What is the prize?</h4>
+        <p>
+          In every round a prize will be auctioned off. The prize will be a lottery ticket, that means a device that generates a
+          non-zero amount of credits with some probability. Any lottery in this experiment is characterized by two features:
+        </p>
+        <ol type="1">
+          <li>A value (in Credits ): a non-zero amount of credits that the lottery possibly pays off and,</li>
+          <li>A probability (in %): the probability of receiving the non-zero amount of credits.</li>
+        </ol>
+        <p>For instance, consider the following lottery ticket:</p>
+
+        <div class="lottery" id="lottery-text">
+          <p class="text-center">
+            With a probability of 75% you get 20 credits, </br>otherwise (with the complementary probability of 30%) you get 0 credits.
+          </p>
+        </div>
+        <div>
+          <p>
+            In this case, 20 credits is the value and 75% is the probability. This means that this lottery pays 20 credits 75 times in
+            100 and pays 0 credits with a 25% chance. The outcome of this lottery is then either 20 credits or 0 credits.
+          </p>
+          <h4>Lottery Types</h4>
+          <p>
+            There will be four different types of lotteries. For each type of lottery, the computer will produce
+            independently from each other 10 lottery tickets and you will bid for each one of them.
+          </p>
+          <h4>Lottery Ticket</h4>
+          <p>
+            Here is some information about the lottery ticket that is being auctioned. Throughout the experiment, however,
+            the value of the lottery will only be partially known: The lottery ticket does not state the exact value v,
+            but you learn that the value could be any integer between 10 and 30 inclusively. That is, the computer has
+            chosen one number that could be 10, 11, 12, ... , 29, or 30 with equal chances). This number is called the
+            Selected Value. Thus, each time you see a lottery ticket on screen, the Selected Value has already been determined
+            by the computer, but it is not displayed. Neither you nor the three other bidders know the Selected Value.
+            To assess how much you would be willing to pay for the lottery ticket, you should guess the Selected Value.
+          </p>
+          <h4>The Signal</h4>
+          <p>
+            To help you guess the Selected Value, we give you a signal. The signal is a number that is close to the
+            Selected Value: Once you receive the signal, you can assume that the Selected Value is no more than x numbers away.
+          </p>
+          <h4>Signal Interpretation</h4>
+          <p>
+            If x = 4, a signal of 22 would mean that the Selected Value lies between 18 and 26 inclusively, where every
+            integer between 18 and 26 is equally likely to be the Selected Value. To help you interpret the signal better,
+            we will always display next to your signal the range of possible Selected Values given your signal.
+          </p>
+          <h4>General Remark</h4>
+          <p>
+            In every auction, you and each of the other three bidders will independently from each other receive a signal
+            surrounding the same Selected Value. The four of you might therefore receive different signals. Yet, no one
+            will see the signals of the other three bidders. Thus, the four of you will face the same lottery ticket,
+            but the signal-updated range for the Selected Value may be different.
+          </p>
+          <h4>Your Task / Your Bid</h4>
+          <p>
+            In each auction, we ask you to submit a bid. A bid is the price that you are willing to pay for the lottery ticket. The three other participants have also submitted a bid for the exact same lottery ticket.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
