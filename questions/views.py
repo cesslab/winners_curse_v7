@@ -31,24 +31,30 @@ class Worth(Page):
 
     @staticmethod
     def before_next_page(player, timeout_happened):
-        # Payoff for Worth
+        # PREP WORK
+        # Point Belief (Worth)
         if player.is_probability_treatment:
-            player.prep_worth = player.ticket_probability * player.fixed_value
+            player.prep_worth = player.ticket_probability * player.fixed_value / 100
         else:
-            player.prep_worth = player.ticket_value_before * player.fixed_value
+            player.prep_worth = player.ticket_value_before * player.fixed_value / 100
 
-        # player.prep_emin = player.fixed_value *
+        player.prep_emin = player.fixed_value * player.alpha
+        player.prep_emax = player.fixed_value * player.beta
+        player.prep_worth = player.be_bid
 
         player.computed_loss = (player.worth - player.prep_worth)*(player.worth - player.prep_worth)
-        player.random_k = random.randint(0, 500)
+        player.random_k = random.randint(0, 1296)
         if player.computed_loss < player.random_k:
-            player.earnings = 12
+            player.point_earnings = 12
         else:
-            player.earnings = 0
+            player.point_earnings = 0
 
-        # Payoff for Confidence Interval
-        # player.confidence_earnings = 12*(1 - (player.max_valuation - player.min_valuation) / (player.e_max)
-
+        # Confidence Interval
+        confidence_value = 12.0*(1.0 - (float(player.max_worth - player.min_worth) / float(player.prep_emax - player.prep_emin)))
+        if confidence_value > 0.0 and player.min_worth >= player.prep_worth <= player.max_worth:
+            player.confidence_earnings = confidence_value
+        else:
+            player.confidence_earnings = 0
 
         if player.lottery_order == player.participant.vars['worth_payoff_lottery_number'] and player.lottery_round_number == player.participant.vars['worth_payoff_lottery_round_number']:
             player.participant.vars['worth_payoff_data'] = {
@@ -59,7 +65,8 @@ class Worth(Page):
                 "epsilon": player.epsilon,
                 "signal": player.signal,
                 "treatment": player.treatment,
-                "earnings": player.earnings,
+                "point_earnings": player.point_earnings,
+                "confidence_interval_earnings": player.confidence_earnings,
                 "lottery_order": player.lottery_order,
                 "lottery_round_number": player.lottery_round_number,
                 "ticket_value_after": player.ticket_value_after,

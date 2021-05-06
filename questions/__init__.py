@@ -57,8 +57,8 @@ class Player(BasePlayer, BidHistoryPlayer):
     prep_emax = models.IntegerField()
     computed_loss = models.IntegerField()
     random_k = models.IntegerField()
-    earnings = models.IntegerField()
-    confidence_earnings = models.IntegerField()
+    point_earnings = models.FloatField()
+    confidence_earnings = models.FloatField()
     # Bid History
     bid_history_id = models.IntegerField()
     previous_session_id = models.IntegerField()
