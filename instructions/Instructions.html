@@ -2,13 +2,46 @@
 {% load otree static %}
 
 {% block title %}
-  General Experiment Instructions
+  General Information
 {% endblock %}
 
 {% block styles %}
 {% endblock %}
 
 {% block content %}
-    <p>Instructions to be placed here...</p>
-    {% next_button %}
+{% if treatment == 'cv' %}
+<div>
+  <p>
+    Welcome. We kindly ask you to dedicate your full attention to the experiment.
+    This experiment consists of 3 parts. If you follow the instructions
+    and make good decisions you might earn a considerable amount of money.
+    Should you have a question, please send a message to the experimenter who
+    will assist you. Please turn on your web camera until the end of the experiment.
+    Should you disobey the rules, we will exclude you from the experiment and you will not be paid.
+  </p>
+  <p>
+    The currency in this experiment is credits. Each credit you earn will
+    be converted into U.S. dollars at the end of the experiment at the rate of $1
+    equals 6 credits.
+  </p>
+</div>
+{% else %}
+<div>
+  <p>
+    Welcome. We kindly ask you to dedicate your full attention to the experiment.
+    This experiment consists of 3 parts. If you follow the instructions
+    and make good decisions you might earn a considerable amount of money.
+    Should you have a question, please send a message to the experimenter who
+    will assist you. Please turn on your web camera until the end of the experiment.
+    Should you disobey the rules, we will exclude you from the experiment and you will not be paid.
+  </p>
+  <p>
+    The currency in this experiment is credits. Each credit you earn will
+    be converted into U.S. dollars at the end of the experiment at the rate of $1
+    equals 6 credits.
+  </p>
+</div>
+{% endif %}
+
+{% next_button %}
 {% endblock %}
