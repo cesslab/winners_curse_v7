@@ -9,61 +9,43 @@
 
 {% block content %}
 {% include 'global/LotteryRoundNavbar.html' %}
-    <div id="outcome-header">
-        <h3 class="text-center">Outcome</h3>
-    </div>
+  <div id="outcome-header">
+      <h3 class="text-center">Outcome</h3>
+  </div>
 
-    <div class="lottery-header">
-    </div>
-
-    <div class="two-column-container">
-        <div class="item text-center">
-            <h5>Your Willingness to Pay</h5>
-            <p>{{ player.bid }}</p>
-        </div>
-        <div class="item text-center">
-            <h5>Lottery Price</h5>
-            <span>X</span>
-        </div>
-    </div>
-    <div class="text-center">
-        <span>
-          If your bid of {{ player.bid }} is greater than the lottery price of X, then you will buy the lottery otherwise you will not.
-        </span>
-    </div>
-
-    <div class="text-center lottery-header">
-        {% if player.treatment == 'cv' %}
-        <h4>Actual Lottery with Selected Value</h4>
-        {% else %}
-            <h4>Actual Lottery with Selected Probability</h4>
-        {% endif %}
-    </div>
-    <div id="lottery-ticket-header" class="text-center">
+  <div>
+    <p>
+      Whether or not you obtain the lottery ticket depends on how your bid com-
+      pares to the other three bids. Thus, every auction has three possible out-
+      comes:
+    </p>
+    <ul>
+      <li>
         <p>
-            {% if player.treatment == 'cv' %}
-                The Selected Value was {{ player.fixed_value }}. Therefore, the actual lottery ticket was:
-            {% else %}
-                The Selected Probability was {{ player.ticket_probability }}%. Therefore, the actual lottery ticket was:
-            {% endif %}
+          <b>You win the auction: </b>
+          If your bid is higher than the bids of the three
+          other participants, you will win the auction, pay your bid and receive
+          the lottery ticket. The computer will then execute the lottery. The
+          outcome of the lottery will be either the Selected Value (Credits) or zero,
         </p>
-    </div>
-    <div class="lottery">
+      </li>
+      <li>
         <p>
-            With a probability p of {{ player.ticket_probability }}% you get a value v = C credits, <br>otherwise you get 0 credits.
+          <b>You lose the auction: </b>
+          If at least one other bid is higher than yours, you will lose the auction and get nothing.
         </p>
-    </div>
-
-    <div id="played-outcome" class="text-center">
-        <p>If the lottery was played, and a number drawn between 1 and 100 drawn, the outcome would be C if the randomly drawn number were less than or equal to 30, otherwise the outcome would be 0.</p>
-    </div>
-
-    <div class="lottery-header text-center">
-        <h4>Your Earnings</h4>
-    </div>
-    <div id="earnings-header" class="text-center">
-        <p>Your earnings would be shown here.</p>
-    </div>
+      </li>
+      <li>
+        <p>
+          <b>There is a tie: </b>
+          If you and another bidder submit identical highest bids, the computer will determine the winner with equal chances.
+        </p>
+      </li>
+    </ul>
+    <p>
+      At the end of the auction, you will learn the Selected Value, the winning bid, the outcome of the lottery and your earnings in this auction.
+    </p>
+  </div>
 
     {% next_button %}
 {% endblock %}

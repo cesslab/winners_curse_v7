@@ -73,14 +73,9 @@
       </div>
       <div>
         <input type="number" id="id_probability_highest_signal" name="bid" min="0" max="100" step="1"
-               class="center-input form-control" value="{{ form.bid.object_data }}" placeholder=""
-               data-for="bid-selected-probability" required>
+               class="center-input form-control" value="" placeholder=""
+               data-for="bid-selected-probability" readonly="readonly">
       </div>
-      {% if form.bid.errors %}
-      <div class="alert alert-danger">
-        {{ form.bid.errors }}
-      </div>
-      {% endif %}
     </div>
   </div>
   <div></div>
