@@ -15,9 +15,6 @@ class Instructions(Page):
 
 
 class Bid(Page):
-    form_model = "player"
-    form_fields = ["bid"]
-
     @staticmethod
     def vars_for_template(player):
         return {
@@ -30,8 +27,6 @@ class Bid(Page):
 
 
 class Outcome(Page):
-    form_model = "player"
-
     @staticmethod
     def vars_for_template(player):
         return {
@@ -41,3 +36,12 @@ class Outcome(Page):
         }
 
 
+class Payoff(Page):
+
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            "player": player,
+            "num_rounds": range(1, Constants.ROUNDS_PER_LOTTERY + 1),
+            "num_lotteries": range(1, Constants.NUM_LOTTERIES + 1),
+        }
