@@ -1,3 +1,5 @@
+import random
+
 from otree.api import Page
 
 from .constants import Constants
@@ -26,6 +28,51 @@ class Worth(Page):
             "min_valuation": Constants.MIN_VALUATION,
             "max_valuation": Constants.MAX_VALUATION,
         }
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        # Payoff for Worth
+        if player.is_probability_treatment:
+            player.prep_worth = player.ticket_probability * player.fixed_value
+        else:
+            player.prep_worth = player.ticket_value_before * player.fixed_value
+
+        # player.prep_emin = player.fixed_value *
+
+        player.computed_loss = (player.worth - player.prep_worth)*(player.worth - player.prep_worth)
+        player.random_k = random.randint(0, 500)
+        if player.computed_loss < player.random_k:
+            player.earnings = 12
+        else:
+            player.earnings = 0
+
+        # Payoff for Confidence Interval
+        # player.confidence_earnings = 12*(1 - (player.max_valuation - player.min_valuation) / (player.e_max)
+
+
+        if player.lottery_order == player.participant.vars['worth_payoff_lottery_number'] and player.lottery_round_number == player.participant.vars['worth_payoff_lottery_round_number']:
+            player.participant.vars['worth_payoff_data'] = {
+                "previous_highest_bid": player.previous_highest_bid,
+                "fixed_value": player.fixed_value,
+                "alpha": player.alpha,
+                "beta": player.beta,
+                "epsilon": player.epsilon,
+                "signal": player.signal,
+                "treatment": player.treatment,
+                "earnings": player.earnings,
+                "lottery_order": player.lottery_order,
+                "lottery_round_number": player.lottery_round_number,
+                "ticket_value_after": player.ticket_value_after,
+                "ticket_value_before": player.ticket_value_before,
+                "ticket_probability": player.ticket_probability,
+                "prep_worth": player.prep_worth,
+                "random_k": player.random_k,
+                "computed_loss": player.computed_loss,
+            }
+
+
+
+
 
     @staticmethod
     def js_vars(player):
