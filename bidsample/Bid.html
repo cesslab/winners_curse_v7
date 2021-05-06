@@ -10,32 +10,38 @@
 
 <link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.css" integrity="sha512-i+WzzATeaDcwcfi5CfLn63qBxrKqiQvDLC+IChU1zVlaPguPgJlddOR07nU28XOoIOno9WPmJ+3ccUInpmHxBg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="{% static 'global/css/tooltip.css' %}">
 {% endblock %}
 
   {% block content %}
   {% include 'global/LotteryRoundNavbar.html' %}
   <div class="grid-container">
-    <div>
-      <div class="lottery-header">
-        <h4 class="text-center"><u>Lottery of type {{ player.lottery_order }}</u></h4>
-      </div>
+    <div id="general-remark">
       <div>
-        <p>Consider the following lottery ticket with two possible prizes,
-          0 and a value v.</p>
+        <div class="lottery-header">
+          <h4 class="text-center"><u>Lottery of type {{ player.lottery_order }}</u></h4>
+        </div>
       </div>
-      <div class="lottery">
-        <p class="text-center">
-          {% if player.is_value_treatment %}
-          With a probability of {{ player.ticket_probability }}% you get a value v between {{ player.alpha }} and {{ player.beta }} credits,
-          <br>otherwise you get 0 credits.
-          {% else %}
-          With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get a value v = {{ player.fixed_value }} credits, <br>otherwise
-          you get 0 credits.
-          {% endif %}
-        </p>
+      <div id="lottery-ticket">
+        <div>
+          <p>Consider the following lottery ticket with two possible prizes,
+            0 and a value v.</p>
+        </div>
+        <div class="lottery" id="lottery-text">
+          <p class="text-center">
+            {% if player.is_value_treatment %}
+            With a probability of {{ player.ticket_probability }}% you get a value v between {{ player.alpha }} and {{ player.beta }} credits,
+            <br>otherwise you get 0 credits.
+            {% else %}
+            With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get a value v = {{ player.fixed_value }} credits, <br>otherwise
+            you get 0 credits.
+            {% endif %}
+          </p>
+        </div>
       </div>
 
-      <div>
+      <div id="lottery-signal">
         <h4 class="text-center lottery-header"><u>Your Signal</u></h4>
         <p class="text-center">
           {% if player.is_value_treatment %}
@@ -46,7 +52,7 @@
         </p>
       </div>
 
-      <div>
+      <div id="lottery-signal-interpretation">
         <h5 class=""><u>Signal Interpretation</u></h5>
         <p>
           {% if player.is_value_treatment %}
@@ -59,41 +65,94 @@
         {% endif %}
         </p>
       </div>
-      {% next_button %}
   </div>
-  <div>
-    <div class="valuation-grid-wrapper">
-      <div></div>
-      <div class="text-center">
-        <h5></h5>
-      </div>
+  <div class="h-100 row">
+    <div id="lottery-bid" class="align-self-center">
       <div class="">
         <span>Your Bid</span>
       </div>
-      <div class="text-center">
-        <h5></h5>
-      </div>
-      <div class="text-center">
-        <h5></h5>
-      </div>
-      <div>
-      </div>
       <div>
         <input type="number" id="id_probability_highest_signal" name="bid" min="0" max="100" step="1"
-          class="center-input form-control" value="{{ form.bid.object_data }}" placeholder=""
-          data-for="bid-selected-probability" required>
-
-        {% if form.bid.errors %}
-        <div class="alert alert-danger">
-          {{ form.bid.errors }}
-        </div>
-        {% endif %}
+               class="center-input form-control" value="{{ form.bid.object_data }}" placeholder=""
+               data-for="bid-selected-probability" required>
       </div>
+      {% if form.bid.errors %}
+      <div class="alert alert-danger">
+        {{ form.bid.errors }}
+      </div>
+      {% endif %}
     </div>
+  </div>
+  <div></div>
+  <div>
+    {% next_button %}
   </div>
 </div>
 
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/intro.min.js" integrity="sha512-QWPjvFqgUJv5X6Sq5NXmwJQSEzUEBxmCCcgqJd5/5luZnS6llRbshsChUNKrFlZ4bshKZEJxAHDB+WWdMsGvUA==" crossorigin="anonymous"></script>
+<script>
+  introJs().setOptions({
+  steps: [
+    {
+      title: 'Lottery types',
+      intro: '<p>There will be four different types of lotteries. For each type of lottery, the\n' +
+        'computer will produce independently from each other 10 lottery tickets and\n' +
+        'you will bid for each one of them.</p>',
+      element: document.querySelector(('#lottery-type'))
+    },
+    {
+    title: 'Lottery Ticket',
+    intro: '<p>Here is some information about the lottery ticket that is being auctioned.\n' +
+      'Throughout the experiment, however, the value of the lottery will only be\n' +
+      'partially known: The lottery ticket does not state the exact value v, but you\n' +
+        'learn that the value could be any integer between 10 and 30 inclusively. That\n' +
+      'is, the computer has chosen one number that could be 10, 11, 12, ... , 29,\n' +
+      'or 30 with equal chances). This number is called the Selected Value. Thus,\n' +
+      'each time you see a lottery ticket on screen, the Selected Value has already\n' +
+      'been determined by the computer, but it is not displayed. Neither you nor\n' +
+      'the three other bidders know the Selected Value. To assess how much you\n' +
+      'would be willing to pay for the lottery ticket, you should guess the Selected\n' +
+      'Value.</p>',
+    element: document.querySelector(('#lottery-ticket'))
+  },
+    {
+    title: 'The Signal',
+    intro: '<p>To help you guess the Selected Value, we give you a signal. The signal is a\n' +
+      'number that is close to the Selected Value: Once you receive the signal, you can assume that the Selected Value is no more than x numbers away.</p>',
+    element: document.querySelector(('#lottery-signal'))
+  },
+  {
+    title: 'Signal Interpretation',
+    intro: '<p>If x = 4, a signal of 22 would mean that the Selected Value lies between 18\n' +
+      'and 26 inclusively, where every integer between 18 and 26 is equally likely to\n' +
+      'be the Selected Value. To help you interpret the signal better, we will always\n' +
+      'display next to your signal the range of possible Selected Values given your\n' +
+      'signal.</p>',
+    element: document.querySelector(('#lottery-signal-interpretation'))
+  },
+    {
+      title: 'General Remark',
+      intro: '<p>In every auction, you and each of the other three bidders will independently\n' +
+        'from each other receive a signal surrounding the same Selected Value. The\n' +
+        'four of you might therefore receive different signals. Yet, no one will see the\n' +
+        'signals of the other three bidders. Thus, the four of you will face the same\n' +
+        'lottery ticket, but the signal-updated range for the Selected Value may be\n' +
+        'different.</p>',
+      element: document.querySelector(('#general-remark'))
+    },
+    {
+      title: 'Your task / your bid',
+      intro: '<p>In each auction, we ask you to submit a bid. A bid is the price that you are\n' +
+        'willing to pay for the lottery ticket. The three other participants have also\n' +
+        'submitted a bid for the exact same lottery ticket.</p>',
+      element: document.querySelector(('#lottery-bid'))
+    },
+  ]
+}).start();
+
+</script>
+
 {% endblock %}
