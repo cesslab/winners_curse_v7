@@ -5,7 +5,7 @@ from exp.models import (
 )
 
 from .constants import Constants
-from .views import Instructions, Outcome, Bid
+from .views import Instructions, Outcome, Bid, Payoff
 
 c = Currency
 
@@ -57,4 +57,4 @@ class Player(BasePlayer, BidHistoryPlayer):
     be_bid = models.IntegerField()
 
 
-page_sequence = [Instructions, Bid, Outcome]
+page_sequence = [Instructions, Bid, Outcome, Payoff]
