@@ -16,7 +16,11 @@
 {% endblock %}
 
 {% block content %}
+{% if new_lottery %}
+{% include 'global/LotteryUpdate.html' %}
+{% endif %}
 {% include 'global/LotteryRoundNavbar.html' %}
+
 <div class="grid-container">
   <div>
     <div class="lottery-header">
@@ -181,6 +185,12 @@
 {% block scripts %}
 <script src="{% static 'global/js/wNumb.js' %}"></script>
 <script src="{% static 'global/js/nouislider.js' %}"></script>
+<script>
+let alertList = document.querySelectorAll('.alert')
+alertList.forEach(function (alert) {
+  new bootstrap.Alert(alert)
+})
+</script>
 <script>
   let slider = document.getElementById('slider');
   let minWorthDisplay = document.getElementById('min_worth_display');

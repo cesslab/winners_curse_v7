@@ -14,6 +14,9 @@
 {% endblock %}
 
   {% block content %}
+  {% if new_lottery %}
+    {% include 'global/LotteryUpdate.html' %}
+  {% endif %}
   {% include 'global/LotteryRoundNavbar.html' %}
   <div class="grid-container">
     <div>
@@ -166,4 +169,10 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+  let alertList = document.querySelectorAll('.alert')
+  alertList.forEach(function (alert) {
+    new bootstrap.Alert(alert)
+  })
+</script>
 {% endblock %}

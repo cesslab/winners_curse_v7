@@ -27,6 +27,11 @@ class Bid(Page):
             "num_lotteries": range(1, Constants.NUM_LOTTERIES+1),
             "min_valuation": Constants.MIN_VALUATION,
             "max_valuation": Constants.MAX_VALUATION,
+            "new_lottery":
+                (
+                    player.round_number != 1
+                    and ((player.round_number - 1) % Constants.ROUNDS_PER_LOTTERY) == 0
+                )
         }
 
     @staticmethod
@@ -71,7 +76,6 @@ class Bid(Page):
                 "ticket_value_after": player.ticket_value_after,
                 "ticket_probability": player.ticket_probability
             }
-
 
 
 class Update(Page):
