@@ -51,14 +51,26 @@ class Player(BasePlayer, BidHistoryPlayer):
     updated_max_worth = models.IntegerField(min=0, max=100)
     updated_worth = models.IntegerField(min=0, max=100)
     probability_highest_signal = models.IntegerField(min=0, max=100)
+    highest_market_signal = models.BooleanField(initial=False)
+    confidence_value = models.FloatField(initial=0.0)
     # Payoff
     prep_worth = models.IntegerField()
     prep_emin = models.IntegerField()
     prep_emax = models.IntegerField()
+    prob_computed_loss = models.FloatField()
     computed_loss = models.IntegerField()
     random_k = models.IntegerField()
+    random_prob_k = models.FloatField()
+    # Payoff: Question 3A
+    k_3a = models.IntegerField()
+    l_3a = models.IntegerField()
+    earnings_3a = models.FloatField()
+    # Payoff: Question 3B
+    computed_3b = models.FloatField()
+    earnings_3b = models.FloatField()
     point_earnings = models.FloatField()
     confidence_earnings = models.FloatField()
+    prob_earnings = models.FloatField()
     # Bid History
     bid_history_id = models.IntegerField()
     previous_session_id = models.IntegerField()
@@ -79,10 +91,11 @@ class Player(BasePlayer, BidHistoryPlayer):
     ticket_value_after = models.IntegerField()
     previous_highest_bid = models.IntegerField()
     # Player Bid History
+    highest_other_signal = models.IntegerField()
     rounds_per_lottery = models.IntegerField()
     player_bid_history_id = models.IntegerField()
     part_round_number = models.IntegerField()
     be_bid = models.IntegerField()
 
 
-page_sequence = [Instructions, Update, Worth, Probability, UpdatedWorth]
+page_sequence = [Instructions, Worth, Probability, UpdatedWorth]

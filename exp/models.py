@@ -26,6 +26,9 @@ def save_bid_history_to_player(player, player_bid_history: PlayerBidHistory):
     player.player_bid_history_id = player_bid_history.id
     player.lottery_order = player_bid_history.lottery_order
     player.lottery_round_number = player_bid_history.lottery_round_number
+    player.highest_other_signal = player_bid_history.highest_other_signal
+    player.highest_market_signal = bid_history.signal > player_bid_history.highest_other_signal
+    player.previous_highest_bid = player_bid_history.highest_other_bid
     # Bid History
     player.bid_history_id = bid_history.id
     player.previous_session_id = bid_history.session_id
@@ -43,7 +46,6 @@ def save_bid_history_to_player(player, player_bid_history: PlayerBidHistory):
     player.ticket_probability = bid_history.ticket_probability
     player.fixed_value = bid_history.fixed_value
     player.ticket_value_after = bid_history.ticket_value_after
-    player.previous_highest_bid = bid_history.highest_bid
     player.be_bid = bid_history.be_bid
 
 
@@ -67,12 +69,11 @@ def create_player_bid_histories(subsession, phase):
                     )
                     bid_history = unused_bid_histories[lottery_round_number - 1]
                     PlayerBidHistory.add_bid_history(
+                        bid_history=bid_history,
                         session_id=subsession.session.id,
                         lottery_round_number=lottery_round_number,
                         participant_id=player.participant.id,
-                        lottery_id=lottery_id,
                         lottery_order=index + 1,
-                        treatment_code=treatment_code,
                         phase=phase
                     )
 

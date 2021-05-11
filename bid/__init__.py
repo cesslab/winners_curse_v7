@@ -45,6 +45,7 @@ class Player(BasePlayer, BidHistoryPlayer):
     winner = models.BooleanField(initial=False)
     earnings = models.IntegerField()
     new_highest_bid = models.IntegerField()
+    highest_market_signal = models.BooleanField(initial=False)
 
     payoff_round = models.BooleanField(initial=False)
     # Bid History
@@ -66,11 +67,13 @@ class Player(BasePlayer, BidHistoryPlayer):
     fixed_value = models.IntegerField()
     ticket_value_after = models.IntegerField()
     previous_highest_bid = models.IntegerField()
+    previous_highest_signal = models.IntegerField()
     # Player Bid History
+    highest_other_signal = models.IntegerField()
     rounds_per_lottery = models.IntegerField()
     player_bid_history_id = models.IntegerField()
     part_round_number = models.IntegerField()
     be_bid = models.IntegerField()
 
 
-page_sequence = [Instructions, Update, Bid, Outcome]
+page_sequence = [Instructions, Bid, Outcome]
