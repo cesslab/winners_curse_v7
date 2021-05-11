@@ -2,8 +2,9 @@ import os
 import pandas as pd
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, func
 from sqlalchemy_utils.types.choice import ChoiceType
+
 
 # class DBWrapper():
 #     db: sqlalchemy.orm.Session =
@@ -30,13 +31,15 @@ class PlayerBidHistory(Base):
     lottery_round_number = Column(Integer, nullable=False)
     session_id = Column(Integer, nullable=False)
     participant_id = Column(Integer, nullable=False)
+    highest_other_signal = Column(Integer, nullable=False)
+    highest_other_bid = Column(Integer, nullable=False)
     phase = Column(ChoiceType(PHASES))
 
     def __repr__(self):
         return f"""
             <PlayerBidHistory(
                 bid_history_id={self.bid_history_id}, lottery_oder={self.lottery_order} lottery_round_number={self.lottery_round_number},
-                session_id={self.session_id}, participant_id={self.participant_id}, phase={self.phase})>"""
+                session_id={self.session_id}, participant_id={self.participant_id}, highest_other_signal={self.highest_other_signal}, phase={self.phase})>"""
 
     @staticmethod
     def get_player_bid_history(
@@ -60,26 +63,21 @@ class PlayerBidHistory(Base):
 
     @staticmethod
     def add_bid_history(
+        bid_history,
         session_id,
         lottery_round_number,
         participant_id,
-        lottery_id,
         lottery_order,
-        treatment_code,
         phase,
     ):
-        unused_bid_histories = BidHistory.get_unused_bid_histories(
-            lottery_id, treatment_code, session_id, participant_id
-        )
-
-        bid_history = unused_bid_histories[0]
-
         player_bid_history = PlayerBidHistory(
             lottery_round_number=lottery_round_number,
             participant_id=participant_id,
             session_id=session_id,
             bid_history=bid_history,
             lottery_order=lottery_order,
+            highest_other_signal=BidHistory.get_highest_other_signal_in_group(bid_history),
+            highest_other_bid=BidHistory.get_highest_other_bid_in_group(bid_history),
             phase=phase
         )
         session.add(player_bid_history)
@@ -165,6 +163,26 @@ class BidHistory(Base):
         usable_bid_histories = usable_bid_histories.all()
 
         return usable_bid_histories
+
+    @staticmethod
+    def get_highest_other_signal_in_group(bid_history):
+        return session.query(func.max(BidHistory.signal).label("max_other_signal")).filter(
+                BidHistory.session_id == bid_history.session_id,
+                BidHistory.session_id == bid_history.session_id,
+                BidHistory.part_round_number == bid_history.part_round_number,
+                BidHistory.group_id == bid_history.group_id,
+                BidHistory.player_id != bid_history.player_id
+            ).one().max_other_signal
+
+    @staticmethod
+    def get_highest_other_bid_in_group(bid_history):
+        return session.query(func.max(BidHistory.bid).label("max_other_bid")).filter(
+            BidHistory.session_id == bid_history.session_id,
+            BidHistory.session_id == bid_history.session_id,
+            BidHistory.part_round_number == bid_history.part_round_number,
+            BidHistory.group_id == bid_history.group_id,
+            BidHistory.player_id != bid_history.player_id
+        ).one().max_other_bid
 
     @staticmethod
     def get_treatment_lottery_bid_histories(lottery_id, treatment_code):
