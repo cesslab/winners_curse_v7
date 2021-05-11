@@ -13,3 +13,4 @@ __pycache__/
 *.otreezip
 .envrc
 .vscode
+resetdb.zsh
