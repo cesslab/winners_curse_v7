@@ -13,10 +13,12 @@ from exp.db import Phase, close_db
 
 from .views import (
     Instructions,
-    Worth,
+    QuestionOneA,
+    QuestionOneB,
     Update,
-    Probability,
-    UpdatedWorth,
+    QuestionTwo,
+    QuestionThreeA,
+    QuestionThreeB
 )
 from .constants import Constants
 
@@ -98,4 +100,4 @@ class Player(BasePlayer, BidHistoryPlayer):
     be_bid = models.IntegerField()
 
 
-page_sequence = [Instructions, Worth, Probability, UpdatedWorth]
+page_sequence = [Instructions, QuestionOneA, QuestionOneB, QuestionTwo, QuestionThreeA, QuestionThreeB]

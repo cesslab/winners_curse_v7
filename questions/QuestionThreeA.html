@@ -1,0 +1,272 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'global/css/bid.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/multi_step_progress_bar.css' %}">
+
+<link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
+
+<link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/nouislider.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/nouislider_hide.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/questions.css' %}">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.css" integrity="sha512-i+WzzATeaDcwcfi5CfLn63qBxrKqiQvDLC+IChU1zVlaPguPgJlddOR07nU28XOoIOno9WPmJ+3ccUInpmHxBg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="{% static 'global/css/tooltip.css' %}">
+{% endblock %}
+
+{% block content %}
+{% if new_lottery %}
+{% include 'global/LotteryUpdate.html' %}
+{% endif %}
+{% include 'global/LotteryRoundNavbar.html' %}
+
+<div class="grid-container">
+  <div>
+    <div class="lottery-header">
+      <h4 class="text-center"><u>Lottery of type {{ player.lottery_order }}</u></h4>
+    </div>
+    <div>
+      <p>Consider the following lottery ticket with two possible prizes,
+        0 and a value v.</p>
+    </div>
+    <div class="lottery">
+      <p class="text-center">
+        {% if player.is_value_treatment %}
+        With a probability of {{ player.ticket_probability }}% you get a value v between {{ player.alpha }} and {{ player.beta }} credits, otherwise you get 0 credits.
+        {% else %}
+        With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get a value v = {{ player.fixed_value }} credits, otherwise
+        you get 0 credits.
+        {% endif %}
+      </p>
+    </div>
+
+    <div>
+      <h4 class="text-center lottery-header"><u>Your Signal</u></h4>
+      <p class="text-center">
+        {% if player.is_value_treatment %}
+        Your signal about v is: {{ player.signal }}
+        {% else %}
+        Your signal about p is: {{ player.signal }}%
+        {% endif %} (with x = {{ player.epsilon }}).
+      </p>
+    </div>
+
+
+    <div>
+      <h5 class=""><u>Signal Interpretation</u></h5>
+      <p>
+        {% if player.is_value_treatment %}
+        The Selected Value v is at most {{ player.epsilon }} units away from your signal about v.
+        Given your signal, the Selected Value must lie between {{ player.min_signal }} and {{ player.max_signal }}.
+        {% else %}
+        The Selected Probability p is at most {{ player.epsilon }} percentage points away from your signal about p.
+        <br>
+        Given your signal, the Selected Probability must lie between {{ player.min_signal }}% and {{ player.max_signal }}%.
+        {% endif %}
+      </p>
+    </div>
+    <div id="plot-container"></div>
+
+    {% next_button %}
+  </div>
+
+  <div>
+    <div>
+      <div>
+        <ul class="list-unstyled multi-steps">
+          <li>Question 1</li>
+          <li>Question 2</li>
+          <li class="is-active">Question 3</li>
+        </ul>
+      </div>
+    </div>
+    <div id="question">
+      <p>What, do you think, is now the (objectively) most reasonable price for the lottery in credits</p>
+    </div>
+    <div id="slider">
+    </div>
+    <div class="worth-table">
+      <table>
+        <thead>
+        <tr>
+          <th class="text-center">
+          </th>
+          <th class="text-center">
+            <span>Average</span>
+          </th>
+        </tr>
+        </thead>
+        <tr>
+          <th>
+            <span>Lottery Worth</span>
+          </th>
+          <td class="text-center">
+            <input type="hidden" id="id_bid" name="updated_worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
+                   class="center-input form-control" value="{{ form.updated_worth.object_data }}" placeholder=""
+                   data-for="bid-selected-probability" required>
+            <span id="worth_display"></span>
+
+            {% if form.updated_worth.errors %}
+            <div class="alert alert-danger">
+              {{ form.updated_worth.errors }}
+            </div>
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th class="selected-probability">
+            {% if player.is_probability_treatment %}
+            <span>Selected Probability</span>
+            {% else %}
+            <span>Selected Value</span>
+            {% endif %}
+          </th>
+          <td id="worth_prob" class="text-center selected-probability"><span id="bid-selected-probability"></span></td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'global/js/wNumb.js' %}"></script>
+<script src="{% static 'global/js/nouislider.js' %}"></script>
+<script>
+let alertList = document.querySelectorAll('.alert')
+alertList.forEach(function (alert) {
+  new bootstrap.Alert(alert)
+})
+</script>
+<script>
+  let slider = document.getElementById('slider');
+  let worthDisplay = document.getElementById('worth_display');
+  let worthProbDisplay = document.getElementById('worth_prob');
+  let worthInput = document.getElementById('id_bid');
+
+  let formatter = {
+      to: function(value) {
+        let prob = parseInt((value / js_vars.mapping_divisor) * 100);
+        let suffix = (js_vars.is_probability_treatment) ? '%' : ''
+        return '$' + value + ' (' + prob + suffix + ')';
+      },
+      from: function(value) {
+        let dollar_value = value.split(" (")[0].slice(1)
+        return Number(dollar_value)
+      },
+  }
+
+  noUiSlider.create(slider, {
+      start: [0],
+      direction: 'ltr',
+      connect: true,
+      step: 1,
+      range: {
+          'min': 0,
+          'max': 100,
+      },
+      behaviour: 'tap-drag',
+      tooltips: [formatter],
+      pips: {
+          mode: 'values',
+          values: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+          density: 1,
+          stepped: true,
+          format: wNumb({
+            decimals: 0,
+            prefix: '$',
+          }),
+      }
+  });
+
+  function updateTable(values, handle) {
+    let handleHidden = document.getElementsByClassName('noUi-handle')[0].style.display === '';
+    console.log(document.getElementsByClassName('noUi-handle')[0].style.visibility)
+    if (handleHidden) {
+      return;
+    }
+    worthDisplay.innerHTML = `$${values[0]}`
+    worthInput.value = parseInt(values[0])
+
+    let suffix = (js_vars.is_probability_treatment) ? "%" : "";
+
+    let worthProb = parseInt((values[0] / js_vars.mapping_divisor) * 100)
+    worthProbDisplay.innerHTML = `${worthProb}${suffix}`
+
+  }
+
+  function doSomething(values, handle, unencoded, tap, positions, noUiSlider) {
+    console.log("set -> calling doSomething")
+    document.getElementsByClassName('noUi-handle')[0].style.display = 'block';
+    updateTable(values, handle)
+  }
+
+  // Binding signature
+  slider.noUiSlider.on('slide', doSomething);
+
+
+</script>
+
+<script>
+  displayMappedValue(document.getElementById("id_bid"));
+
+  document.getElementById("id_bid").addEventListener("keyup", (event) => {
+    displayMappedValue(event.target);
+  })
+
+  function isInteger(valStr) {
+    return !isNaN(valStr) && Number.isInteger(parseFloat(valStr));
+  }
+
+  function displayMappedValue(element) {
+    let correspondingElement = document.getElementById(element.dataset.for);
+
+    console.log(element.value)
+
+    let worth = parseInt(element.value);
+    if (!isInteger(worth)) {
+      correspondingElement.textContent = "";
+      return;
+    }
+
+    let suffix = (js_vars.is_probability_treatment) ? "%" : "";
+    correspondingElement.textContent = parseInt((worth / js_vars.mapping_divisor) * 100) + suffix;
+  }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/intro.min.js" integrity="sha512-QWPjvFqgUJv5X6Sq5NXmwJQSEzUEBxmCCcgqJd5/5luZnS6llRbshsChUNKrFlZ4bshKZEJxAHDB+WWdMsGvUA==" crossorigin="anonymous"></script>
+<script type="text/javascript">
+  IMG_URL = '{% static "global/img/q3a_graph.png" %}';
+</script>
+<script>
+  if (js_vars.display_intro) {
+    introJs().setOptions({
+      steps: [
+        {
+          title: 'What is the lottery, on average, worth?',
+          intro: 'Guess the worth of the lottery. You will earn 12 credits if your guess is sufficiently close to the actual worth of the lottery; and nothing if it is too far away.',
+          position: 'top',
+          element: document.querySelector(('#question'))
+        },
+        {
+          title: 'Your task',
+          intro: '<div><p>Guess the lottery’s worth if you have the highest signal. You will earn 12 credits if your ' +
+            'guess is sufficiently close to the correct estimate according to the laws of probability theory; and nothing ' +
+            'if it is too far away.</p></div>' +
+            '<div><img src="' + IMG_URL + '" alt="graph"></div>' +
+            '<div><p>The graph shows how the chance of getting 12 credits drops the ' +
+            'further away your guess is from the actual worth of the lottery. If it is too far away, you will get ' +
+            'nothing.</p></div>',
+          position: 'top',
+          element: document.querySelector(('#slider'))
+        },
+      ]
+    }).start()
+  }
+</script>
+{% endblock %}

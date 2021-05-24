@@ -3,15 +3,21 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'global/css/bid.css' %}">
-<link rel="stylesheet" href="{% static 'global/css/progress.css' %}">
-<link rel="stylesheet" href="{% static 'global/css/progress.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/multi_step_progress_bar.css' %}">
 
 <link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
 
 <link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
+
 <link rel="stylesheet" href="{% static 'global/css/nouislider.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/nouislider_hide.css' %}">
+
+<link rel="stylesheet" href="{% static 'global/css/questions.css' %}">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.css" integrity="sha512-i+WzzATeaDcwcfi5CfLn63qBxrKqiQvDLC+IChU1zVlaPguPgJlddOR07nU28XOoIOno9WPmJ+3ccUInpmHxBg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="{% static 'global/css/tooltip.css' %}">
 
 {% endblock %}
 
@@ -94,16 +100,16 @@
 
   <div>
     <div>
-      <div class="pprogress">
-        <span class="progress__circle progress--active"></span>
-        <span class="progress__bar"></span>
-        <span class="progress__circle"></span>
-        <span class="progress__bar"></span>
-        <span class="progress__circle"></span>
-        <span class="progress-left-text">Question 1</span>
-        <span class="progress-middle-text">Question 2</span>
-        <span class="progress-right-text">Question 3</span>
+      <div>
+        <ul class="list-unstyled multi-steps">
+          <li class="is-active">Question 1</li>
+          <li>Question 2</li>
+          <li>Question 3</li>
+        </ul>
       </div>
+    </div>
+    <div id="question">
+      <p>Enter what you believe to be the lottery worth.</p>
     </div>
     <div id="slider">
     </div>
@@ -114,13 +120,7 @@
           <th class="text-center">
           </th>
           <th class="text-center">
-            <span>Minimum</span>
-          </th>
-          <th class="text-center">
             <span>Average</span>
-          </th>
-          <th>
-            <span>Maximum</span>
           </th>
         </tr>
         </thead>
@@ -128,16 +128,6 @@
           <th>
             <span>Lottery Worth</span>
           </th>
-          <td class="text-center">
-            <input type="hidden" id="id_min_worth" name="min_worth" min="0" max="100" step="1" class="center-input form-control" value="{{ form.min_worth.object_data }}" placeholder="" data-for="min-selected-probability" required>
-            <span id="min_worth_display"></span>
-
-            {% if form.min_worth.errors %}
-            <div class="alert alert-danger">
-              {{ form.min_worth.errors }}
-            </div>
-            {% endif %}
-          </td>
           <td class="text-center">
             <input type="hidden" id="id_bid" name="worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
                    class="center-input form-control" value="{{ form.worth.object_data }}" placeholder=""
@@ -150,17 +140,6 @@
             </div>
             {% endif %}
           </td>
-          <td class="text-center">
-            <input type="hidden" id="id_max_worth" name="max_worth" min="0" max="100" step="1" class="center-input form-control"
-                   value="{{ form.max_worth.object_data }}" placeholder="" data-for="max-selected-probability" required>
-            <span id="max_worth_display"></span>
-
-            {% if form.max_worth.errors %}
-            <div class="alert alert-danger">
-              {{ form.max_worth.errors }}
-            </div>
-            {% endif %}
-          </td>
         </tr>
         <tr>
           <th class="selected-probability">
@@ -170,15 +149,49 @@
             <span>Selected Value</span>
             {% endif %}
           </th>
-          <td id="min_worth_prob" class="text-center selected-probability"><span id="min-selected-probability"></span></td>
           <td id="worth_prob" class="text-center selected-probability"><span id="bid-selected-probability"></span></td>
-          <td id="max_worth_prob" class="text-center selected-probability"><span id="max-selected-probability"></span></td>
         </tr>
       </table>
 
     </div>
   </div>
 
+</div>
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Instructions
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <h4>Instructions</h4>
+        <p>
+          The second Part of the experiment has again 40 rounds. Like in Part I, in each round you will see again lotteries with an unknown Selected Value, about which you will receive a signal. Remember that the Selected Value is no more than x numbers away from your signal.
+          Again, you will be randomly matched with three other participants from previous experiments. Remember that the other three bidders also have independently from each other received a signal surrounding the same Selected Value. The four of you might therefore receive different signals. That means, the four of you face the same lottery ticket, but the signal-updated range for the Selected Value may be different.
+          In every round you will have to answer three different questions. There is a right answer to each question. The closer your answer is to the truth, the more you will earn. For each question you may earn a maximum of 12 credits.
+          In this part you will not learn anything at the of the round. At the end of the experiment we will randomly choose one question for payment and only then you will learn how close your answer was to the correct answer for that particular question.
+        </p>
+        <h4>What is the lottery, on average, worth?</h4>
+        <p>
+         The correct answer to that question depends on the true Selected Value in the auction. Keep in mind that the lottery pays either the Selected Value or nothing. Therefore, the lottery cannot be worth less than zero or more than the Selected Value. In general, the lottery is worth what you get, on average, if you play the lottery very often.
+        </p>
+        <h4>Your task</h4>
+        <p>
+         Guess the worth of the lottery. You will earn 12 credits if your guess is sufficiently close to the actual worth of the lottery; and nothing if it is too far away.
+       I</p>
+      </div>
+      <div>
+        <img src="{% static "global/img/q1a_graph.png" %}" alt="">
+      </div>
+      <div>
+        <p>
+          The graph shows how the chance of getting 12 credits drops the further away your guess is from the actual worth of the lottery. If it is too far away, you will get nothing.
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
@@ -193,17 +206,9 @@ alertList.forEach(function (alert) {
 </script>
 <script>
   let slider = document.getElementById('slider');
-  let minWorthDisplay = document.getElementById('min_worth_display');
-  let minWorthInput = document.getElementById('id_min_worth');
   let worthDisplay = document.getElementById('worth_display');
-
-  let minWorthProbDisplay = document.getElementById('min_worth_prob');
   let worthProbDisplay = document.getElementById('worth_prob');
-  let maxWorthProbDisplay = document.getElementById('max_worth_prob');
-
   let worthInput = document.getElementById('id_bid');
-  let maxWorthDisplay = document.getElementById('max_worth_display');
-  let maxWorthInput = document.getElementById('id_max_worth');
 
   let formatter = {
       to: function(value) {
@@ -218,7 +223,7 @@ alertList.forEach(function (alert) {
   }
 
   noUiSlider.create(slider, {
-      start: [0, 50, 100],
+      start: [0],
       direction: 'ltr',
       connect: true,
       step: 1,
@@ -227,7 +232,7 @@ alertList.forEach(function (alert) {
           'max': 100,
       },
       behaviour: 'tap-drag',
-      tooltips: [formatter, formatter, formatter],
+      tooltips: [formatter],
       pips: {
           mode: 'values',
           values: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
@@ -240,73 +245,87 @@ alertList.forEach(function (alert) {
       }
   });
 
-
-  slider.noUiSlider.on('update', function(values, handle) {
-    minWorthDisplay.innerHTML = `$${values[0]}`
-    minWorthInput.value = parseInt(values[0])
-
-    worthDisplay.innerHTML = `$${values[1]}`
-    worthInput.value = parseInt(values[1])
-
-    maxWorthDisplay.innerHTML = `$${values[2]}`
-    maxWorthInput.value = parseInt(values[2])
+  function updateTable(values, handle) {
+    let handleHidden = document.getElementsByClassName('noUi-handle')[0].style.display === '';
+    console.log(document.getElementsByClassName('noUi-handle')[0].style.visibility)
+    if (handleHidden) {
+      return;
+    }
+    worthDisplay.innerHTML = `$${values[0]}`
+    worthInput.value = parseInt(values[0])
 
     let suffix = (js_vars.is_probability_treatment) ? "%" : "";
 
-    let minWorthProb = parseInt((values[0] / js_vars.mapping_divisor) * 100)
-    minWorthProbDisplay.innerHTML = `${minWorthProb}${suffix}`
-
-    let worthProb = parseInt((values[1] / js_vars.mapping_divisor) * 100)
+    let worthProb = parseInt((values[0] / js_vars.mapping_divisor) * 100)
     worthProbDisplay.innerHTML = `${worthProb}${suffix}`
 
-    let maxWorthProb = parseInt((values[2] / js_vars.mapping_divisor) * 100)
-    maxWorthProbDisplay.innerHTML = `${maxWorthProb}${suffix}`
-  })
+  }
+
+  function doSomething(values, handle, unencoded, tap, positions, noUiSlider) {
+    console.log("set -> calling doSomething")
+    document.getElementsByClassName('noUi-handle')[0].style.display = 'block';
+    updateTable(values, handle)
+  }
+
+  // Binding signature
+  slider.noUiSlider.on('slide', doSomething);
+
+
 </script>
 
 <script>
-  displayMappedValue(document.getElementById("id_min_worth"));
   displayMappedValue(document.getElementById("id_bid"));
-  displayMappedValue(document.getElementById("id_max_worth"));
 
-  document.getElementById("id_min_worth").addEventListener("keyup", (event) => {
-    displayMappedValue(event.target);
-  })
   document.getElementById("id_bid").addEventListener("keyup", (event) => {
     displayMappedValue(event.target);
   })
-  document.getElementById("id_max_worth").addEventListener("keyup", (event) => {
-    displayMappedValue(event.target);
-  })
-
-  document.getElementById('id_bid').addEventListener("keyup", (event) => {
-    bidChecker(event.target);
-  });
 
   function isInteger(valStr) {
     return !isNaN(valStr) && Number.isInteger(parseFloat(valStr));
   }
 
   function displayMappedValue(element) {
-    var correspondingElement = document.getElementById(element.dataset.for);
-    console.log(element.dataset.for)
+    let correspondingElement = document.getElementById(element.dataset.for);
 
-    var worth = parseInt(element.value);
+    console.log(element.value)
+
+    let worth = parseInt(element.value);
     if (!isInteger(worth)) {
       correspondingElement.textContent = "";
       return;
     }
 
-    var suffix = (js_vars.is_probability_treatment) ? "%" : "";
+    let suffix = (js_vars.is_probability_treatment) ? "%" : "";
     correspondingElement.textContent = parseInt((worth / js_vars.mapping_divisor) * 100) + suffix;
   }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/intro.min.js" integrity="sha512-QWPjvFqgUJv5X6Sq5NXmwJQSEzUEBxmCCcgqJd5/5luZnS6llRbshsChUNKrFlZ4bshKZEJxAHDB+WWdMsGvUA==" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    IMG_URL = '{% static "global/img/q1a_graph.png" %}';
+</script>
+<script>
+  if (js_vars.display_intro) {
+    introJs().setOptions({
+      steps: [
+        {
+          title: 'What is the lottery, on average, worth?',
+          intro: 'Guess the worth of the lottery. You will earn 12 credits if your guess is sufficiently close to the actual worth of the lottery; and nothing if it is too far away.',
+          position: 'top',
+          element: document.querySelector(('#question'))
+        },
+        {
+          title: 'Your task',
+          intro: '<div><p>Guess the worth of the lottery. You will earn 12 credits if your guess is sufficiently close to ' +
+            'the actual worth of the lottery; and nothing if it is too far away.</p></div>' +
+            '<div><img src="' + IMG_URL + '" alt="graph"></div><div><p>The graph shows how the chance of getting 12 credits ' +
+            'drops the further away your guess is from the actual worth of the lottery. If it is too far away, you will get ' +
+            'nothing.</p></div>',
+          position: 'top',
+          element: document.querySelector(('#question'))
+        },
+      ]
+    }).start()
 
-  function bidChecker(element) {
-    var max = js_vars.lottery_max_value;
-    if (element.value > max) {
-      $('#modal').modal('show');
-    }
   }
-
 </script>
 {% endblock %}

@@ -8,7 +8,7 @@ from exp.models import (
 from questions.views import (
     Worth,
     Update,
-    Probability,
+    QuestionTwo,
     UpdatedWorth,
 )
 from .views import Instructions
@@ -66,4 +66,4 @@ class Player(BasePlayer, BidHistoryPlayer):
     be_bid = models.IntegerField()
 
 
-page_sequence = [Instructions, Update, Worth, Probability, UpdatedWorth]
+page_sequence = [Instructions, Update, Worth, QuestionTwo, UpdatedWorth]

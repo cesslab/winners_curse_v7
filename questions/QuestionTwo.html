@@ -3,13 +3,16 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'global/css/bid.css' %}">
-<link rel="stylesheet" href="{% static 'global/css/progress.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/multi_step_progress_bar.css' %}">
 
 <link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
 
 <link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.css" integrity="sha512-i+WzzATeaDcwcfi5CfLn63qBxrKqiQvDLC+IChU1zVlaPguPgJlddOR07nU28XOoIOno9WPmJ+3ccUInpmHxBg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="{% static 'global/css/tooltip.css' %}">
 {% endblock %}
 
   {% block content %}
@@ -62,53 +65,26 @@
       {% next_button %}
   </div>
   <div>
-    <div class="pprogress">
-      <span class="progress__circle progress--done progress--active"></span>
-      <span class="progress__bar progress--done"></span>
-      <span class="progress__circle progress--active"></span>
-      <span class="progress__bar"></span>
-      <span class="progress__circle"></span>
-      <span class="progress-left-text">Question 1</span>
-      <span class="progress-middle-text">Question 2</span>
-      <span class="progress-right-text">Question 3</span>
-
-      <!-- <li class="progress__circle progress--done progress--active"></li>
-      <li class="progress__bar progress--done"></li>
-      <li class="progress__circle progress--active progress--done"></li>
-      <li class="progress__bar progress--done"></li>
-      <li class="progress__circle progress--active"></li>
-      <li class="progress__bar"></li>
-      <li class="progress__circle"></li>
-      <li class="progress__bar"></li>
-      <li class="progress__circle"></li> -->
+    <div>
+      <ul class="list-unstyled multi-steps">
+        <li>Question 1</li>
+        <li class="is-active">Question 2</li>
+        <li>Question 3</li>
+      </ul>
     </div>
-    <div class="valuation-grid-wrapper">
-      <div></div>
-      <div class="text-center">
-        <h5></h5>
-      </div>
-      <div class="">
-        <span>What do you think is the probability of you having the highest signal?</span>
-      </div>
-      <div class="text-center">
-        <h5></h5>
-      </div>
-      <div class="text-center">
-        <h5></h5>
-      </div>
-      <div>
-      </div>
-      <div>
-        <input type="number" id="id_probability_highest_signal" name="probability_highest_signal" min="0" max="100" step="1"
-          class="center-input form-control" value="{{ form.probability_highest_signal.object_data }}" placeholder=""
-          data-for="bid-selected-probability" required>
+    <div id="question">
+      <p>Enter what you think is the probability of having the highest signal.</p>
+    </div>
+    <div>
+      <input type="number" id="id_probability_highest_signal" name="probability_highest_signal" min="0" max="100" step="1"
+             class="center-input form-control" value="{{ form.probability_highest_signal.object_data }}" placeholder=""
+             data-for="bid-selected-probability" required>
 
-        {% if form.probability_highest_signal.errors %}
-        <div class="alert alert-danger">
-          {{ form.probability_highest_signal.errors }}
-        </div>
-        {% endif %}
+      {% if form.probability_highest_signal.errors %}
+      <div class="alert alert-danger">
+        {{ form.probability_highest_signal.errors }}
       </div>
+      {% endif %}
     </div>
   </div>
 </div>
@@ -181,5 +157,30 @@
     }
   }
 
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/intro.min.js" integrity="sha512-QWPjvFqgUJv5X6Sq5NXmwJQSEzUEBxmCCcgqJd5/5luZnS6llRbshsChUNKrFlZ4bshKZEJxAHDB+WWdMsGvUA==" crossorigin="anonymous"></script>
+<script type="text/javascript">
+  IMG_URL = '{% static "global/img/q2_graph.png" %}';
+</script>
+<script>
+  if (js_vars.display_intro) {
+    introJs().setOptions({
+      steps: [
+        {
+          title: 'Your Task',
+          intro: '<div><p>Choose a number between 0% and 100%. You increase your chance of getting 12 credits, 1) the closer your ' +
+            'number is to 100% and your signal is indeed the highest one, or 2) the closer your number is to 0% and your ' +
+            'signal is NOT the highest one. The best you can do is to report your true belief about the probability.</p></div>' +
+            '<div><img src="' + IMG_URL + '" alt="graph"></div>' +
+            '<div><p>The computer will randomly draw a number between 0 and 1 (where all numbers have equal chances of ' +
+            'being drawn). If the squared difference betweenthetruth(0% or 100%)andyourguess,(truth - your guess)^2, is ' +
+            'smaller than the random number, you will get 12 credits; if not, you will get nothing.</p></div>',
+          position: 'top',
+          element: document.querySelector(('#question'))
+        },
+      ]
+    }).start()
+
+  }
 </script>
 {% endblock %}

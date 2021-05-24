@@ -15,7 +15,7 @@ class Instructions(Page):
         return {"treatment": player.subsession.session.config["treatment"]}
 
 
-class Worth(Page):
+class QuestionOneB(Page):
     form_model = "player"
     form_fields = ["worth", "min_worth", "max_worth"]
 
@@ -101,15 +101,83 @@ class Worth(Page):
 
     @staticmethod
     def js_vars(player):
-        pass
         return dict(
+            display_intro=(player.round_number == 1),
+            worth=player.worth,
             lottery_max_value=player.lottery_max_value,
             mapping_divisor=player.fixed_value,
             is_probability_treatment=player.is_probability_treatment,
         )
 
 
-class Probability(Page):
+class QuestionOneA(Page):
+    form_model = "player"
+    form_fields = ["worth"]
+
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            "player": player,
+            "num_rounds": range(1, Constants.ROUNDS_PER_LOTTERY+1),
+            "num_lotteries": range(1, Constants.NUM_LOTTERIES+1),
+            "min_valuation": Constants.MIN_VALUATION,
+            "max_valuation": Constants.MAX_VALUATION,
+            "new_lottery":
+                (
+                    player.round_number != 1
+                    and ((player.round_number - 1) % Constants.ROUNDS_PER_LOTTERY) == 0
+                )
+        }
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        # PREP WORK
+        # Worth = vLotto *fix (in CV) or pLotto * fix (in CP)
+        if player.is_probability_treatment:
+            player.prep_worth = player.ticket_probability * player.fixed_value
+        else:
+            player.prep_worth = player.ticket_value_before * player.fixed_value
+
+        #  Emin = fix * alpha
+        #  Emax = fix * beta
+        player.prep_emin = player.fixed_value * player.alpha
+        player.prep_emax = player.fixed_value * player.beta
+
+        # ---------------------------------------------------------------------
+        # Question 1a: point belief about worth of the lottery (unconditional)
+        # ---------------------------------------------------------------------
+        # Computer computes loss function L= (X-worth)^2
+        player.computed_loss = (player.worth - player.prep_worth)**2
+        # Computer draws random number K ~ U[0,1296]
+        player.random_k = random.randint(0, 1296)
+        # Computer pays 12 credits if L<K ; 0 otherwise (in particular if L>1296)
+        if player.computed_loss < player.random_k:
+            player.point_earnings = 12
+        else:
+            player.point_earnings = 0
+
+        if player.lottery_order == player.participant.vars['worth_payoff_lottery_number'] and player.lottery_round_number == player.participant.vars['worth_payoff_lottery_round_number']:
+            player.participant.vars['q1a_data'] = {
+                "prep_emax": player.prep_emax,
+                "prep_emin": player.prep_emin,
+                "prep_worth": player.prep_worth,
+                "worth": player.worth,
+                "random_k": player.random_k,
+                "computed_loss": player.computed_loss,
+                "point_earnings": player.point_earnings,
+            }
+
+    @staticmethod
+    def js_vars(player):
+        return dict(
+            display_intro=(player.round_number == 1),
+            lottery_max_value=player.lottery_max_value,
+            mapping_divisor=player.fixed_value,
+            is_probability_treatment=player.is_probability_treatment,
+        )
+
+
+class QuestionTwo(Page):
     form_model = "player"
     form_fields = ["probability_highest_signal"]
 
@@ -161,7 +229,36 @@ class Bid(Page):
         }
 
 
-class UpdatedWorth(Page):
+class QuestionThreeA(Page):
+    form_model = "player"
+    form_fields = ["updated_worth"]
+
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            "player": player,
+            "num_rounds": range(1, Constants.ROUNDS_PER_LOTTERY+1),
+            "num_lotteries": range(1, Constants.NUM_LOTTERIES+1),
+            "min_valuation": Constants.MIN_VALUATION,
+            "max_valuation": Constants.MAX_VALUATION,
+            "new_lottery":
+                (
+                    player.round_number != 1
+                    and ((player.round_number - 1) % Constants.ROUNDS_PER_LOTTERY) == 0
+                )
+        }
+
+    @staticmethod
+    def js_vars(player):
+        return dict(
+            display_intro=(player.round_number == 1),
+            lottery_max_value=player.lottery_max_value,
+            mapping_divisor=player.fixed_value,
+            is_probability_treatment=player.is_probability_treatment,
+        )
+
+
+class QuestionThreeB(Page):
     form_model = "player"
     form_fields = ["updated_worth", "updated_min_worth", "updated_max_worth"]
 
@@ -173,6 +270,11 @@ class UpdatedWorth(Page):
             "num_lotteries": range(1, Constants.NUM_LOTTERIES+1),
             "min_valuation": Constants.MIN_VALUATION,
             "max_valuation": Constants.MAX_VALUATION,
+            "new_lottery":
+                (
+                    player.round_number != 1
+                    and ((player.round_number - 1) % Constants.ROUNDS_PER_LOTTERY) == 0
+                )
         }
 
     @staticmethod
@@ -233,8 +335,9 @@ class UpdatedWorth(Page):
 
     @staticmethod
     def js_vars(player):
-        pass
         return dict(
+            display_intro=(player.round_number == 1),
+            updated_worth=player.updated_worth,
             lottery_max_value=player.lottery_max_value,
             mapping_divisor=player.fixed_value,
             is_probability_treatment=player.is_probability_treatment,
