@@ -329,7 +329,7 @@
       return {isValid: false, resetValue: worthValue, errorMessage: `Your entered value must be greater than or equal to ${worthValue}.`};
     }
     else if (handle === 2 && value > 100) {
-      return {isValid: false, resetValue: 100, errorMessage: `Your entered value must be less than or equal to ${worthValue}.`};
+      return {isValid: false, resetValue: 100, errorMessage: `Your entered value must be less than or equal to 100.`};
     }
     else {
       return {isValid: true, errorMessage: ''};
