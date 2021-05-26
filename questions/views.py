@@ -215,6 +215,15 @@ class QuestionTwo(Page):
                 "prob_computed_loss": player.prob_computed_loss
             }
 
+    @staticmethod
+    def js_vars(player):
+        return dict(
+            display_intro=(player.round_number == 1),
+            lottery_max_value=player.lottery_max_value,
+            mapping_divisor=player.fixed_value,
+            is_probability_treatment=player.is_probability_treatment,
+        )
+
 
 class Bid(Page):
     form_model = "player"

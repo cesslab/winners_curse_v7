@@ -129,9 +129,9 @@
             <span>Lottery Worth</span>
           </th>
           <td class="text-center">
-            <input type="hidden" id="id_bid" name="worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
+            <input type="number" id="id_bid" name="worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
                    class="center-input form-control" value="{{ form.worth.object_data }}" placeholder=""
-                   data-for="bid-selected-probability" required>
+                   data-for="bid-selected-probability" data-handle="0" required>
             <span id="worth_display"></span>
 
             {% if form.worth.errors %}
@@ -206,7 +206,6 @@ alertList.forEach(function (alert) {
 </script>
 <script>
   let slider = document.getElementById('slider');
-  let worthDisplay = document.getElementById('worth_display');
   let worthProbDisplay = document.getElementById('worth_prob');
   let worthInput = document.getElementById('id_bid');
 
@@ -245,13 +244,23 @@ alertList.forEach(function (alert) {
       }
   });
 
+  worthInput.addEventListener('change', function (e) {
+    let handle = document.getElementsByClassName('noUi-handle')[0]
+    console.log(handle)
+    if (handle.style.display === '') {
+      handle.style.display = 'block';
+    }
+    slider.noUiSlider.set(e.value);
+    console.log(e.value)
+    console.log(handle.style.visibility)
+  });
+
   function updateTable(values, handle) {
     let handleHidden = document.getElementsByClassName('noUi-handle')[0].style.display === '';
     console.log(document.getElementsByClassName('noUi-handle')[0].style.visibility)
     if (handleHidden) {
       return;
     }
-    worthDisplay.innerHTML = `$${values[0]}`
     worthInput.value = parseInt(values[0])
 
     let suffix = (js_vars.is_probability_treatment) ? "%" : "";
@@ -270,13 +279,9 @@ alertList.forEach(function (alert) {
   // Binding signature
   slider.noUiSlider.on('slide', doSomething);
 
+  // displayMappedValue(document.getElementById("id_bid"));
 
-</script>
-
-<script>
-  displayMappedValue(document.getElementById("id_bid"));
-
-  document.getElementById("id_bid").addEventListener("keyup", (event) => {
+  worthInput.addEventListener("keyup", (event) => {
     displayMappedValue(event.target);
   })
 
@@ -287,13 +292,18 @@ alertList.forEach(function (alert) {
   function displayMappedValue(element) {
     let correspondingElement = document.getElementById(element.dataset.for);
 
+    console.log("displaying mapped value")
     console.log(element.value)
+
+    document.getElementsByClassName('noUi-handle')[0].style.display = 'block';
 
     let worth = parseInt(element.value);
     if (!isInteger(worth)) {
       correspondingElement.textContent = "";
       return;
     }
+
+    slider.noUiSlider.set(element.value);
 
     let suffix = (js_vars.is_probability_treatment) ? "%" : "";
     correspondingElement.textContent = parseInt((worth / js_vars.mapping_divisor) * 100) + suffix;
