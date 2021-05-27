@@ -35,6 +35,12 @@ class QuestionOneB(Page):
         }
 
     @staticmethod
+    def error_message(player, values):
+        if values["min_worth"] > values["worth"] or values["max_worth"] < values["worth"]:
+            return f"Invalid values entered."
+
+
+    @staticmethod
     def before_next_page(player, timeout_happened):
         # PREP WORK
         # Worth = vLotto *fix (in CV) or pLotto * fix (in CP)
@@ -287,6 +293,13 @@ class QuestionThreeB(Page):
         }
 
     @staticmethod
+    def error_message(player, values):
+        if values["updated_min_worth"] > values["updated_worth"] or values["updated_max_worth"] < values["updated_worth"]:
+            return f"Invalid values entered."
+
+
+
+    @staticmethod
     def before_next_page(player, timeout_happened):
         # ---------------------------------------------------------------------
         # Question 3a: point belief about conditional worth of the lottery.
@@ -346,7 +359,7 @@ class QuestionThreeB(Page):
     def js_vars(player):
         return dict(
             display_intro=(player.round_number == 1),
-            updated_worth=player.updated_worth,
+            worth=player.updated_worth,
             lottery_max_value=player.lottery_max_value,
             mapping_divisor=player.fixed_value,
             is_probability_treatment=player.is_probability_treatment,

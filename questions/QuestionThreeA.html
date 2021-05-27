@@ -10,9 +10,11 @@
 
 <link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/questions.css' %}">
+
 <link rel="stylesheet" href="{% static 'global/css/nouislider.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/nouislider_hide.css' %}">
-<link rel="stylesheet" href="{% static 'global/css/questions.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/custom_nouislider.css' %}">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.css" integrity="sha512-i+WzzATeaDcwcfi5CfLn63qBxrKqiQvDLC+IChU1zVlaPguPgJlddOR07nU28XOoIOno9WPmJ+3ccUInpmHxBg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="{% static 'global/css/tooltip.css' %}">
@@ -105,9 +107,9 @@
             <span>Lottery Worth</span>
           </th>
           <td class="text-center">
-            <input type="hidden" id="id_bid" name="updated_worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
+            <input type="number" id="id_bid" name="updated_worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
                    class="center-input form-control" value="{{ form.updated_worth.object_data }}" placeholder=""
-                   data-for="bid-selected-probability" required>
+                   data-for="bid-selected-probability" data-handle="0" required>
             <span id="worth_display"></span>
 
             {% if form.updated_worth.errors %}
@@ -115,6 +117,7 @@
               {{ form.updated_worth.errors }}
             </div>
             {% endif %}
+            <div id="worth_error"></div>
           </td>
         </tr>
         <tr>
@@ -146,98 +149,153 @@ alertList.forEach(function (alert) {
 </script>
 <script>
   let slider = document.getElementById('slider');
-  let worthDisplay = document.getElementById('worth_display');
+
   let worthProbDisplay = document.getElementById('worth_prob');
   let worthInput = document.getElementById('id_bid');
+  let worthError = document.getElementById('worth_error');
 
-  let formatter = {
-      to: function(value) {
-        let prob = parseInt((value / js_vars.mapping_divisor) * 100);
-        let suffix = (js_vars.is_probability_treatment) ? '%' : ''
-        return '$' + value + ' (' + prob + suffix + ')';
-      },
-      from: function(value) {
-        let dollar_value = value.split(" (")[0].slice(1)
-        return Number(dollar_value)
-      },
-  }
-
-  noUiSlider.create(slider, {
-      start: [0],
-      direction: 'ltr',
-      connect: true,
-      step: 1,
-      range: {
-          'min': 0,
-          'max': 100,
-      },
-      behaviour: 'tap-drag',
-      tooltips: [formatter],
-      pips: {
-          mode: 'values',
-          values: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-          density: 1,
-          stepped: true,
-          format: wNumb({
-            decimals: 0,
-            prefix: '$',
-          }),
-      }
-  });
-
-  function updateTable(values, handle) {
-    let handleHidden = document.getElementsByClassName('noUi-handle')[0].style.display === '';
-    console.log(document.getElementsByClassName('noUi-handle')[0].style.visibility)
-    if (handleHidden) {
-      return;
-    }
-    worthDisplay.innerHTML = `$${values[0]}`
-    worthInput.value = parseInt(values[0])
-
-    let suffix = (js_vars.is_probability_treatment) ? "%" : "";
-
-    let worthProb = parseInt((values[0] / js_vars.mapping_divisor) * 100)
-    worthProbDisplay.innerHTML = `${worthProb}${suffix}`
-
-  }
-
-  function doSomething(values, handle, unencoded, tap, positions, noUiSlider) {
-    console.log("set -> calling doSomething")
-    document.getElementsByClassName('noUi-handle')[0].style.display = 'block';
-    updateTable(values, handle)
-  }
-
-  // Binding signature
-  slider.noUiSlider.on('slide', doSomething);
-
-
-</script>
-
-<script>
-  displayMappedValue(document.getElementById("id_bid"));
-
-  document.getElementById("id_bid").addEventListener("keyup", (event) => {
-    displayMappedValue(event.target);
-  })
+  let inputElements = [worthInput];
+  let displayElements = [worthProbDisplay];
+  let errorElements = [worthError];
+  let handlesHiddenState = [true];
 
   function isInteger(valStr) {
     return !isNaN(valStr) && Number.isInteger(parseFloat(valStr));
   }
 
-  function displayMappedValue(element) {
+  let sliderTooltipFormatter = {
+    to: function(value) {
+      let prob = parseInt((value / js_vars.mapping_divisor) * 100);
+      let suffix = (js_vars.is_probability_treatment) ? '%' : ''
+      return '$' + value + ' (' + prob + suffix + ')';
+    },
+    from: function(value) {
+      let dollar_value = value.split(" (")[0].slice(1)
+      return Number(dollar_value)
+    },
+  }
+
+  noUiSlider.create(slider, {
+    start: [0],
+    direction: 'ltr',
+    connect: true,
+    step: 1,
+    range: {
+      'min': 0,
+      'max': 100,
+    },
+    behaviour: 'tap-drag',
+    tooltips: [sliderTooltipFormatter],
+    pips: {
+      mode: 'values',
+      values: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+      density: 1,
+      stepped: true,
+      format: wNumb({
+        decimals: 0,
+        prefix: '$',
+      }),
+    }
+  });
+
+  function updateInputMappedValue(handle, value) {
+    let suffix = (js_vars.is_probability_treatment) ? "%" : "";
+    displayElements[handle].innerHTML = (value !== "") ? `${parseInt((value / js_vars.mapping_divisor) * 100)}${suffix}` : "-";
+  }
+
+  function updateInputValue(handle, value) {
+    inputElements[handle].value = parseInt(value);
+  }
+
+  function displayHandleIfHidden(handle) {
+    if (handlesHiddenState[handle]) {
+      handlesHiddenState[handle] = false;
+      document.getElementsByClassName('noUi-handle')[handle].style.display = "block";
+    }
+  }
+
+  function handleSliderSlide(values, handle){
+    displayHandleIfHidden(handle);
+    updateInputValue(handle, values[handle]);
+    updateInputMappedValue(handle, values[handle]);
+  }
+
+  function handleSliderSet(values, handle) {
+    displayHandleIfHidden(handle);
+    updateInputMappedValue(handle, values[handle]);
+  }
+
+  function initializeWorthTable(element) {
     let correspondingElement = document.getElementById(element.dataset.for);
+    if (correspondingElement === null) {
+      return;
+    }
 
-    console.log(element.value)
-
-    let worth = parseInt(element.value);
-    if (!isInteger(worth)) {
+    let value = parseInt(element.value);
+    if (!isInteger(value)) {
       correspondingElement.textContent = "";
       return;
     }
 
     let suffix = (js_vars.is_probability_treatment) ? "%" : "";
-    correspondingElement.textContent = parseInt((worth / js_vars.mapping_divisor) * 100) + suffix;
+    correspondingElement.textContent = parseInt((value / js_vars.mapping_divisor) * 100) + suffix;
   }
+
+  function validateInput(value, handle) {
+    let minWorthValue = parseInt(inputElements[0].value);
+
+    if (handle === 0 && value > 100) {
+      return {isValid: false, resetValue: 100, errorMessage: `Your entered value must be less than or equal to 100.`};
+    }
+    else {
+      return {isValid: true, errorMessage: ''};
+    }
+  }
+
+  function updateSliderHandleOnInputFieldChange(element) {
+    let handleId = parseInt(element.dataset.handle);
+    let inputString = element.value
+
+    if (!isInteger(inputString)) {
+      return;
+    }
+
+    let inputValue = parseInt(inputString);
+
+    let inputValidation = validateInput(inputValue, handleId)
+    if (!inputValidation.isValid) {
+      errorElements[handleId].innerHTML = `<span class="error">${inputValidation.errorMessage}</span>`;
+    }
+    else {
+      errorElements[handleId].innerHTML = '';
+    }
+
+    let handleValues = [null].map((e, i) => {
+      if (i === handleId) {
+        if (!inputValidation.isValid) {
+          return inputValidation.resetValue;
+        }
+        else {
+          return inputValue;
+        }
+      }
+      else {
+        return e;
+      }
+    })
+    console.log(handleValues)
+
+    slider.noUiSlider.set(handleValues);
+  }
+
+  slider.noUiSlider.on('set', handleSliderSet)
+  slider.noUiSlider.on('slide', handleSliderSlide)
+
+  initializeWorthTable(document.getElementById("id_bid"));
+
+  worthInput.addEventListener("keyup", (event) => {
+    updateSliderHandleOnInputFieldChange(event.target);
+  })
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/intro.min.js" integrity="sha512-QWPjvFqgUJv5X6Sq5NXmwJQSEzUEBxmCCcgqJd5/5luZnS6llRbshsChUNKrFlZ4bshKZEJxAHDB+WWdMsGvUA==" crossorigin="anonymous"></script>
 <script type="text/javascript">

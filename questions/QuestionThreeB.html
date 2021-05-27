@@ -12,6 +12,7 @@
 <link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/nouislider.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/custom_nouislider.css' %}">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.css" integrity="sha512-i+WzzATeaDcwcfi5CfLn63qBxrKqiQvDLC+IChU1zVlaPguPgJlddOR07nU28XOoIOno9WPmJ+3ccUInpmHxBg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="{% static 'global/css/tooltip.css' %}">
@@ -131,7 +132,9 @@
             <span>Lottery Worth</span>
           </th>
           <td class="text-center">
-            <input type="hidden" id="id_min_worth" name="updated_min_worth" min="0" max="100" step="1" class="center-input form-control" value="{{ form.updated_min_worth.object_data }}" placeholder="" data-for="min-selected-probability" required>
+            <input type="number" id="id_min_worth" name="updated_min_worth" min="0" max="100" step="1"
+                   class="center-input form-control" value="{{ form.updated_min_worth.object_data }}"
+                   placeholder="" data-for="min-selected-probability" data-handle="0" required>
             <span id="min_worth_display"></span>
 
             {% if form.updated_min_worth.errors %}
@@ -139,11 +142,12 @@
               {{ form.updated_min_worth.errors }}
             </div>
             {% endif %}
+            <div id="min_worth_error"></div>
           </td>
           <td class="text-center">
-            <input type="hidden" id="id_bid" name="updated_worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
+            <input type="number" id="id_bid" name="updated_worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
                    class="center-input form-control" value="{{ form.updated_worth.object_data }}" placeholder=""
-                   data-for="bid-selected-probability" required>
+                   data-for="bid-selected-probability" data-handle="1" required>
             <span id="worth_display"></span>
 
             {% if form.updated_worth.errors %}
@@ -151,10 +155,12 @@
               {{ form.updated_worth.errors }}
             </div>
             {% endif %}
+            <div id="worth_error"></div>
           </td>
           <td class="text-center">
-            <input type="hidden" id="id_max_worth" name="updated_max_worth" min="0" max="100" step="1" class="center-input form-control"
-                   value="{{ form.updated_max_worth.object_data }}" placeholder="" data-for="max-selected-probability" required>
+            <input type="number" id="id_max_worth" name="updated_max_worth" min="0" max="100" step="1" class="center-input form-control"
+                   value="{{ form.updated_max_worth.object_data }}" placeholder=""
+                   data-for="max-selected-probability" data-handle="2" required>
             <span id="max_worth_display"></span>
 
             {% if form.updated_max_worth.errors %}
@@ -162,6 +168,7 @@
               {{ form.updated_max_worth.errors }}
             </div>
             {% endif %}
+            <div id="max_worth_error"></div>
           </td>
         </tr>
         <tr>
@@ -188,6 +195,7 @@
 <script src="{% static 'global/js/wNumb.js' %}"></script>
 <script src="{% static 'global/js/nouislider.js' %}"></script>
 <script>
+
   let alertList = document.querySelectorAll('.alert')
   alertList.forEach(function (alert) {
     new bootstrap.Alert(alert)
@@ -197,20 +205,23 @@
    * Global Variables
    */
   let slider = document.getElementById('slider');
-  let minWorthDisplay = document.getElementById('min_worth_display');
-  let minWorthInput = document.getElementById('id_min_worth');
-  let worthDisplay = document.getElementById('worth_display');
 
   let minWorthProbDisplay = document.getElementById('min_worth_prob');
   let worthProbDisplay = document.getElementById('worth_prob');
   let maxWorthProbDisplay = document.getElementById('max_worth_prob');
 
+  let minWorthInput = document.getElementById('id_min_worth');
   let worthInput = document.getElementById('id_bid');
-  let maxWorthDisplay = document.getElementById('max_worth_display');
   let maxWorthInput = document.getElementById('id_max_worth');
 
-  let minHandleHidden = true;
-  let maxHandleHidden = true;
+  let minWorthError = document.getElementById('min_worth_error');
+  let worthError = document.getElementById('worth_error');
+  let maxWorthError = document.getElementById('max_worth_error');
+
+  let inputElements = [minWorthInput, worthInput, maxWorthInput];
+  let displayElements = [minWorthProbDisplay, worthProbDisplay, maxWorthProbDisplay];
+  let errorElements = [minWorthError, worthError, maxWorthError];
+  let handlesHiddenState = [true, false, true];
 
   /**
    * Utility Functions
@@ -219,84 +230,67 @@
     return !isNaN(valStr) && Number.isInteger(parseFloat(valStr));
   }
 
-  /**
-   * No Ui Slider
-   */
   let sliderTooltipFormatter = {
-      to: function(value) {
-        let prob = parseInt((value / js_vars.mapping_divisor) * 100);
-        let suffix = (js_vars.is_probability_treatment) ? '%' : ''
-        return '$' + value + ' (' + prob + suffix + ')';
-      },
-      from: function(value) {
-        let dollar_value = value.split(" (")[0].slice(1)
-        return Number(dollar_value)
-      },
+    to: function(value) {
+      let prob = parseInt((value / js_vars.mapping_divisor) * 100);
+      let suffix = (js_vars.is_probability_treatment) ? '%' : ''
+      return '$' + value + ' (' + prob + suffix + ')';
+    },
+    from: function(value) {
+      let dollar_value = value.split(" (")[0].slice(1)
+      return Number(dollar_value)
+    },
   }
 
   noUiSlider.create(slider, {
-      start: [js_vars.updated_worth, js_vars.updated_worth, js_vars.updated_worth],
-      direction: 'ltr',
-      connect: true,
-      step: 1,
-      range: {
-          'min': 0,
-          'max': 100,
-      },
-      behaviour: 'tap-drag',
-      tooltips: [sliderTooltipFormatter, sliderTooltipFormatter, sliderTooltipFormatter],
-      pips: {
-          mode: 'values',
-          values: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-          density: 1,
-          stepped: true,
-          format: wNumb({
-            decimals: 0,
-            prefix: '$',
-          }),
-      }
+    start: [js_vars.worth, js_vars.worth, js_vars.worth],
+    direction: 'ltr',
+    connect: true,
+    step: 1,
+    range: {
+      'min': 0,
+      'max': 100,
+    },
+    behaviour: 'tap-drag',
+    tooltips: [sliderTooltipFormatter, sliderTooltipFormatter, sliderTooltipFormatter],
+    pips: {
+      mode: 'values',
+      values: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+      density: 1,
+      stepped: true,
+      format: wNumb({
+        decimals: 0,
+        prefix: '$',
+      }),
+    }
   });
 
-  slider.noUiSlider.on('slide', function(values, handle, unencoded, tap, positions, noUiSlider) {
-    const MIN_HANDLE = 0
-    const MAX_HANDLE = 2
+  function updateInputMappedValue(handle, value) {
     let suffix = (js_vars.is_probability_treatment) ? "%" : "";
+    displayElements[handle].innerHTML = (value !== "") ? `${parseInt((value / js_vars.mapping_divisor) * 100)}${suffix}` : "-";
+  }
 
-    if (handle === MIN_HANDLE) {
-      if (minHandleHidden) {
-        minHandleHidden = false;
-        document.getElementsByClassName('noUi-handle')[0].style.display = "block";
-      }
+  function updateInputValue(handle, value) {
+    inputElements[handle].value = parseInt(value);
+  }
 
-      minWorthDisplay.innerHTML = `$${values[0]}`
-      minWorthInput.value = parseInt(values[0])
-      minWorthProbDisplay.innerHTML = `${parseInt((values[0] / js_vars.mapping_divisor) * 100)}${suffix}`;
+  function displayHandleIfHidden(handle) {
+    if (handlesHiddenState[handle]) {
+      handlesHiddenState[handle] = false;
+      document.getElementsByClassName('noUi-handle')[handle].style.display = "block";
     }
-    else if (handle === MAX_HANDLE) {
-      if (maxHandleHidden) {
-        maxHandleHidden = false;
-        document.getElementsByClassName('noUi-handle')[2].style.display = "block";
-      }
+  }
 
-      maxWorthDisplay.innerHTML = `$${values[2]}`
-      maxWorthInput.value = parseInt(values[2])
-      maxWorthProbDisplay.innerHTML = `${parseInt((values[2] / js_vars.mapping_divisor) * 100)}${suffix}`
-    }
-    else {
-      worthDisplay.innerHTML = `$${values[1]}`
-      worthInput.value = parseInt(values[1])
-      worthProbDisplay.innerHTML = `${parseInt((values[1] / js_vars.mapping_divisor) * 100)}${suffix}`
-    }
+  function handleSliderSlide(values, handle){
+    displayHandleIfHidden(handle);
+    updateInputValue(handle, values[handle]);
+    updateInputMappedValue(handle, values[handle]);
+  }
 
-  })
-
-  // slider.noUiSlider.on('slide', doSomething);
-  /**
-   * Table Values
-   */
-
-  initializeWorthTable(document.getElementById("id_bid"));
-
+  function handleSliderSet(values, handle) {
+    displayHandleIfHidden(handle);
+    updateInputMappedValue(handle, values[handle]);
+  }
 
   function initializeWorthTable(element) {
     let correspondingElement = document.getElementById(element.dataset.for);
@@ -304,29 +298,100 @@
       return;
     }
 
-    let worth = parseInt(element.value);
-    if (!isInteger(worth)) {
+    let value = parseInt(element.value);
+    if (!isInteger(value)) {
       correspondingElement.textContent = "";
       return;
     }
 
     let suffix = (js_vars.is_probability_treatment) ? "%" : "";
-    worthDisplay.innerHTML = `$${worth}`
-    correspondingElement.textContent = parseInt((worth / js_vars.mapping_divisor) * 100) + suffix;
+    correspondingElement.textContent = parseInt((value / js_vars.mapping_divisor) * 100) + suffix;
 
-    minWorthDisplay.innerHTML = "-"
     minWorthProbDisplay.innerHTML = "-"
-    maxWorthDisplay.innerHTML = "-"
     maxWorthProbDisplay.innerHTML = "-"
   }
 
+  function validateInput(value, handle) {
+    let minWorthValue = parseInt(inputElements[0].value);
+    let worthValue = parseInt(inputElements[1].value);
+    let maxWorthValue = parseInt(inputElements[2].value);
 
-  for(const e of document.getElementsByClassName('noUi-handle')) {
-    if ((e.dataset.handle === '0' && minHandleHidden) || (e.dataset.handle === '2' && maxHandleHidden)) {
-      e.style.display = "none"
+    if (handle === 0 && value > worthValue) {
+      return {isValid: false, resetValue: worthValue, errorMessage: `Your entered value must be less than or equal to ${worthValue}.`};
+    }
+    else if (handle === 1 && value < minWorthValue) {
+      return {isValid: false, resetValue: minWorthValue, errorMessage: `Your entered value must be greater or equal to ${minWorthValue}.`};
+    }
+    else if (handle === 1 && value > maxWorthValue ) {
+      return {isValid: false, resetValue: maxWorthValue, errorMessage: `Your entered must be less than or equal to ${maxWorthValue}.`};
+    }
+    else if (handle === 2 && value < worthValue) {
+      return {isValid: false, resetValue: worthValue, errorMessage: `Your entered value must be greater than or equal to ${worthValue}.`};
+    }
+    else if (handle === 2 && value > 100) {
+      return {isValid: false, resetValue: 100, errorMessage: `Your entered value must be less than or equal to 100.`};
+    }
+    else {
+      return {isValid: true, errorMessage: ''};
     }
   }
 
+  function updateSliderHandleOnInputFieldChange(element) {
+    let handleId = parseInt(element.dataset.handle);
+    let inputString = element.value
+
+    if (!isInteger(inputString)) {
+      return;
+    }
+
+    let inputValue = parseInt(inputString);
+
+    let inputValidation = validateInput(inputValue, handleId)
+    if (!inputValidation.isValid) {
+      errorElements[handleId].innerHTML = `<span class="error">${inputValidation.errorMessage}</span>`;
+    }
+    else {
+      errorElements[handleId].innerHTML = '';
+    }
+
+    let handleValues = [null,null,null].map((e, i) => {
+      if (i === handleId) {
+        if (!inputValidation.isValid) {
+          return inputValidation.resetValue;
+        }
+        else {
+          return inputValue;
+        }
+      }
+      else {
+        return e;
+      }
+    })
+    console.log(handleValues)
+
+    slider.noUiSlider.set(handleValues);
+  }
+
+  slider.noUiSlider.on('set', handleSliderSet)
+  slider.noUiSlider.on('slide', handleSliderSlide)
+
+  handlesHiddenState.forEach((isHidden, handle) => {
+    if (isHidden) {
+      document.getElementsByClassName('noUi-handle')[handle].style.display = "none";
+    }
+  })
+
+  initializeWorthTable(document.getElementById("id_bid"));
+
+  worthInput.addEventListener("keyup", (event) => {
+    updateSliderHandleOnInputFieldChange(event.target);
+  })
+  minWorthInput.addEventListener("keyup", (event) => {
+    updateSliderHandleOnInputFieldChange(event.target);
+  })
+  maxWorthInput.addEventListener("keyup", (event) => {
+    updateSliderHandleOnInputFieldChange(event.target);
+  })
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/intro.min.js" integrity="sha512-QWPjvFqgUJv5X6Sq5NXmwJQSEzUEBxmCCcgqJd5/5luZnS6llRbshsChUNKrFlZ4bshKZEJxAHDB+WWdMsGvUA==" crossorigin="anonymous"></script>
 <script type="text/javascript">
