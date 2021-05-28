@@ -1,6 +1,9 @@
 img {
     width: 80%;
 }
+.btn-container {
+    margin-bottom: 20px;
+}
 
 output {
     padding: .3em;
@@ -25,10 +28,6 @@ output {
     /* grid-gap: 5em; */
     grid-template-columns: 50% 50%;
     grid-column-gap: 30px;
-}
-
-#slider {
-    margin-top: 100px;
 }
 
 .header-item {
@@ -115,6 +114,3 @@ input[type=number].form-control {
     margin-top: 20px;
 }
 
-.worth-table {
-    margin-top: 90px;
-}

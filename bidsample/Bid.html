@@ -31,7 +31,7 @@
         <div class="lottery" id="lottery-text">
           <p class="text-center">
             {% if player.is_value_treatment %}
-            With a probability of {{ player.ticket_probability }}% you get a value v between {{ player.alpha }} and {{ player.beta }} credits,
+            With a probability of {{ player.ticket_probability }}% you get<br> a value v between {{ player.alpha }} and {{ player.beta }} credits,
             <br>otherwise you get 0 credits.
             {% else %}
             With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get a value v = {{ player.fixed_value }} credits, <br>otherwise
@@ -93,56 +93,55 @@
   steps: [
     {
       title: 'Lottery types',
-      intro: '<p>There will be four different types of lotteries. For each type of lottery, the\n' +
-        'computer will produce independently from each other 10 lottery tickets and\n' +
-        'you will bid for each one of them.</p>',
+      intro: `<p>There will be four different types of lotteries. For each type of lottery, the
+              computer will produce independently from each other 10 lottery tickets and
+              in each round you will bid for one of them.</p>`,
       element: document.querySelector(('#lottery-type'))
     },
     {
     title: 'Lottery Ticket',
-    intro: '<p>Here is some information about the lottery ticket that is being auctioned.\n' +
-      'Throughout the experiment, however, the value of the lottery will only be\n' +
-      'partially known: The lottery ticket does not state the exact value v, but you\n' +
-        'learn that the value could be any integer between 10 and 30 inclusively. That\n' +
-      'is, the computer has chosen one number that could be 10, 11, 12, ... , 29,\n' +
-      'or 30 with equal chances). This number is called the Selected Value. Thus,\n' +
-      'each time you see a lottery ticket on screen, the Selected Value has already\n' +
-      'been determined by the computer, but it is not displayed. Neither you nor\n' +
-      'the three other bidders know the Selected Value. To assess how much you\n' +
-      'would be willing to pay for the lottery ticket, you should guess the Selected\n' +
-      'Value.</p>',
+    intro: `<p>Here is some information about the lottery ticket that is being auctioned.
+            However, the Selected Value is only partially known: You learn that alpha could
+            be any integer between 10 and 30 inclusively. That is, the computer has chosen one number
+            that could be 10, 11, 12, ... , 29, or 30 with equal chances). Thus, each time you see a lottery
+            ticket, the Selected Value has already been set by the computer, but it is not displayed. Neither you nor
+            the three other bidders know the Selected Value. To assess how much you
+            would be willing to pay for the lottery ticket, you should guess the Selected Value.</p>`,
     element: document.querySelector(('#lottery-ticket'))
   },
     {
     title: 'The Signal',
-    intro: '<p>To help you guess the Selected Value, we give you a signal. The signal is a\n' +
-      'number that is close to the Selected Value: Once you receive the signal, you can assume that the Selected Value is no more than x numbers away.</p>',
+    intro: `<p>To help hou guess the Selected Value, we give you a signal. The signal is a
+            number that is close to the Selected Value: Once you receive the signal, you can assume
+            that the Selected Value is no more than x = ${js_vars.epsilon} numbers away.</p>`,
     element: document.querySelector(('#lottery-signal'))
   },
   {
     title: 'Signal Interpretation',
-    intro: '<p>If x = 4, a signal of 22 would mean that the Selected Value lies between 18\n' +
-      'and 26 inclusively, where every integer between 18 and 26 is equally likely to\n' +
-      'be the Selected Value. To help you interpret the signal better, we will always\n' +
-      'display next to your signal the range of possible Selected Values given your\n' +
-      'signal.</p>',
+    intro: `<p>A signal of ${js_vars.signal} means that the Selected Value lies between
+            ${js_vars.min_signal} and ${js_vars.max_signal} inclusively,
+            where every integer between ${js_vars.min_signal} and
+            ${js_vars.max_signal} is equally likely to
+            be the Selected Value. To help you interpret the signal better, we will always
+            display next to your signal the range of possible Selected Values given your
+            signal.</p>`,
     element: document.querySelector(('#lottery-signal-interpretation'))
   },
     {
       title: 'General Remark',
-      intro: '<p>In every auction, you and each of the other three bidders will independently\n' +
-        'from each other receive a signal surrounding the same Selected Value. The\n' +
-        'four of you might therefore receive different signals. Yet, no one will see the\n' +
-        'signals of the other three bidders. Thus, the four of you will face the same\n' +
-        'lottery ticket, but the signal-updated range for the Selected Value may be\n' +
-        'different.</p>',
+      intro: `<p>In every auction, you and each of the other three bidders will independently
+              from each other receive a signal surrounding the same Selected Value. The
+              four of you might therefore receive different signals. Yet, no one will see the
+              signals of the other three bidders. Thus, the four of you will face the same
+              lottery ticket, but the signal-updated range for the Selected Value may be
+              different.</p>`,
       element: document.querySelector(('#general-remark'))
     },
     {
-      title: 'Your task / your bid',
-      intro: '<p>In each auction, we ask you to submit a bid. A bid is the price that you are\n' +
-        'willing to pay for the lottery ticket. The three other participants have also\n' +
-        'submitted a bid for the exact same lottery ticket.</p>',
+      title: 'Your task',
+      intro: `<p>In each auction, we ask you to submit a bid. A bid is the price that you are
+             willing to pay for the lottery ticket. The three other participants have also
+            submitted a bid for the exact same lottery ticket.</p>`,
       element: document.querySelector(('#lottery-bid'))
     },
   ]

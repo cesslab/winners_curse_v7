@@ -25,6 +25,16 @@ class Bid(Page):
             "max_valuation": Constants.MAX_VALUATION,
         }
 
+    @staticmethod
+    def js_vars(player):
+        return dict(
+            alpha=player.alpha,
+            beta=player.beta,
+            epsilon=player.epsilon,
+            signal=player.signal,
+            min_signal=player.min_signal,
+            max_signal=player.max_signal,
+        )
 
 class Outcome(Page):
     @staticmethod

@@ -46,8 +46,8 @@ class Player(BasePlayer, BidHistoryPlayer):
     beta = models.IntegerField(initial=30)
     epsilon = models.IntegerField(initial=4)
     ticket_value_before = models.IntegerField(initial=0)
-    ticket_probability = models.IntegerField(initial=75)
-    fixed_value = models.IntegerField(initial=75)
+    ticket_probability = models.IntegerField(initial=70)
+    fixed_value = models.IntegerField(initial=70)
     ticket_value_after = models.IntegerField(initial=0)
     previous_highest_bid = models.IntegerField(initial=0)
     # Player Bid History

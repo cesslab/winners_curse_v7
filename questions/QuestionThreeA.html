@@ -38,10 +38,13 @@
     <div class="lottery">
       <p class="text-center">
         {% if player.is_value_treatment %}
-        With a probability of {{ player.ticket_probability }}% you get a value v between {{ player.alpha }} and {{ player.beta }} credits, otherwise you get 0 credits.
+        With a probability of {{ player.ticket_probability }}% you get<br>
+        a value v between {{ player.alpha }} and {{ player.beta }} credits,<br>
+        otherwise you get 0 credits.
         {% else %}
-        With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get a value v = {{ player.fixed_value }} credits, otherwise
-        you get 0 credits.
+        With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get<br>
+        a value v = {{ player.fixed_value }} credits,<br>
+        otherwise you get 0 credits.
         {% endif %}
       </p>
     </div>
@@ -86,10 +89,13 @@
         </ul>
       </div>
     </div>
-    <div id="question">
-      <p>What, do you think, is now the (objectively) most reasonable price for the lottery in credits</p>
-    </div>
-    <div id="slider">
+    <div id="task">
+      <div id="question">
+        <h5>How much is the lottery worth if you have the highest signal? Now suppose that you have the highest signal
+          among all four bidders. What, do you think, is now the average worth for the lottery in credits?</h5>
+      </div>
+      <div id="slider">
+      </div>
     </div>
     <div class="worth-table">
       <table>
@@ -306,22 +312,16 @@ alertList.forEach(function (alert) {
     introJs().setOptions({
       steps: [
         {
-          title: 'What is the lottery, on average, worth?',
-          intro: 'Guess the worth of the lottery. You will earn 12 credits if your guess is sufficiently close to the actual worth of the lottery; and nothing if it is too far away.',
-          position: 'top',
-          element: document.querySelector(('#question'))
-        },
-        {
           title: 'Your task',
           intro: '<div><p>Guess the lottery’s worth if you have the highest signal. You will earn 12 credits if your ' +
             'guess is sufficiently close to the correct estimate according to the laws of probability theory; and nothing ' +
             'if it is too far away.</p></div>' +
             '<div><img src="' + IMG_URL + '" alt="graph"></div>' +
             '<div><p>The graph shows how the chance of getting 12 credits drops the ' +
-            'further away your guess is from the actual worth of the lottery. If it is too far away, you will get ' +
+            'further away your guess is from the correct estimate. If it is too far away, you will get ' +
             'nothing.</p></div>',
           position: 'top',
-          element: document.querySelector(('#slider'))
+          element: document.querySelector(('#task'))
         },
       ]
     }).start()

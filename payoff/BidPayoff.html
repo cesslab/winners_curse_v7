@@ -6,11 +6,12 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{% static 'global/css/payoff_outcome.css' %}">
+    <link rel="stylesheet" href="{% static 'global/css/bid.css' %}">
 {% endblock %}
 
 {% block content %}
     <div id="outcome-header">
-        <h3 class="text-center">Payoff in Part 1</h3>
+        <h2 class="text-center">Payoff in Part 1</h2>
     </div>
     <div class="text-center">
         <span>
@@ -66,7 +67,7 @@
             {% endif %}
         </p>
     </div>
-    <div class="text-center">
+    <div class="text-center lottery">
         <p>
             With a probability of {{ ticket_probability }}% you get a value of {{ fixed_value }}, <br>otherwise you get 0.
         </p>

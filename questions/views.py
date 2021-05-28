@@ -12,7 +12,10 @@ class Instructions(Page):
 
     @staticmethod
     def vars_for_template(player):
-        return {"treatment": player.subsession.session.config["treatment"]}
+        return {
+            "player": player,
+            "treatment": player.subsession.session.config["treatment"],
+        }
 
 
 class QuestionOneB(Page):

@@ -8,6 +8,7 @@
 
 <link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/questions.css' %}">
 
 <link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
@@ -36,10 +37,13 @@
     <div class="lottery">
       <p class="text-center">
         {% if player.is_value_treatment %}
-        With a probability of {{ player.ticket_probability }}% you get a value v between {{ player.alpha }} and {{ player.beta }} credits, otherwise you get 0 credits.
+        With a probability of {{ player.ticket_probability }}% you get<br>
+        a value v between {{ player.alpha }} and {{ player.beta }} credits,<br>
+        otherwise you get 0 credits.
         {% else %}
-        With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get a value v = {{ player.fixed_value }} credits, otherwise
-        you get 0 credits.
+        With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get<br>
+        a value v = {{ player.fixed_value }} credits,<br>
+        otherwise you get 0 credits.
         {% endif %}
       </p>
     </div>
@@ -105,10 +109,12 @@
         </ul>
       </div>
     </div>
-    <div id="question">
-      <p></p>
-    </div>
-    <div id="slider">
+    <div id="task">
+      <div id="question">
+        <h5>Choose an interval for your guess</h5>
+      </div>
+      <div id="slider">
+      </div>
     </div>
     <div class="worth-table">
       <table>
@@ -403,17 +409,17 @@
       steps: [
         {
           title: 'Your task',
-          intro: '<div><p>Now choose an interval that contains the lottery’s worth if you have the highest signal with a ' +
-            '50% probability; that is, you should be 50% sure that the interval contains the lottery’s true worth. ' +
-            'The smaller your chosen interval is, the more you will earn, but you will only get a payoff if the actual ' +
-            'worth of the lottery lies within your chosen interval.' +
-            '<div><img src="' + IMG_URL + '" alt="graph"></div><div><p>The graphs show the trade-off between making your ' +
-            'interval wider but not too wide. Increasing the width of the interval increases the chances to capture the ' +
-            'true worth of the lottery and to get a payoff (left graph),but at the same time it decreases your payoff ' +
-            '(right graph). The overall effect on your expected payment depends on the actual lottery and your chosen width. ' +
-            'Eventually, choosing an interval that is too wide, may decrease your average payment.</p></div>',
-          position: 'top',
-          element: document.querySelector(('#slider'))
+          intro: `<div><p>Now choose an interval that contains the correct estimate with a 50% probability; that is,
+          you should be 50% sure that the interval contains the correct estimate. The smaller your chosen interval is,
+          the more you will earn, but you will only earn a payoff if the correct estimate lies within your chosen
+          interval.</p></div><div><img src="${IMG_URL}" alt="graph"></div>
+          <div><p>The graphs show the trade-off between making your interval wider and not too wide.
+          Increasing the width of the interval increases the chances to capture the correct estimate and to get a
+          payoff (left graph), but at the same time it decreases your payoff (right graph). The overall effect on
+          your expected payment depends on the actual lottery and your chosen width (lower graph). Eventually,
+          choosing an interval that is too wide, may decrease your average payment.</p></div>`,
+          position: 'bottom',
+          element: document.querySelector(('#task'))
         },
       ]
     }).start()

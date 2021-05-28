@@ -2,6 +2,7 @@
 {% load otree static %}
 
 {% block styles %}
+    <link rel="stylesheet" href="{% static 'global/css/bid.css' %}">
     <link rel="stylesheet" href="{% static 'global/css/outcome.css' %}">
 
     <link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
@@ -61,7 +62,7 @@
             {% endif %}
         </p>
     </div>
-    <div class="lottery">
+    <div class="lottery" id="lottery-text">
         <p>
             With a probability p of {{ player.ticket_probability }}% you get a value v = {{ player.fixed_value }} credits, <br>otherwise you get 0 credits.
         </p>
@@ -73,8 +74,6 @@
 
     <div class="lottery-header text-center">
         <h4>Your Earnings</h4>
-    </div>
-    <div id="earnings-header" class="text-center">
       {% if player.bid > player.previous_highest_bid %}
         <p>Your earnings for this round are {{ earnings }}.</p>
       {% else %}

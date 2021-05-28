@@ -30,11 +30,13 @@
       <div class="lottery">
         <p class="text-center">
           {% if player.is_value_treatment %}
-          With a probability of {{ player.ticket_probability }}% you get a value v between {{ player.alpha }} and {{ player.beta }} credits,
+          With a probability of {{ player.ticket_probability }}% you get<br>
+          a value v between {{ player.alpha }} and {{ player.beta }} credits,
           <br>otherwise you get 0 credits.
           {% else %}
-          With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get a value v = {{ player.fixed_value }} credits, <br>otherwise
-          you get 0 credits.
+          With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get<br>
+          a value v = {{ player.fixed_value }} credits,
+          <br>otherwise you get 0 credits.
           {% endif %}
         </p>
       </div>
@@ -64,27 +66,25 @@
         </p>
       </div>
   </div>
-  <div class="h-100 row">
+  <div class="d-flex flex-column align-self-center">
     <div class="align-self-center">
-      <div class="">
-        <span>Your Bid</span>
-      </div>
-      <div>
-        <input type="number" id="id_probability_highest_signal" name="bid" min="0" max="100" step="1"
-               class="center-input form-control" value="{{ form.bid.object_data }}" placeholder=""
-               data-for="bid-selected-probability" required>
-      </div>
-      {% if form.bid.errors %}
-      <div class="alert alert-danger">
-        {{ form.bid.errors }}
-      </div>
-      {% endif %}
+      <h4>Your Bid</h4>
     </div>
+    <div class="align-self-center">
+      <input type="number" id="bid" name="bid" min="0" max="100" step="1"
+             class="center-input form-control" value="{{ form.bid.object_data }}" placeholder=""
+             data-for="bid-selected-probability" required>
+    </div>
+    {% if form.bid.errors %}
+    <div class="alert alert-danger align-self-center">
+      {{ form.bid.errors }}
+    </div>
+    {% endif %}
   </div>
-  <div></div>
-  <div>
-    {% next_button %}
-  </div>
+</div>
+
+<div class="btn-container">
+  <button class="otree-btn-next btn btn-primary">Next</button>
 </div>
 
 <div class="accordion" id="accordionExample">

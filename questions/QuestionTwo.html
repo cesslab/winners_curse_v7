@@ -29,11 +29,13 @@
       <div class="lottery">
         <p class="text-center">
           {% if player.is_value_treatment %}
-          With a probability of {{ player.ticket_probability }}% you get a value v between {{ player.alpha }} and {{ player.beta }} credits,
-          <br>otherwise you get 0 credits.
+          With a probability of {{ player.ticket_probability }}% you get<br>
+          a value v between {{ player.alpha }} and {{ player.beta }} credits,<br>
+          otherwise you get 0 credits.
           {% else %}
-          With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get a value v = {{ player.fixed_value }} credits, <br>otherwise
-          you get 0 credits.
+          With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get<br>
+          a value v = {{ player.fixed_value }} credits,<br>
+          otherwise you get 0 credits.
           {% endif %}
         </p>
       </div>
@@ -72,19 +74,23 @@
         <li>Question 3</li>
       </ul>
     </div>
-    <div id="question">
-      <p>Enter what you think is the probability of having the highest signal.</p>
-    </div>
-    <div>
-      <input type="number" id="id_probability_highest_signal" name="probability_highest_signal" min="0" max="100" step="1"
-             class="center-input form-control" value="{{ form.probability_highest_signal.object_data }}" placeholder=""
-             data-for="bid-selected-probability" required>
-
-      {% if form.probability_highest_signal.errors %}
-      <div class="alert alert-danger">
-        {{ form.probability_highest_signal.errors }}
+    <div id="task">
+      <div id="question">
+        <h5>What is the probability that your signal is the highest one in the auction?</h5>
       </div>
-      {% endif %}
+      <div>
+        <input type="number" id="id_probability_highest_signal" name="probability_highest_signal" min="0" max="100" step="1"
+               class="center-input form-control" value="{{ form.probability_highest_signal.object_data }}"
+               placeholder="Enter a number between 0 and 100"
+               data-for="bid-selected-probability" required>
+
+        {% if form.probability_highest_signal.errors %}
+        <div class="alert alert-danger">
+          {{ form.probability_highest_signal.errors }}
+        </div>
+        {% endif %}
+      </div>
+
     </div>
   </div>
 </div>
@@ -176,7 +182,7 @@
             'being drawn). If the squared difference betweenthetruth(0% or 100%)andyourguess,(truth - your guess)^2, is ' +
             'smaller than the random number, you will get 12 credits; if not, you will get nothing.</p></div>',
           position: 'top',
-          element: document.querySelector(('#question'))
+          element: document.querySelector(('#task'))
         },
       ]
     }).start()
