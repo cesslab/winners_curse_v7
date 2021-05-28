@@ -5,7 +5,7 @@ SESSION_CONFIGS = [
         "name": "wc",
         "app_sequence": ["instructions", "bidsample", "quiz", "bid", "questions", "payoff"],
         "num_demo_participants": 2,
-        "treatment": "cp",
+        "treatment": "cv",
         "lottery_1": "1",
         "lottery_2": "2",
         "lottery_3": "3",

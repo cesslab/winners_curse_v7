@@ -127,7 +127,7 @@ class BidHistoryPlayer:
 
     @property
     def is_value_treatment(self):
-        return self.session_treatment == "cp"
+        return self.session_treatment == "cv"
 
     @property
     def session_treatment(self):

@@ -96,12 +96,12 @@
       intro: `<p>There will be four different types of lotteries. For each type of lottery, the
               computer will produce independently from each other 10 lottery tickets and
               in each round you will bid for one of them.</p>`,
-      element: document.querySelector(('#lottery-type'))
+      element: document.querySelector(('#lottery-navbar'))
     },
     {
     title: 'Lottery Ticket',
     intro: `<p>Here is some information about the lottery ticket that is being auctioned.
-            However, the Selected Value is only partially known: You learn that alpha could
+            However, the Selected Value is only partially known: You learn that it could
             be any integer between 10 and 30 inclusively. That is, the computer has chosen one number
             that could be 10, 11, 12, ... , 29, or 30 with equal chances). Thus, each time you see a lottery
             ticket, the Selected Value has already been set by the computer, but it is not displayed. Neither you nor
@@ -111,7 +111,7 @@
   },
     {
     title: 'The Signal',
-    intro: `<p>To help hou guess the Selected Value, we give you a signal. The signal is a
+    intro: `<p>To help you guess the Selected Value, we give you a signal. The signal is a
             number that is close to the Selected Value: Once you receive the signal, you can assume
             that the Selected Value is no more than x = ${js_vars.epsilon} numbers away.</p>`,
     element: document.querySelector(('#lottery-signal'))
