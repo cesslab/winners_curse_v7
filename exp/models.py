@@ -130,6 +130,10 @@ class BidHistoryPlayer:
         return self.session_treatment == "cv"
 
     @property
+    def selected_value_text(self):
+        return "Selected Value" if self.is_value_treatment else "Selected Probability"
+
+    @property
     def session_treatment(self):
         return self.subsession.session.config["treatment"]
 

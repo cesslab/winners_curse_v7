@@ -11,7 +11,7 @@ class Instructions(Page):
 
     @staticmethod
     def vars_for_template(player):
-        return {"treatment": player.session_treatment}
+        return {"player": player}
 
 
 class Bid(Page):
@@ -34,7 +34,10 @@ class Bid(Page):
             signal=player.signal,
             min_signal=player.min_signal,
             max_signal=player.max_signal,
+            is_cv_treatment=player.is_value_treatment,
+            selected_value_text=player.selected_value_text,
         )
+
 
 class Outcome(Page):
     @staticmethod

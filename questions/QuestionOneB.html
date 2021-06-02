@@ -12,6 +12,8 @@
 <link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
 
+<link rel="stylesheet" href="{% static 'global/css/custom_font.css' %}">
+
 <link rel="stylesheet" href="{% static 'global/css/nouislider.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/custom_nouislider.css' %}">
 
@@ -36,48 +38,14 @@
       <p>Consider the following lottery ticket with two possible prizes,
         0 and a value v.</p>
     </div>
-    <div class="lottery">
-      <p class="text-center">
-        {% if player.is_value_treatment %}
-        With a probability of {{ player.ticket_probability }}% you get<br>
-        a value v between {{ player.alpha }} and {{ player.beta }} credits,<br>
-        otherwise you get 0 credits.
-        {% else %}
-        With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get<br>
-        a value v = {{ player.fixed_value }} credits,<br>
-        otherwise you get 0 credits.
-        {% endif %}
-      </p>
-    </div>
 
-    <div>
-      <h4 class="text-center lottery-header"><u>Your Signal</u></h4>
-      <p class="text-center">
-        {% if player.is_value_treatment %}
-        Your signal about v is: {{ player.signal }}
-        {% else %}
-        Your signal about p is: {{ player.signal }}%
-        {% endif %} (with x = {{ player.epsilon }}).
-      </p>
-    </div>
+    {% include 'global/Lottery.html' %}
+
+    {% include 'global/YourSignal.html' %}
+
+    {% include 'global/SignalInterpretation.html' %}
 
 
-    <div>
-      <h5 class=""><u>Signal Interpretation</u></h5>
-      <p>
-        {% if player.is_value_treatment %}
-        The Selected Value v is at most {{ player.epsilon }} units away from your signal about v.
-        Given your signal, the Selected Value must lie between {{ player.min_signal }} and {{ player.max_signal }}.
-        {% else %}
-        The Selected Probability p is at most {{ player.epsilon }} percentage points away from your signal about p.
-        <br>
-        Given your signal, the Selected Probability must lie between {{ player.min_signal }}% and {{ player.max_signal }}%.
-        {% endif %}
-      </p>
-    </div>
-    <div id="plot-container"></div>
-
-    {% next_button %}
 
     <div class="modal" id="modal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -118,20 +86,21 @@
       <div id="slider">
       </div>
     </div>
-    <div class="worth-table">
+
+    <div class="worth-table" id="conversion-table">
       <table>
         <thead>
         <tr>
           <th class="text-center">
           </th>
           <th class="text-center">
-            <span>Minimum</span>
+            <span>At Least</span>
           </th>
           <th class="text-center">
-            <span>Average</span>
+            <span>Best</span>
           </th>
           <th>
-            <span>Maximum</span>
+            <span>At Most</span>
           </th>
         </tr>
         </thead>
@@ -191,6 +160,9 @@
           <td id="max_worth_prob" class="text-center selected-probability"><span id="max-selected-probability"></span></td>
         </tr>
       </table>
+      <div>
+        {% next_button %}
+      </div>
 
     </div>
   </div>
@@ -402,7 +374,9 @@
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/intro.min.js" integrity="sha512-QWPjvFqgUJv5X6Sq5NXmwJQSEzUEBxmCCcgqJd5/5luZnS6llRbshsChUNKrFlZ4bshKZEJxAHDB+WWdMsGvUA==" crossorigin="anonymous"></script>
 <script type="text/javascript">
-    IMG_URL = '{% static "global/img/q1b_graph.png" %}';
+    INT1a = '{% static "global/img/INT1a.png" %}';
+    INT1b = '{% static "global/img/INT1b.png" %}';
+    INT = '{% static "global/img/INT.png" %}';
 </script>
 <script>
   if (js_vars.display_intro) {
@@ -418,14 +392,22 @@
           element: document.querySelector(('#question'))
         },
         {
-          title: 'Your task',
-          intro: '<div><img src="' + IMG_URL + '" alt="graph"></div><div><p>The graphs show the trade-off between making your ' +
-            'interval wider but not too wide. Increasing the width of the interval increases the chances to capture the true ' +
-            'worth of the lottery and to get a payoff (left graph), but at the same time it decreases your payoff (right graph). ' +
-            'The overall effect on your expected payment depends on the actual lottery and your chosen width. ' +
-            'Eventually, choosing an interval that is too wide, may decrease your average payment.</p></div>',
+          title: 'Details about payoff',
+          intro: `<div><img src="${INT1b}" alt="graph"><img src="${INT1a}" alt="graph"><img src="${INT}" alt="graph"></div>
+            <div><p>The graphs show the trade-off between making your interval wider but not too wide.
+            Increasing the width of the interval increases the chances to capture the true worth of the lottery and to
+            get a payoff (top graph), but at the same time it decreases your payoff (middle graph).
+            The overall effect on your expected payment depends on the actual lottery and your chosen width (bottom graph).
+            Eventually, choosing an interval that is too wide, may decrease your average payment.</p></div>`,
           position: 'top',
           element: document.querySelector(('#question'))
+        },
+        {
+          title: 'Interval Boundaries',
+          intro: `<div><p>Enter here the lower and upper threshold of your interval. Choose the values such that your
+                  best guess lies within your selected interval.</p></div>`,
+          position: 'top',
+          element: document.querySelector(('#conversion-table'))
         },
       ]
     }).start()

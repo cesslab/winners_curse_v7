@@ -35,6 +35,23 @@ class BidPayoff(Page):
 class QuestionPayoff(Page):
     @staticmethod
     def vars_for_template(player):
+        question_selected = {
+                "selected_lottery_number": player.participant.vars['worth_payoff_lottery_number'],
+                "selected_round": player.participant.vars['worth_payoff_lottery_round_number'],
+                "question_number": player.participant.vars['worth_payoff_question_number']
+             }
+        return {
+            **question_selected,
+            **player.participant.vars['q1_data'],
+            **player.participant.vars['q2_data'],
+            **player.participant.vars['q3a_data'],
+            **player.participant.vars['q3b_data'],
+        }
+
+
+class QuestionPayoffDebug(Page):
+    @staticmethod
+    def vars_for_template(player):
         return {
             **player.participant.vars['q1_data'],
             **player.participant.vars['q2_data'],
@@ -43,4 +60,4 @@ class QuestionPayoff(Page):
         }
 
 
-page_sequence = [BidPayoff, QuestionPayoff]
+page_sequence = [BidPayoff, QuestionPayoff, QuestionPayoffDebug]

@@ -7,6 +7,8 @@
 
     <link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
     <link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
+
+    <link rel="stylesheet" href="{% static 'global/css/custom_font.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -47,25 +49,26 @@
     </div>
 
     <div class="text-center lottery-header">
-        {% if player.treatment == 'cv' %}
-        <h4>Actual Lottery with Selected Value</h4>
-        {% else %}
-            <h4>Actual Lottery with Selected Probability</h4>
-        {% endif %}
+        <h4>Actual Lottery with {{ player.selected_value_text }}</h4>
     </div>
     <div id="lottery-ticket-header" class="text-center">
-        <p>
-            {% if player.treatment == 'cv' %}
-                The Selected Value was {{ player.fixed_value }}. Therefore, the actual lottery ticket was:
-            {% else %}
-                The Selected Probability was {{ player.ticket_probability }}%. Therefore, the actual lottery ticket was:
-            {% endif %}
-        </p>
+      <p>
+          The {{ player.selected_value_text }} was {{ player.ticket_value_before }}. Therefore, the actual lottery ticket was:
+      </p>
     </div>
+
     <div class="lottery" id="lottery-text">
+      {% if player.treatment == 'cv' %}
         <p>
-            With a probability p of {{ player.ticket_probability }}% you get a value v = {{ player.fixed_value }} credits, <br>otherwise you get 0 credits.
+          With a probability p of {{ player.fixed_value }}% you get a value v = <span class="credits">C</span>{{ player.ticket_value_before }},
+          <br>otherwise you get <span class="credits">C</span>0.
         </p>
+      {% else %}
+        <p>
+          With a probability p of {{ player.ticket_probability }}% you get a value v = <span class="credits">C</span>{{ player.fixed_value }},
+          <br>otherwise you get <span class="credits">C</span>0.
+        </p>
+      {% endif %}
     </div>
 
     <div id="played-outcome" class="text-center">

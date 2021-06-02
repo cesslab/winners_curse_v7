@@ -34,7 +34,7 @@
   grid-column : 1 / span 2;
 }
 
-#outcome-header {
+.outcome-header {
   margin-bottom: 50px;
 }
 

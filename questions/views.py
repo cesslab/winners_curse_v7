@@ -48,20 +48,20 @@ class QuestionOneB(Page):
         # PREP WORK
         # Worth = vLotto *fix (in CV) or pLotto * fix (in CP)
         if player.is_probability_treatment:
-            player.prep_worth = player.ticket_probability * player.fixed_value
+            player.prep_worth = player.ticket_probability * player.fixed_value / 100
         else:
-            player.prep_worth = player.ticket_value_before * player.fixed_value
+            player.prep_worth = player.ticket_value_before * player.fixed_value / 100
 
         #  Emin = fix * alpha
         #  Emax = fix * beta
-        player.prep_emin = player.fixed_value * player.alpha
-        player.prep_emax = player.fixed_value * player.beta
+        player.prep_emin = player.fixed_value * player.alpha / 100
+        player.prep_emax = player.fixed_value * player.beta / 100
 
         # ---------------------------------------------------------------------
         # Question 1a: point belief about worth of the lottery (unconditional)
         # ---------------------------------------------------------------------
         # Computer computes loss function L= (X-worth)^2
-        player.computed_loss = (player.worth - player.prep_worth)**2
+        player.computed_loss = float((player.worth - player.prep_worth)**2)
         # Computer draws random number K ~ U[0,1296]
         player.random_k = random.randint(0, 1296)
         # Computer pays 12 credits if L<K ; 0 otherwise (in particular if L>1296)
@@ -116,6 +116,8 @@ class QuestionOneB(Page):
             lottery_max_value=player.lottery_max_value,
             mapping_divisor=player.fixed_value,
             is_probability_treatment=player.is_probability_treatment,
+            is_cv_treatment=player.is_value_treatment,
+            selected_value_text=player.selected_value_text,
         )
 
 
@@ -143,20 +145,20 @@ class QuestionOneA(Page):
         # PREP WORK
         # Worth = vLotto *fix (in CV) or pLotto * fix (in CP)
         if player.is_probability_treatment:
-            player.prep_worth = player.ticket_probability * player.fixed_value
+            player.prep_worth = player.ticket_probability * player.fixed_value / 100
         else:
-            player.prep_worth = player.ticket_value_before * player.fixed_value
+            player.prep_worth = player.ticket_value_before * player.fixed_value / 100
 
         #  Emin = fix * alpha
         #  Emax = fix * beta
-        player.prep_emin = player.fixed_value * player.alpha
-        player.prep_emax = player.fixed_value * player.beta
+        player.prep_emin = player.fixed_value * player.alpha / 100
+        player.prep_emax = player.fixed_value * player.beta / 100
 
         # ---------------------------------------------------------------------
         # Question 1a: point belief about worth of the lottery (unconditional)
         # ---------------------------------------------------------------------
         # Computer computes loss function L= (X-worth)^2
-        player.computed_loss = (player.worth - player.prep_worth)**2
+        player.computed_loss = float((player.worth - player.prep_worth)**2)
         # Computer draws random number K ~ U[0,1296]
         player.random_k = random.randint(0, 1296)
         # Computer pays 12 credits if L<K ; 0 otherwise (in particular if L>1296)
@@ -183,6 +185,8 @@ class QuestionOneA(Page):
             lottery_max_value=player.lottery_max_value,
             mapping_divisor=player.fixed_value,
             is_probability_treatment=player.is_probability_treatment,
+            is_cv_treatment=player.is_value_treatment,
+            selected_value_text=player.selected_value_text,
         )
 
 
@@ -231,6 +235,8 @@ class QuestionTwo(Page):
             lottery_max_value=player.lottery_max_value,
             mapping_divisor=player.fixed_value,
             is_probability_treatment=player.is_probability_treatment,
+            is_cv_treatment=player.is_value_treatment,
+            selected_value_text=player.selected_value_text,
         )
 
 
@@ -273,6 +279,8 @@ class QuestionThreeA(Page):
             lottery_max_value=player.lottery_max_value,
             mapping_divisor=player.fixed_value,
             is_probability_treatment=player.is_probability_treatment,
+            is_cv_treatment=player.is_value_treatment,
+            selected_value_text=player.selected_value_text,
         )
 
 
@@ -366,6 +374,8 @@ class QuestionThreeB(Page):
             lottery_max_value=player.lottery_max_value,
             mapping_divisor=player.fixed_value,
             is_probability_treatment=player.is_probability_treatment,
+            is_cv_treatment=player.is_value_treatment,
+            selected_value_text=player.selected_value_text,
         )
 
 

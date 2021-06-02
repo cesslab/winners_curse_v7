@@ -7,6 +7,7 @@ Part I (Auctions)
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'global/css/bid.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/custom_font.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -20,22 +21,32 @@ other participants from a previous experiment.
   <p>
     In every round a prize will be auctioned off. The prize will be a lottery ticket. Any lottery is characterized by two features:
   </p>
+
   <ol type="1">
-    <li>A Selected Value (in credits ): a non-zero amount of credits that the lottery possibly pays off and,</li>
-    <li>A probability (in %): the probability of receiving the non-zero amount of credits.</li>
+    <li>A {% if player.is_value_treatment %}Selected {% endif %}Value (in <span class="credits">C</span> ): a non-zero amount of credits that the lottery possibly pays off and,</li>
+    <li>A {% if player.is_value_treatment %}probability{% else %}Selected Probability{% endif %} (in %): the probability of receiving the non-zero amount of credits.</li>
   </ol>
   <p>For instance, consider the following lottery ticket:</p>
 
   <div class="lottery" id="lottery-text">
     <p class="text-center">
-      With a probability of 70% you get 20 credits, </br>otherwise (with the complementary probability of 30%) you get 0 credits.
+      With a probability of {% if player.is_value_treatment%} 70% {%else%} 20% {%endif%} you get
+      <span class="credits">C</span>{% if player.is_value_treatment %} 20 {% else %} 70 {%endif%},<br>
+      otherwise (with the complementary probability of {% if player.is_value_treatment%} 30% {%else%} 80% {%endif%}) you get <span class="credits">C</span>0.
     </p>
   </div>
   <div>
     <p>
-      In this case, 20 credits is the Selected Value and 70% is the probability. This means that this lottery pays
-      20 credits with a 70% chance and pays 0 credits with a 30% chance. The outcome of this lottery is then either 20
-      credits or 0 credits.
+      In this case, <span class="credits">C</span>{% if player.is_value_treatment%}20 {%else%}70 {%endif%}
+      is the {% if player.is_value_treatment%} Selected Value {%else%} value {%endif%} and
+      {% if player.is_value_treatment%} 70% {%else%} 20% {%endif%} is the
+      {% if player.is_value_treatment %} probability {% else %} Selected Probability {% endif %}.
+      This means that this lottery pays <span class="credits">C</span>{% if player.is_value_treatment%}20 {%else%}70 {%endif%}
+      with a {% if player.is_value_treatment%} 70% {%else%} 20% {%endif%} chance and pays
+      <span class="credits">C</span>0 with a {% if player.is_value_treatment %} 30% {% else %} 80% {% endif %} chance.
+      The outcome of this lottery is then either
+      <span class="credits">C</span>{% if player.is_value_treatment%}20 {%else%}70 {%endif%} or
+      <span class="credits">C</span>0.
     </p>
   </div>
   {% next_button %}

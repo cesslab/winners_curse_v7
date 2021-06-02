@@ -7,6 +7,7 @@
 
 <link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/custom_font.css' %}">
 
 <link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
@@ -31,11 +32,13 @@
         <div class="lottery" id="lottery-text">
           <p class="text-center">
             {% if player.is_value_treatment %}
-            With a probability of {{ player.ticket_probability }}% you get<br> a value v between {{ player.alpha }} and {{ player.beta }} credits,
-            <br>otherwise you get 0 credits.
+            With a probability of {{ player.ticket_probability }}% you get<br> a value v between
+            <span class="credits">C</span>{{ player.alpha }} and <span class="credits">C</span>{{ player.beta }},
+            <br>otherwise you get <span class="credits">C</span>0.
             {% else %}
-            With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get a value v = {{ player.fixed_value }} credits, <br>otherwise
-            you get 0 credits.
+            With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get a value
+            v = <span class="credits">C</span>{{ player.fixed_value }}, <br>otherwise
+            you get <span class="credits">C</span>0.
             {% endif %}
           </p>
         </div>
@@ -68,13 +71,16 @@
   </div>
   <div class="h-100 row">
     <div id="lottery-bid" class="align-self-center">
-      <div class="">
-        <span>Your Bid</span>
+      <div class="text-center">
+        <h4>Your Bid</h4>
       </div>
-      <div>
-        <input type="number" id="id_probability_highest_signal" name="bid" min="0" max="100" step="1"
-               class="center-input form-control" value="" placeholder=""
-               data-for="bid-selected-probability" readonly="readonly">
+      <div class="centered">
+        <div class="col-sm-6">
+          <input type="number" id="id_probability_highest_signal" name="bid" min="0" max="100" step="1"
+                 class="center-input form-control" value="" placeholder=""
+                 data-for="bid-selected-probability" readonly="readonly">
+        </div>
+
       </div>
     </div>
   </div>
@@ -100,41 +106,61 @@
     },
     {
     title: 'Lottery Ticket',
-    intro: `<p>Here is some information about the lottery ticket that is being auctioned.
-            However, the Selected Value is only partially known: You learn that it could
-            be any integer between 10 and 30 inclusively. That is, the computer has chosen one number
-            that could be 10, 11, 12, ... , 29, or 30 with equal chances). Thus, each time you see a lottery
-            ticket, the Selected Value has already been set by the computer, but it is not displayed. Neither you nor
-            the three other bidders know the Selected Value. To assess how much you
-            would be willing to pay for the lottery ticket, you should guess the Selected Value.</p>`,
+    intro: (js_vars.is_cv_treatment) ?
+          `<p>Here is some information about the lottery ticket that is being auctioned.
+            However, the Selected Value is only partially known: You learn that it could be any integer
+            between 10 and 30 inclusively. That is, the computer has chosen one number that could be
+            10, 11, 12, ... , 29, or 30 with equal chances. Thus, each time you see a lottery ticket,
+            the Selected Value has already been set by the computer, but it is not displayed.
+            Neither you nor the three other bidders know the Selected Value. To assess how much you would be
+            willing to pay for the lottery ticket, you should guess the Selected Value.</p>` :
+            `<p>Here is some information about the lottery ticket that is being auctioned.
+            However, the Selected Probability is only partially known: You learn that it could be any percentage number
+            between 10% and 30% inclusively. That is, the computer has chosen one number that could be
+            10, 11, 12, ... , 29, or 30 with equal chances. Thus, each time you see a lottery ticket,
+            the Selected Probability has already been set by the computer, but it is not displayed.
+            Neither you nor the three other bidders know the Selected Probability. To assess how much you would be
+            willing to pay for the lottery ticket, you should guess the Selected Probability.</p>`,
     element: document.querySelector(('#lottery-ticket'))
   },
     {
     title: 'The Signal',
-    intro: `<p>To help you guess the Selected Value, we give you a signal. The signal is a
+    intro: (js_vars.is_cv_treatment) ?
+      `<p>To help you guess the Selected Value, we give you a signal. The signal is a
             number that is close to the Selected Value: Once you receive the signal, you can assume
-            that the Selected Value is no more than x = ${js_vars.epsilon} numbers away.</p>`,
+            that the Selected Value is no more than x = ${js_vars.epsilon} numbers away.</p>` :
+      `<p>To help you guess the Selected Probability, we give you a signal. The signal is a
+          number that is close to the Selected Probability: Once you receive the signal, you can assume
+          that the Selected Probability is no more than x = ${js_vars.epsilon} numbers away.</p>`,
     element: document.querySelector(('#lottery-signal'))
   },
   {
     title: 'Signal Interpretation',
-    intro: `<p>A signal of ${js_vars.signal} means that the Selected Value lies between
+    intro: (js_vars.is_cv_treatment) ?
+      `<p>A signal of ${js_vars.signal} means that the Selected Value lies between
             ${js_vars.min_signal} and ${js_vars.max_signal} inclusively,
             where every integer between ${js_vars.min_signal} and
             ${js_vars.max_signal} is equally likely to
             be the Selected Value. To help you interpret the signal better, we will always
             display next to your signal the range of possible Selected Values given your
+            signal.</p>` :
+      `<p>A signal of ${js_vars.signal} means that the Selected Probability lies between
+            ${js_vars.min_signal}% and ${js_vars.max_signal}% inclusively,
+            where every integer between ${js_vars.min_signal}% and ${js_vars.max_signal}% is equally likely to
+            be the Selected Probability. To help you interpret the signal better, we will always
+            display next to your signal the range of possible Selected Probabilities given your
             signal.</p>`,
     element: document.querySelector(('#lottery-signal-interpretation'))
   },
     {
       title: 'General Remark',
       intro: `<p>In every auction, you and each of the other three bidders will independently
-              from each other receive a signal surrounding the same Selected Value. The
+              from each other receive a signal surrounding the same Selected
+              ${(js_vars.is_cv_treatment) ? 'Value' : 'Probability'}. The
               four of you might therefore receive different signals. Yet, no one will see the
               signals of the other three bidders. Thus, the four of you will face the same
-              lottery ticket, but the signal-updated range for the Selected Value may be
-              different.</p>`,
+              lottery ticket, but the signal-updated range for the
+              Selected ${(js_vars.is_cv_treatment) ? 'Value' : 'Probability'} may be different.</p>`,
       element: document.querySelector(('#general-remark'))
     },
     {

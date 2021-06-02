@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/footer.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/custom_font.css' %}">
 
 <link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
@@ -31,12 +32,12 @@
         <p class="text-center">
           {% if player.is_value_treatment %}
           With a probability of {{ player.ticket_probability }}% you get<br>
-          a value v between {{ player.alpha }} and {{ player.beta }} credits,
+          a value v between <span class="credits">C</span>{{ player.alpha }} and <span class="credits">C</span>{{ player.beta }},
           <br>otherwise you get 0 credits.
           {% else %}
-          With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get<br>
-          a value v = {{ player.fixed_value }} credits,
-          <br>otherwise you get 0 credits.
+          With a probability p between {{ player.alpha }}% and {{ player.beta }}%,<br>
+          you get a value v = <span class="credits">C</span>{{ player.fixed_value }},
+          <br>otherwise you get <span class="credits">C</span>0.
           {% endif %}
         </p>
       </div>
@@ -57,16 +58,15 @@
         <p>
           {% if player.is_value_treatment %}
           The Selected Value v is at most {{ player.epsilon }} units away from your signal about v.
-          Given your signal, the Selected Value must lie between {{ player.min_signal }} and {{ player.max_signal }}.
+          Given your signal, the Selected Value must lie <br>between <span class="credits">C</span>{{ player.min_signal }} and <span class="credits">C</span>{{ player.max_signal }}.
           {% else %}
           The Selected Probability p is at most {{ player.epsilon }} percentage points away from your signal about p.
-          <br>
-        Given your signal, the Selected Probability must lie between {{ player.min_signal }}% and {{ player.max_signal }}%.
+          Given your signal, the Selected Probability must lie between {{ player.min_signal }}% and {{ player.max_signal }}%.
         {% endif %}
         </p>
       </div>
   </div>
-  <div class="d-flex flex-column align-self-center">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="height: 100%;">
     <div class="align-self-center">
       <h4>Your Bid</h4>
     </div>
@@ -80,18 +80,17 @@
       {{ form.bid.errors }}
     </div>
     {% endif %}
+    <div class="btn-container">
+      <button class="otree-btn-next btn btn-primary">Next</button>
+    </div>
   </div>
-</div>
-
-<div class="btn-container">
-  <button class="otree-btn-next btn btn-primary">Next</button>
 </div>
 
 <div class="accordion" id="accordionExample">
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingOne">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        Instructions
+        Re-read Instructions
       </button>
     </h2>
     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
@@ -108,21 +107,37 @@
           non-zero amount of credits with some probability. Any lottery in this experiment is characterized by two features:
         </p>
         <ol type="1">
-          <li>A value (in Credits ): a non-zero amount of credits that the lottery possibly pays off and,</li>
-          <li>A probability (in %): the probability of receiving the non-zero amount of credits.</li>
+          <li>A {% if player.is_value_treatment %} Selected Value{% else %}value{% endif %}
+            (in <span class="credits">C</span>): a non-zero amount of credits that the lottery possibly pays off and,</li>
+          <li>A {% if player.is_value_treatment %} probability {% else %} Selected Probability {% endif %} (in %): the probability of receiving the non-zero amount of credits.</li>
         </ol>
         <p>For instance, consider the following lottery ticket:</p>
 
         <div class="lottery" id="lottery-text">
           <p class="text-center">
-            With a probability of 75% you get 20 credits, </br>otherwise (with the complementary probability of 30%) you get 0 credits.
+            {% if player.is_value_treatment %}
+            With a probability of 70% you get <span class="credits">C</span>20,<br> otherwise
+            (with the complementary probability of 30%) you get <span class="credits">C</span>0.
+            {% else %}
+            With a probability of 20% you get <span class="credits">C</span>70,<br> otherwise
+            (with the complementary probability of 80%) you get <span class="credits">C</span>0.
+            {% endif %}
           </p>
         </div>
         <div>
           <p>
-            In this case, 20 credits is the value and 75% is the probability. This means that this lottery pays 20 credits 75 times in
-            100 and pays 0 credits with a 25% chance. The outcome of this lottery is then either 20 credits or 0 credits.
+            In this case, <span class="credits">C</span>{% if player.is_value_treatment%}20 {%else%}70 {%endif%}
+            is the {% if player.is_value_treatment%} Selected Value {%else%} value {%endif%} and
+            {% if player.is_value_treatment%} 70% {%else%} 20% {%endif%} is the
+            {% if player.is_value_treatment %} probability {% else %} Selected Probability {% endif %}.
+            This means that this lottery pays <span class="credits">C</span>{% if player.is_value_treatment%}20 {%else%}70 {%endif%}
+            with a {% if player.is_value_treatment%} 70% {%else%} 20% {%endif%} chance and pays
+            <span class="credits">C</span>0 with a {% if player.is_value_treatment %} 30% {% else %} 80% {% endif %} chance.
+            The outcome of this lottery is then either
+            <span class="credits">C</span>{% if player.is_value_treatment%}20 {%else%}70 {%endif%} or
+            <span class="credits">C</span>0.
           </p>
+
           <h4>Lottery Types</h4>
           <p>
             There will be four different types of lotteries. For each type of lottery, the computer will produce
@@ -130,32 +145,40 @@
           </p>
           <h4>Lottery Ticket</h4>
           <p>
-            Here is some information about the lottery ticket that is being auctioned. Throughout the experiment, however,
-            the value of the lottery will only be partially known: The lottery ticket does not state the exact value v,
-            but you learn that the value could be any integer between 10 and 30 inclusively. That is, the computer has
-            chosen one number that could be 10, 11, 12, ... , 29, or 30 with equal chances). This number is called the
-            Selected Value. Thus, each time you see a lottery ticket on screen, the Selected Value has already been determined
-            by the computer, but it is not displayed. Neither you nor the three other bidders know the Selected Value.
-            To assess how much you would be willing to pay for the lottery ticket, you should guess the Selected Value.
+            Here is some information about the lottery ticket that is being auctioned.
+            However, the {{player.selected_value_text}}
+            is only partially known: You learn that it could be any integer
+            between {% if player.is_value_treatment %} 10 and 30 {% else %} 10% and 30% {% endif %} inclusively.
+            That is, the computer has chosen one number that could be 10, 11, 12, ... , 29, or 30 with equal chances.
+            Thus, each time you see a lottery ticket, the {{ player.selected_value_text }} has already
+            been set by the computer, but it is not displayed.  Neither you nor the three other bidders know the
+            {{ player.selected_value_text }}. To assess how much you would be willing to pay for the lottery ticket,
+            you should guess the {{ player.selected_value_text }}.
           </p>
+
           <h4>The Signal</h4>
           <p>
-            To help you guess the Selected Value, we give you a signal. The signal is a number that is close to the
-            Selected Value: Once you receive the signal, you can assume that the Selected Value is no more than x numbers away.
+            To help you guess the {{ player.selected_value_text }}, we give you a signal.
+            The signal is a number that is close to the {{ player.selected_value_text }}:
+            Once you receive the signal, you can assume that the {{ player.selected_value_text }} is no more than
+            x numbers away.
           </p>
+
           <h4>Signal Interpretation</h4>
           <p>
-            If x = 4, a signal of 22 would mean that the Selected Value lies between 18 and 26 inclusively, where every
-            integer between 18 and 26 is equally likely to be the Selected Value. To help you interpret the signal better,
-            we will always display next to your signal the range of possible Selected Values given your signal.
+          A signal of 22 means that the {{ player.selected_value_text }} lies between 18 and 26 inclusively, where every integer between
+          18 and 26 is equally likely to be the {{ player.selected_value_text }}. To help you interpret the signal better,
+            we will always display next to your signal the range of possible {{ player.selected_value_text }} given your signal.
           </p>
+
           <h4>General Remark</h4>
           <p>
             In every auction, you and each of the other three bidders will independently from each other receive a signal
-            surrounding the same Selected Value. The four of you might therefore receive different signals. Yet, no one
+            surrounding the same {{ player.selected_value_text }}. The four of you might therefore receive different signals. Yet, no one
             will see the signals of the other three bidders. Thus, the four of you will face the same lottery ticket,
-            but the signal-updated range for the Selected Value may be different.
+            but the signal-updated range for the {{ player.selected_value_text }} may be different.
           </p>
+
           <h4>Your Task / Your Bid</h4>
           <p>
             In each auction, we ask you to submit a bid. A bid is the price that you are willing to pay for the lottery ticket. The three other participants have also submitted a bid for the exact same lottery ticket.

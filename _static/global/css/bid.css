@@ -5,6 +5,12 @@ img {
     margin-bottom: 20px;
 }
 
+.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 output {
     padding: .3em;
     font-size: 1em;

@@ -34,6 +34,7 @@ def creating_session(subsession):
         for player in subsession.get_players():
             player.participant.vars['worth_payoff_lottery_number'] = random.randint(1, Constants.NUM_LOTTERIES)
             player.participant.vars['worth_payoff_lottery_round_number'] = random.randint(1, Constants.ROUNDS_PER_LOTTERY)
+            player.participant.vars['worth_payoff_question_number'] = random.randint(1, 3)
     close_db()
 
 
@@ -56,11 +57,11 @@ class Player(BasePlayer, BidHistoryPlayer):
     highest_market_signal = models.BooleanField(initial=False)
     confidence_value = models.FloatField(initial=0.0)
     # Payoff
-    prep_worth = models.IntegerField()
-    prep_emin = models.IntegerField()
-    prep_emax = models.IntegerField()
+    prep_worth = models.FloatField()
+    prep_emin = models.FloatField()
+    prep_emax = models.FloatField()
     prob_computed_loss = models.FloatField()
-    computed_loss = models.IntegerField()
+    computed_loss = models.FloatField()
     random_k = models.IntegerField()
     random_prob_k = models.FloatField()
     # Payoff: Question 3A

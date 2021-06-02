@@ -12,6 +12,8 @@
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/questions.css' %}">
 
+<link rel="stylesheet" href="{% static 'global/css/custom_font.css' %}">
+
 <link rel="stylesheet" href="{% static 'global/css/nouislider.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/nouislider_hide.css' %}">
 <link rel="stylesheet" href="{% static 'global/css/custom_nouislider.css' %}">
@@ -35,48 +37,15 @@
       <p>Consider the following lottery ticket with two possible prizes,
         0 and a value v.</p>
     </div>
-    <div class="lottery">
-      <p class="text-center">
-        {% if player.is_value_treatment %}
-        With a probability of {{ player.ticket_probability }}% you get<br>
-        a value v between {{ player.alpha }} and {{ player.beta }} credits,<br>
-        otherwise you get 0 credits.
-        {% else %}
-        With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get<br>
-        a value v = {{ player.fixed_value }} credits,<br>
-        otherwise you get 0 credits.
-        {% endif %}
-      </p>
-    </div>
 
-    <div>
-      <h4 class="text-center lottery-header"><u>Your Signal</u></h4>
-      <p class="text-center">
-        {% if player.is_value_treatment %}
-        Your signal about v is: {{ player.signal }}
-        {% else %}
-        Your signal about p is: {{ player.signal }}%
-        {% endif %} (with x = {{ player.epsilon }}).
-      </p>
-    </div>
+    {% include 'global/Lottery.html' %}
 
+    {% include 'global/YourSignal.html' %}
 
-    <div>
-      <h5 class=""><u>Signal Interpretation</u></h5>
-      <p>
-        {% if player.is_value_treatment %}
-        The Selected Value v is at most {{ player.epsilon }} units away from your signal about v.
-        Given your signal, the Selected Value must lie between {{ player.min_signal }} and {{ player.max_signal }}.
-        {% else %}
-        The Selected Probability p is at most {{ player.epsilon }} percentage points away from your signal about p.
-        <br>
-        Given your signal, the Selected Probability must lie between {{ player.min_signal }}% and {{ player.max_signal }}%.
-        {% endif %}
-      </p>
-    </div>
+    {% include 'global/SignalInterpretation.html' %}
+
     <div id="plot-container"></div>
 
-    {% next_button %}
   </div>
 
   <div>
@@ -91,13 +60,14 @@
     </div>
     <div id="task">
       <div id="question">
-        <h5>How much is the lottery worth if you have the highest signal? Now suppose that you have the highest signal
-          among all four bidders. What, do you think, is now the average worth for the lottery in credits?</h5>
+        <h5>Now suppose that you have the highest signal
+          among all four bidders.</h5>
+        <h5>What, do you think, is now the average worth for the lottery in credits?</h5>
       </div>
       <div id="slider">
       </div>
     </div>
-    <div class="worth-table">
+    <div class="worth-table" id="conversion-table">
       <table>
         <thead>
         <tr>
@@ -137,6 +107,9 @@
           <td id="worth_prob" class="text-center selected-probability"><span id="bid-selected-probability"></span></td>
         </tr>
       </table>
+      <div>
+        {% next_button %}
+      </div>
 
     </div>
   </div>
@@ -305,7 +278,7 @@ alertList.forEach(function (alert) {
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/intro.min.js" integrity="sha512-QWPjvFqgUJv5X6Sq5NXmwJQSEzUEBxmCCcgqJd5/5luZnS6llRbshsChUNKrFlZ4bshKZEJxAHDB+WWdMsGvUA==" crossorigin="anonymous"></script>
 <script type="text/javascript">
-  IMG_URL = '{% static "global/img/q3a_graph.png" %}';
+  IMG_URL = '{% static "global/img/BSR.png" %}';
 </script>
 <script>
   if (js_vars.display_intro) {
@@ -313,15 +286,42 @@ alertList.forEach(function (alert) {
       steps: [
         {
           title: 'Your task',
-          intro: '<div><p>Guess the lottery’s worth if you have the highest signal. You will earn 12 credits if your ' +
-            'guess is sufficiently close to the correct estimate according to the laws of probability theory; and nothing ' +
-            'if it is too far away.</p></div>' +
-            '<div><img src="' + IMG_URL + '" alt="graph"></div>' +
-            '<div><p>The graph shows how the chance of getting 12 credits drops the ' +
-            'further away your guess is from the correct estimate. If it is too far away, you will get ' +
-            'nothing.</p></div>',
+          intro: `<div><p>Guess the lottery’s worth if you have the highest signal. You will earn 12 credits if your
+            guess is sufficiently close to the correct estimate according to the laws of probability theory; and nothing
+            if it is too far away.</p></div>`,
           position: 'top',
           element: document.querySelector(('#task'))
+        },
+        {
+          title: 'Your task (Continued)',
+          intro: `<div><img src="${IMG_URL}" alt="graph"></div>
+            <div><p>The graph shows how the chance of getting 12 credits drops the
+            further away your guess is from the correct estimate. If it is too far away, you will get
+            nothing.</p></div>`,
+          position: 'top',
+          element: document.querySelector(('#task'))
+        },
+        {
+          title: 'Details about payoff',
+          intro: `<p>The graph shows how the chance of getting 12 credits drops the further away your guess is from the
+          actual worth of the lottery. If it is too far away, you will get nothing.</p>`,
+          position: 'top',
+          element: document.querySelector(('#task'))
+        },
+        {
+          title: 'Instructions for slider',
+          intro: `<p>Click anywhere on the slider to select your best guess. After clicking the first time, you may change
+          your guess by dragging the slider to the left or right.</p><p>Alternatively, you may also enter your best guess
+          directly in the box below.</p>`,
+          position: 'top',
+          element: document.querySelector(('#slider'))
+        },
+        {
+          title: 'Conversion lottery worth and ' + js_vars.selected_value_text,
+          intro: `<p>The computer automatically converts your guess about the average lottery worth in your guess
+                    about the ${js_vars.selected_value_text}.</p>`,
+          position: 'top',
+          element: document.querySelector(('#conversion-table'))
         },
       ]
     }).start()

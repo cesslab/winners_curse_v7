@@ -1,21 +1,22 @@
 from os import environ, getenv
 
+GENERIC_CONFIG = {
+    "app_sequence": ["instructions", "bidsample", "quiz", "bid", "questions", "payoff"],
+    "num_demo_participants": 2,
+    "lottery_1": "1",
+    "lottery_2": "2",
+    "lottery_3": "3",
+    "lottery_4": "4",
+    "lottery_5": "5",
+    "lottery_6": "6",
+    "lottery_7": "7",
+    "lottery_8": "8",
+    "endowment_tokens": "100",
+}
+
 SESSION_CONFIGS = [
-    {
-        "name": "wc",
-        "app_sequence": ["instructions", "bidsample", "quiz", "bid", "questions", "payoff"],
-        "num_demo_participants": 2,
-        "treatment": "cv",
-        "lottery_1": "1",
-        "lottery_2": "2",
-        "lottery_3": "3",
-        "lottery_4": "4",
-        "lottery_5": "5",
-        "lottery_6": "6",
-        "lottery_7": "7",
-        "lottery_8": "8",
-        "endowment_tokens": "100",
-    },
+    {**GENERIC_CONFIG, **{"name": "cv", "treatment": "cv"}},
+    {**GENERIC_CONFIG, **{"name": "cp", "treatment": "cp"}},
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs

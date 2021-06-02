@@ -1,0 +1,7 @@
+span.credits::before {
+    content: '\2016';
+    position: absolute;
+    margin-left: 2px;
+    font-size: 1rem;
+    font-weight: 400;
+}

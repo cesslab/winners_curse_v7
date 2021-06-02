@@ -1,0 +1,13 @@
+<div class="lottery">
+  <p class="text-center">
+    {% if player.is_value_treatment %}
+    With a probability of {{ player.ticket_probability }}% you get<br>
+    a value v between <span class="credits">C</span>{{ player.alpha }} and <span class="credits">C</span>{{ player.beta }},
+    <br>otherwise you get 0 credits.
+    {% else %}
+    With a probability p between {{ player.alpha }}% and {{ player.beta }}%,<br>
+    you get a value v = <span class="credits">C</span>{{ player.fixed_value }},
+    <br>otherwise you get <span class="credits">C</span>0.
+    {% endif %}
+  </p>
+</div>

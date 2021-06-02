@@ -11,6 +11,8 @@
 <link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
 
+<link rel="stylesheet" href="{% static 'global/css/custom_font.css' %}">
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.css" integrity="sha512-i+WzzATeaDcwcfi5CfLn63qBxrKqiQvDLC+IChU1zVlaPguPgJlddOR07nU28XOoIOno9WPmJ+3ccUInpmHxBg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="{% static 'global/css/tooltip.css' %}">
 {% endblock %}
@@ -26,45 +28,12 @@
         <p>Consider the following lottery ticket with two possible prizes,
           0 and a value v.</p>
       </div>
-      <div class="lottery">
-        <p class="text-center">
-          {% if player.is_value_treatment %}
-          With a probability of {{ player.ticket_probability }}% you get<br>
-          a value v between {{ player.alpha }} and {{ player.beta }} credits,<br>
-          otherwise you get 0 credits.
-          {% else %}
-          With a probability p between {{ player.alpha }}% and {{ player.beta }}%, you get<br>
-          a value v = {{ player.fixed_value }} credits,<br>
-          otherwise you get 0 credits.
-          {% endif %}
-        </p>
-      </div>
 
-      <div>
-        <h4 class="text-center lottery-header"><u>Your Signal</u></h4>
-        <p class="text-center">
-          {% if player.is_value_treatment %}
-          Your signal about v is: {{ player.signal }}
-          {% else %}
-          Your signal about p is: {{ player.signal }}%
-          {% endif %} (with x = {{ player.epsilon }}).
-        </p>
-      </div>
+      {% include 'global/Lottery.html' %}
 
-      <div>
-        <h5 class=""><u>Signal Interpretation</u></h5>
-        <p>
-          {% if player.is_value_treatment %}
-          The Selected Value v is at most {{ player.epsilon }} units away from your signal about v.
-          Given your signal, the Selected Value must lie between {{ player.min_signal }} and {{ player.max_signal }}.
-          {% else %}
-          The Selected Probability p is at most {{ player.epsilon }} percentage points away from your signal about p.
-          <br>
-        Given your signal, the Selected Probability must lie between {{ player.min_signal }}% and {{ player.max_signal }}%.
-        {% endif %}
-        </p>
-      </div>
-      {% next_button %}
+      {% include 'global/YourSignal.html' %}
+
+      {% include 'global/SignalInterpretation.html' %}
   </div>
   <div>
     <div>
@@ -74,9 +43,9 @@
         <li>Question 3</li>
       </ul>
     </div>
-    <div id="task">
-      <div id="question">
-        <h5>What is the probability that your signal is the highest one in the auction?</h5>
+    <div id="task" class="d-flex flex-column align-items-center justify-content-center" style="height: 100%;">
+      <div id="question" class="align-self-center">
+        <h5>What is the probability that you have the highest signal among all four bidders?</h5>
       </div>
       <div>
         <input type="number" id="id_probability_highest_signal" name="probability_highest_signal" min="0" max="100" step="1"
@@ -89,6 +58,9 @@
           {{ form.probability_highest_signal.errors }}
         </div>
         {% endif %}
+      </div>
+      <div>
+        {% next_button %}
       </div>
 
     </div>
@@ -166,7 +138,7 @@
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/intro.min.js" integrity="sha512-QWPjvFqgUJv5X6Sq5NXmwJQSEzUEBxmCCcgqJd5/5luZnS6llRbshsChUNKrFlZ4bshKZEJxAHDB+WWdMsGvUA==" crossorigin="anonymous"></script>
 <script type="text/javascript">
-  IMG_URL = '{% static "global/img/q2_graph.png" %}';
+  IMG_URL = '{% static "global/img/BSR2.png" %}';
 </script>
 <script>
   if (js_vars.display_intro) {
@@ -174,14 +146,31 @@
       steps: [
         {
           title: 'Your Task',
-          intro: '<div><p>Choose a number between 0% and 100%. You increase your chance of getting 12 credits, 1) the closer your ' +
-            'number is to 100% and your signal is indeed the highest one, or 2) the closer your number is to 0% and your ' +
-            'signal is NOT the highest one. The best you can do is to report your true belief about the probability.</p></div>' +
-            '<div><img src="' + IMG_URL + '" alt="graph"></div>' +
-            '<div><p>The computer will randomly draw a number between 0 and 1 (where all numbers have equal chances of ' +
-            'being drawn). If the squared difference betweenthetruth(0% or 100%)andyourguess,(truth - your guess)^2, is ' +
-            'smaller than the random number, you will get 12 credits; if not, you will get nothing.</p></div>',
-          position: 'top',
+          intro: `<div><p>Choose a number between 0% and 100%. You increase your chance of getting 12 credits, 1) the closer your
+            number is to 100% and your signal is indeed the highest one, or 2) the closer your number is to 0% and your
+            signal is NOT the highest one. The best you can do is to report your true belief about the probability.</p></div>`,
+          position: 'left',
+          element: document.querySelector(('#task'))
+        },
+        {
+          title: 'Your Task (Continued)',
+          intro: `
+            <div><img src="${IMG_URL}" alt="graph"></div>
+
+            <div><p>The computer will randomly draw a number between 0 and 1 (where all numbers have equal chances of
+            being drawn). If the squared difference between the truth (0% or 100%)and your guess,(truth - your guess)^2, is
+            smaller than the random number, you will get 12 credits; if not, you will get nothing.</p></div>`,
+          position: 'left',
+          element: document.querySelector(('#task'))
+        },
+        {
+          title: 'Details about payoff',
+          intro: `
+            <div><p>To determine your payoff, the computer will randomly draw a number between 0 and 1
+            (where all numbers have equal chances of being drawn). If the squared difference between the truth
+            (0% or 100%) and your guess, (truth - your guess)^2, is smaller than the random number,
+            you will get 12 credits; if not, you will get nothing.</p></div>`,
+          position: 'left',
           element: document.querySelector(('#task'))
         },
       ]

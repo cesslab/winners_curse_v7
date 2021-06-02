@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{% static 'global/css/outcome.css' %}">
     <link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
     <link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'global/css/custom_font.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -24,12 +25,15 @@
           If your bid is higher than the bids of the three
           other participants, you will win the auction, pay your bid and receive
           the lottery ticket. The computer will then execute the lottery. The
-          outcome of the lottery will be either the Selected Value (Credits) or zero, and you
-          will receive the difference between the outcome and your bid (i.e., your earnings = lottery outcome - your bid).
+          outcome of the lottery will be either the
+          {% if player.is_value_treatment %} Selected Value {% else %} value {% endif %}
+          (<span class="credits">C</span>) or zero, and you will receive the difference between the outcome
+          and your bid (i.e., your earnings = lottery outcome - your bid).
         </p>
         <p>
-          Note that if you win and bid more than the value or you win and the outcome turns out to be zero, you will
-          lose money in a given auction.
+          Note that if you win and bid more than the
+          {% if player.is_value_treatment %} Selected Value {% else %} value {% endif %}
+          or you win and the outcome turns out to be zero, you will lose money in a given auction.
         </p>
       </li>
       <li>
@@ -46,7 +50,8 @@
       </li>
     </ul>
     <p>
-      At the end of the auction, you will learn the Selected Value, the winning bid, the outcome of the lottery and your earnings in this auction.
+      At the end of the auction, you will learn the {% if player.is_value_treatment %} Selected Value {% else %} Selected Probability {% endif %},
+      the winning bid, the outcome of the lottery and your earnings in this auction.
     </p>
   </div>
 
