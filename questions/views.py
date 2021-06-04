@@ -18,6 +18,39 @@ class Instructions(Page):
         }
 
 
+class QuestionOneA(Page):
+    form_model = "player"
+    form_fields = ["worth"]
+
+    @staticmethod
+    def vars_for_template(player):
+        return {
+            "player": player,
+            "num_rounds": range(1, Constants.ROUNDS_PER_LOTTERY+1),
+            "num_lotteries": range(1, Constants.NUM_LOTTERIES+1),
+            "min_valuation": Constants.MIN_VALUATION,
+            "max_valuation": Constants.MAX_VALUATION,
+            "new_lottery":
+                (
+                    player.round_number != 1
+                    and ((player.round_number - 1) % Constants.ROUNDS_PER_LOTTERY) == 0
+                )
+        }
+
+    @staticmethod
+    def js_vars(player):
+        return dict(
+            display_intro=(player.round_number == 1),
+            lottery_max_value=player.lottery_max_value,
+            mapping_divisor=player.fixed_value,
+            is_probability_treatment=player.is_probability_treatment,
+            is_cv_treatment=player.is_value_treatment,
+            selected_value_text=player.selected_value_text,
+        )
+
+
+
+
 class QuestionOneB(Page):
     form_model = "player"
     form_fields = ["worth", "min_worth", "max_worth"]
@@ -65,7 +98,8 @@ class QuestionOneB(Page):
         # Computer draws random number K ~ U[0,1296]
         player.random_k = random.randint(0, 1296)
         # Computer pays 12 credits if L<K ; 0 otherwise (in particular if L>1296)
-        if player.computed_loss < player.random_k:
+        is_guess_sufficiently_close_to_worth = player.computed_loss < player.random_k
+        if is_guess_sufficiently_close_to_worth:
             player.point_earnings = 12
         else:
             player.point_earnings = 0
@@ -75,7 +109,8 @@ class QuestionOneB(Page):
         # ---------------------------------------------------------------------
         # Computer computes 12*[1- (u-l)/(Emax-Emin)] if positive and worth in [l,u] (worth is in interval); 0 otherwise
         player.confidence_value = 12.0*(1.0 - (float(player.max_worth - player.min_worth) / float(player.prep_emax - player.prep_emin)))
-        if player.confidence_value > 0.0 and player.min_worth >= player.prep_worth <= player.max_worth:
+        is_worth_within_interval = player.min_worth >= player.prep_worth <= player.max_worth
+        if player.confidence_value > 0.0 and is_worth_within_interval:
             player.confidence_earnings = player.confidence_value
         else:
             player.confidence_earnings = 0
@@ -91,11 +126,13 @@ class QuestionOneB(Page):
                 "epsilon": player.epsilon,
                 "signal": player.signal,
                 "treatment": player.treatment,
-                "point_earnings": player.point_earnings,
+                "earnings_q1a": player.point_earnings,
                 "max_worth": player.max_worth,
                 "min_worth": player.min_worth,
                 "worth": player.worth,
-                "confidence_interval_earnings": player.confidence_earnings,
+                "earnings_q1b": player.confidence_earnings,
+                "earnings_q1": player.point_earnings + player.confidence_earnings,
+                "is_worth_within_interval": is_worth_within_interval,
                 "lottery_order": player.lottery_order,
                 "lottery_round_number": player.lottery_round_number,
                 "ticket_value_after": player.ticket_value_after,
@@ -106,6 +143,7 @@ class QuestionOneB(Page):
                 "computed_loss": player.computed_loss,
                 "confidence_value": player.confidence_value,
                 "is_probability_treatment": player.is_probability_treatment,
+                "is_guess_sufficiently_close_to_worth": is_guess_sufficiently_close_to_worth,
             }
 
     @staticmethod
@@ -113,75 +151,6 @@ class QuestionOneB(Page):
         return dict(
             display_intro=(player.round_number == 1),
             worth=player.worth,
-            lottery_max_value=player.lottery_max_value,
-            mapping_divisor=player.fixed_value,
-            is_probability_treatment=player.is_probability_treatment,
-            is_cv_treatment=player.is_value_treatment,
-            selected_value_text=player.selected_value_text,
-        )
-
-
-class QuestionOneA(Page):
-    form_model = "player"
-    form_fields = ["worth"]
-
-    @staticmethod
-    def vars_for_template(player):
-        return {
-            "player": player,
-            "num_rounds": range(1, Constants.ROUNDS_PER_LOTTERY+1),
-            "num_lotteries": range(1, Constants.NUM_LOTTERIES+1),
-            "min_valuation": Constants.MIN_VALUATION,
-            "max_valuation": Constants.MAX_VALUATION,
-            "new_lottery":
-                (
-                    player.round_number != 1
-                    and ((player.round_number - 1) % Constants.ROUNDS_PER_LOTTERY) == 0
-                )
-        }
-
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        # PREP WORK
-        # Worth = vLotto *fix (in CV) or pLotto * fix (in CP)
-        if player.is_probability_treatment:
-            player.prep_worth = player.ticket_probability * player.fixed_value / 100
-        else:
-            player.prep_worth = player.ticket_value_before * player.fixed_value / 100
-
-        #  Emin = fix * alpha
-        #  Emax = fix * beta
-        player.prep_emin = player.fixed_value * player.alpha / 100
-        player.prep_emax = player.fixed_value * player.beta / 100
-
-        # ---------------------------------------------------------------------
-        # Question 1a: point belief about worth of the lottery (unconditional)
-        # ---------------------------------------------------------------------
-        # Computer computes loss function L= (X-worth)^2
-        player.computed_loss = float((player.worth - player.prep_worth)**2)
-        # Computer draws random number K ~ U[0,1296]
-        player.random_k = random.randint(0, 1296)
-        # Computer pays 12 credits if L<K ; 0 otherwise (in particular if L>1296)
-        if player.computed_loss < player.random_k:
-            player.point_earnings = 12
-        else:
-            player.point_earnings = 0
-
-        if player.lottery_order == player.participant.vars['worth_payoff_lottery_number'] and player.lottery_round_number == player.participant.vars['worth_payoff_lottery_round_number']:
-            player.participant.vars['q1a_data'] = {
-                "prep_emax": player.prep_emax,
-                "prep_emin": player.prep_emin,
-                "prep_worth": player.prep_worth,
-                "worth": player.worth,
-                "random_k": player.random_k,
-                "computed_loss": player.computed_loss,
-                "point_earnings": player.point_earnings,
-            }
-
-    @staticmethod
-    def js_vars(player):
-        return dict(
-            display_intro=(player.round_number == 1),
             lottery_max_value=player.lottery_max_value,
             mapping_divisor=player.fixed_value,
             is_probability_treatment=player.is_probability_treatment,
@@ -290,7 +259,8 @@ class QuestionThreeB(Page):
 
     @staticmethod
     def vars_for_template(player):
-        return {
+        return \
+        {
             "player": player,
             "num_rounds": range(1, Constants.ROUNDS_PER_LOTTERY+1),
             "num_lotteries": range(1, Constants.NUM_LOTTERIES+1),
@@ -323,7 +293,8 @@ class QuestionThreeB(Page):
         l_3a = (cx - cworth)**2
         k_3a = random.randint(0, 1296)
         # Computer pays 12 credits if L<K ; 0 otherwise (in particular if L>1296).
-        if l_3a < k_3a:
+        guess_sufficiently_close_to_estimate = l_3a < k_3a
+        if guess_sufficiently_close_to_estimate:
             earnings_3a = 12
         else:
             earnings_3a = 0
@@ -336,7 +307,10 @@ class QuestionThreeB(Page):
             "cx": cx,
             "l_3a": l_3a,
             "k_3a": k_3a,
-            "earnings_3a": earnings_3a
+            "earnings_3a": earnings_3a,
+            "updated_worth": player.updated_worth,
+            "guess_sufficiently_close_to_estimate": guess_sufficiently_close_to_estimate,
+
         }
         # ---------------------------------------------------------------------
         # Question 3b: confidence interval about conditional worth of the lottery.
@@ -348,7 +322,8 @@ class QuestionThreeB(Page):
         emin = player.prep_emin
         # Computer computes 12*[1- (cu-cl)/(Emax-Emin)] if positive and worth in [cl,cu] (Cworth is in interval); 0 otherwise
         computed_3b = 12.0*(1.0 - float(cu-cl)/float(emax-emin))
-        if computed_3b > 0 and cl <= cworth <= cu:
+        guess_within_chosen_interval = cl <= cworth <= cu
+        if computed_3b > 0 and guess_within_chosen_interval:
             earnings_3b = computed_3b
         else:
             earnings_3b = 0
@@ -363,7 +338,11 @@ class QuestionThreeB(Page):
             "computed_3b": computed_3b,
             "l_3a": l_3a,
             "k_3a": k_3a,
-            "earnings_3b": earnings_3b
+            "earnings_3b": earnings_3b,
+            "updated_min_worth": player.updated_min_worth,
+            "updated_max_worth": player.updated_max_worth,
+            "earnings_q3": earnings_3a + earnings_3b,
+            "guess_within_chosen_interval": guess_within_chosen_interval,
         }
 
     @staticmethod
