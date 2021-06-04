@@ -1,5 +1,9 @@
 from otree.api import *
 
+from exp.models import (
+    BidHistoryPlayer,
+)
+
 c = Currency
 
 doc = """
@@ -21,7 +25,7 @@ class Group(BaseGroup):
     pass
 
 
-class Player(BasePlayer):
+class Player(BasePlayer, BidHistoryPlayer):
     pass
 
 
@@ -35,24 +39,30 @@ class BidPayoff(Page):
 class QuestionPayoff(Page):
     @staticmethod
     def vars_for_template(player):
-        question_selected = {
-                "selected_lottery_number": player.participant.vars['worth_payoff_lottery_number'],
-                "selected_round": player.participant.vars['worth_payoff_lottery_round_number'],
-                "question_number": player.participant.vars['worth_payoff_question_number']
-             }
+        question_number = player.participant.vars['worth_payoff_question_number']
+        if question_number == 1:
+            q1_data = player.participant.vars['q1_data']
+            payoff_data = player.participant.vars['q1_data']
+        elif question_number == 2:
+            payoff_data = player.participant.vars['q2_data']
+        else:
+            payoff_data = {**player.participant.vars['q3a_data'], **player.participant.vars['q3b_data']}
+
         return {
-            **question_selected,
-            **player.participant.vars['q1_data'],
-            **player.participant.vars['q2_data'],
-            **player.participant.vars['q3a_data'],
-            **player.participant.vars['q3b_data'],
+            "selected_value_text": player.selected_value_text,
+            "selected_lottery_number": player.participant.vars['worth_payoff_lottery_number'],
+            "selected_round": player.participant.vars['worth_payoff_lottery_round_number'],
+            "question_number": question_number,
+            **payoff_data,
         }
 
 
 class QuestionPayoffDebug(Page):
     @staticmethod
     def vars_for_template(player):
+        question_number = player.participant.vars['worth_payoff_question_number']
         return {
+            "question_number": question_number,
             **player.participant.vars['q1_data'],
             **player.participant.vars['q2_data'],
             **player.participant.vars['q3a_data'],
