@@ -145,26 +145,47 @@
             <div id="max_worth_error"></div>
           </td>
         </tr>
-        <tr>
-          <th class="selected-probability">
-            {% if player.is_probability_treatment %}
-            <span>Selected Probability</span>
-            {% else %}
-            <span>Selected Value</span>
-            {% endif %}
-          </th>
-          <td id="min_worth_prob" class="text-center selected-probability"><span id="min-selected-probability"></span></td>
-          <td id="worth_prob" class="text-center selected-probability"><span id="bid-selected-probability"></span></td>
-          <td id="max_worth_prob" class="text-center selected-probability"><span id="max-selected-probability"></span></td>
-        </tr>
       </table>
       <div>
         {% next_button %}
       </div>
-
     </div>
   </div>
+</div>
 
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Re-Read Instructions
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <h4>Interval Selection</h4>
+        <p>
+          Now choose an interval that contains the worth of the lottery with a 50% probability; that is,
+          you should be 50% sure that the interval contains the lottery’s true worth. The smaller your chosen
+          interval is, the more you will earn, but you will only earn a payoff if the actual worth of the lottery
+          lies within your chosen interval.
+        </p>
+        <h4>Details about payoff</h4>
+        <img src='{% static "global/img/INT1b.png" %}' alt="graph">
+        <img src='{% static "global/img/INT1a.png" %}' alt="graph">
+        <img src='{% static "global/img/INT.png" %}' alt="graph">
+        <p>The graphs show the trade-off between making your interval wider but not too wide.
+          Increasing the width of the interval increases the chances to capture the true worth of the lottery and to
+          get a payoff (top graph), but at the same time it decreases your payoff (middle graph).
+          The overall effect on your expected payment depends on the actual lottery and your chosen width (bottom graph).
+          Eventually, choosing an interval that is too wide, may decrease your average payment.
+        </p>
+        <h4>Interval Boundaries</h4>
+        <p>Enter here the lower and upper threshold of your interval. Choose the values such that your best guess
+          lies within your selected interval.
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
@@ -183,10 +204,6 @@
    */
   let slider = document.getElementById('slider');
 
-  let minWorthProbDisplay = document.getElementById('min_worth_prob');
-  let worthProbDisplay = document.getElementById('worth_prob');
-  let maxWorthProbDisplay = document.getElementById('max_worth_prob');
-
   let minWorthInput = document.getElementById('id_min_worth');
   let worthInput = document.getElementById('id_bid');
   let maxWorthInput = document.getElementById('id_max_worth');
@@ -196,7 +213,6 @@
   let maxWorthError = document.getElementById('max_worth_error');
 
   let inputElements = [minWorthInput, worthInput, maxWorthInput];
-  let displayElements = [minWorthProbDisplay, worthProbDisplay, maxWorthProbDisplay];
   let errorElements = [minWorthError, worthError, maxWorthError];
   let handlesHiddenState = [true, false, true];
 
@@ -209,9 +225,7 @@
 
   let sliderTooltipFormatter = {
     to: function(value) {
-      let prob = parseInt((value / js_vars.mapping_divisor) * 100);
-      let suffix = (js_vars.is_probability_treatment) ? '%' : ''
-      return '$' + value + ' (' + prob + suffix + ')';
+      return '$' + value;
     },
     from: function(value) {
       let dollar_value = value.split(" (")[0].slice(1)
@@ -242,11 +256,6 @@
     }
   });
 
-  function updateInputMappedValue(handle, value) {
-    let suffix = (js_vars.is_probability_treatment) ? "%" : "";
-    displayElements[handle].innerHTML = (value !== "") ? `${parseInt((value / js_vars.mapping_divisor) * 100)}${suffix}` : "-";
-  }
-
   function updateInputValue(handle, value) {
     inputElements[handle].value = parseInt(value);
   }
@@ -261,31 +270,10 @@
   function handleSliderSlide(values, handle){
     displayHandleIfHidden(handle);
     updateInputValue(handle, values[handle]);
-    updateInputMappedValue(handle, values[handle]);
   }
 
   function handleSliderSet(values, handle) {
     displayHandleIfHidden(handle);
-    updateInputMappedValue(handle, values[handle]);
-  }
-
-  function initializeWorthTable(element) {
-    let correspondingElement = document.getElementById(element.dataset.for);
-    if (correspondingElement === null) {
-      return;
-    }
-
-    let value = parseInt(element.value);
-    if (!isInteger(value)) {
-      correspondingElement.textContent = "";
-      return;
-    }
-
-    let suffix = (js_vars.is_probability_treatment) ? "%" : "";
-    correspondingElement.textContent = parseInt((value / js_vars.mapping_divisor) * 100) + suffix;
-
-    minWorthProbDisplay.innerHTML = "-"
-    maxWorthProbDisplay.innerHTML = "-"
   }
 
   function validateInput(value, handle) {
@@ -358,8 +346,6 @@
     }
   })
 
-  initializeWorthTable(document.getElementById("id_bid"));
-
   worthInput.addEventListener("keyup", (event) => {
     updateSliderHandleOnInputFieldChange(event.target);
   })
@@ -390,15 +376,14 @@
           element: document.querySelector(('#question'))
         },
         {
-          title: 'Details about payoff',
+          title: 'Interval Selection: Details about payoff',
           intro: `<div><img src="${INT1b}" alt="graph"><img src="${INT1a}" alt="graph"><img src="${INT}" alt="graph"></div>
             <div><p>The graphs show the trade-off between making your interval wider but not too wide.
             Increasing the width of the interval increases the chances to capture the true worth of the lottery and to
             get a payoff (top graph), but at the same time it decreases your payoff (middle graph).
             The overall effect on your expected payment depends on the actual lottery and your chosen width (bottom graph).
             Eventually, choosing an interval that is too wide, may decrease your average payment.</p></div>`,
-          position: 'top',
-          element: document.querySelector(('#task'))
+          position: 'auto',
         },
         {
           title: 'Interval Boundaries',

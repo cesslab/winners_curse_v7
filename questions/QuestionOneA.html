@@ -114,25 +114,14 @@
             <div id="worth_error"></div>
           </td>
         </tr>
-        <tr id="probability-row">
-          <th class="selected-probability">
-            {% if player.is_probability_treatment %}
-            <span>Selected Probability</span>
-            {% else %}
-            <span>Selected Value</span>
-            {% endif %}
-          </th>
-          <td id="worth_prob" class="text-center selected-probability"><span id="bid-selected-probability"></span></td>
-        </tr>
       </table>
       <div>
         {% next_button %}
       </div>
-
     </div>
   </div>
-
 </div>
+
 <div class="accordion" id="accordionExample">
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingOne">
@@ -146,7 +135,7 @@
         <p>
           Part II has also 40 rounds. Like in Part I, in each round you will see again lotteries with an unknown Selected Value, about which you will receive a signal. Remember that the Selected Value is no more than x numbers away from your signal.
           Again, you will be randomly matched with three other participants from previous experiments. Remember that the other three bidders also have independently from each other received a signal surrounding the same Selected Value. The four of you might therefore receive different signals. That means, the four of you face the same lottery ticket, but the signal-updated range for the Selected Value may be different.
-          In every round you will have to answer three different questions. There is a right answer to each question. The closer your answer is to the truth, the more you will earn. For each question you may earn a maximum of 12 credits.
+          In every round you will have to answer three different questions. There is a right answer to each question. The closer your answer is to the truth, the more you will earn. For each question you may earn a maximum of <span class="credits">C</span>12.
           In this part you will not learn anything at the of the round. At the end of the experiment we will randomly choose one question for payment and only then you will learn how close your answer was to the correct answer for that particular question.
         </p>
         <h4>What is the lottery, on average, worth?</h4>
@@ -155,15 +144,11 @@
         </p>
         <h4>Your task</h4>
         <p>
-         Guess the worth of the lottery. You will earn 12 credits if your guess is sufficiently close to the actual worth of the lottery; and nothing if it is too far away.
+         Guess the worth of the lottery. You will earn <span class="credits">C</span>12 if your guess is sufficiently close to the actual worth of the lottery; and nothing if it is too far away.
        I</p>
-      </div>
-      <div>
         <img src="{% static "global/img/q1a_graph.png" %}" alt="">
-      </div>
-      <div>
         <p>
-          The graph shows how the chance of getting 12 credits drops the further away your guess is from the actual worth of the lottery. If it is too far away, you will get nothing.
+          The graph shows how the chance of getting <span class="credits">C</span>12 drops the further away your guess is from the actual worth of the lottery. If it is too far away, you will get nothing.
         </p>
       </div>
     </div>
@@ -183,12 +168,10 @@ let alertList = document.querySelectorAll('.alert')
 <script>
   let slider = document.getElementById('slider');
 
-  let worthProbDisplay = document.getElementById('worth_prob');
   let worthInput = document.getElementById('id_bid');
   let worthError = document.getElementById('worth_error');
 
   let inputElements = [worthInput];
-  let displayElements = [worthProbDisplay];
   let errorElements = [worthError];
   let handlesHiddenState = [true];
 
@@ -198,9 +181,7 @@ let alertList = document.querySelectorAll('.alert')
 
   let sliderTooltipFormatter = {
     to: function(value) {
-      let prob = parseInt((value / js_vars.mapping_divisor) * 100);
-      let suffix = (js_vars.is_probability_treatment) ? '%' : ''
-      return '$' + value + ' (' + prob + suffix + ')';
+      return '$' + value;
     },
     from: function(value) {
       let dollar_value = value.split(" (")[0].slice(1)
@@ -231,11 +212,6 @@ let alertList = document.querySelectorAll('.alert')
       }
   });
 
-  function updateInputMappedValue(handle, value) {
-    let suffix = (js_vars.is_probability_treatment) ? "%" : "";
-    displayElements[handle].innerHTML = (value !== "") ? `${parseInt((value / js_vars.mapping_divisor) * 100)}${suffix}` : "-";
-  }
-
   function updateInputValue(handle, value) {
     inputElements[handle].value = parseInt(value);
   }
@@ -250,33 +226,13 @@ let alertList = document.querySelectorAll('.alert')
   function handleSliderSlide(values, handle){
     displayHandleIfHidden(handle);
     updateInputValue(handle, values[handle]);
-    updateInputMappedValue(handle, values[handle]);
   }
 
   function handleSliderSet(values, handle) {
     displayHandleIfHidden(handle);
-    updateInputMappedValue(handle, values[handle]);
-  }
-
-  function initializeWorthTable(element) {
-    let correspondingElement = document.getElementById(element.dataset.for);
-    if (correspondingElement === null) {
-      return;
-    }
-
-    let value = parseInt(element.value);
-    if (!isInteger(value)) {
-      correspondingElement.textContent = "";
-      return;
-    }
-
-    let suffix = (js_vars.is_probability_treatment) ? "%" : "";
-    correspondingElement.textContent = parseInt((value / js_vars.mapping_divisor) * 100) + suffix;
   }
 
   function validateInput(value, handle) {
-    let minWorthValue = parseInt(inputElements[0].value);
-
     if (handle === 0 && value > 100) {
       return {isValid: false, resetValue: 100, errorMessage: `Your entered value must be less than or equal to 100.`};
     }
@@ -324,8 +280,6 @@ let alertList = document.querySelectorAll('.alert')
   slider.noUiSlider.on('set', handleSliderSet)
   slider.noUiSlider.on('slide', handleSliderSlide)
 
-  initializeWorthTable(document.getElementById("id_bid"));
-
   worthInput.addEventListener("keyup", (event) => {
     updateSliderHandleOnInputFieldChange(event.target);
   })
@@ -349,15 +303,15 @@ let alertList = document.querySelectorAll('.alert')
         },
         {
           title: 'Your task',
-          intro: `<div><p>Guess the worth of the lottery. You will earn 12 credits if your guess is sufficiently close to
+          intro: `<div><p>Guess the worth of the lottery. You will earn <span class="credits">C</span>12 if your guess is sufficiently close to
             the actual worth of the lottery; and nothing if it is too far away. How close your guess is to the actual
-            worth regulates your chance of getting 12 credits.</p></div>`,
+            worth regulates your chance of getting <span class="credits">C</span>12.</p></div>`,
           position: 'top',
           element: document.querySelector(('#task'))
         },
         {
           title: 'Your task',
-          intro: `<div><img src="${IMG_URL}" alt="graph"></div><div><p>The graph shows how the chance of getting 12 credits
+          intro: `<div><img src="${IMG_URL}" alt="graph"></div><div><p>The graph shows how the chance of getting <span class="credits">C</span>12
             drops the further away your guess is from the actual worth of the lottery. If it is too far away, you will get
             nothing.</p></div>`,
           position: 'top',
