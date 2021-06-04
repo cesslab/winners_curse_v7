@@ -36,9 +36,9 @@
   <span>Computer computes loss function L = (X-worth)^2 => ({{worth}} - {{prep_worth}})^2 = {{computed_loss}}</span><br>
   <span>K = U[0,1296] = {{random_k}}</span><br>
   <span>{% if computed_loss < random_k %}
-    {{computed_loss}} is less than {{random_k}}, so the the payoff is {{point_earnings}}
+    {{computed_loss}} is less than {{random_k}}, so the the payoff is {{earnings_q1a}}
     {% else %}
-    {{computed_loss}} is greater than or equal {{random_k}}, so the the payoff is {{point_earnings}}
+    {{computed_loss}} is greater than or equal {{random_k}}, so the the payoff is {{earnings_q1a}}
     {% endif %}}
   </span>
 </div>
@@ -48,10 +48,10 @@
   {% if confidence_value  > 0 %}
     Since {{confidence_value}} is greater than or equal to zero and worth is
   {% if min_worth <= prep_worth and prep_worth <= max_worth %} {{prep_worth }} <b>is</b> between l = {{min_worth}} and u = {{max_worth}} the payoff
-      for this question is {{confidence_interval_earnings}}.
+      for this question is {{earnings_q1b}}.
     {% else %}
       {{prep_worth }} <b>is not</b> between l = {{min_worth}} and u = {{max_worth}} the payoff
-      for this question is {{confidence_interval_earnings}}.
+      for this question is {{earnings_q1b}}.
     {% endif %}
   {% else %}
     Since {{confidence_value}} is less than zero the payoff for this question is 0.
