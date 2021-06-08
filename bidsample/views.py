@@ -1,4 +1,8 @@
 import random
+import os
+
+import ibis
+from pathlib import Path
 
 from otree.api import Page
 from .constants import Constants
@@ -27,6 +31,7 @@ class Bid(Page):
 
     @staticmethod
     def js_vars(player):
+        loader = ibis.loaders.FileLoader(Path(__file__).parent)
         return dict(
             alpha=player.alpha,
             beta=player.beta,
@@ -36,6 +41,12 @@ class Bid(Page):
             max_signal=player.max_signal,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
+            lottery_ticket=loader('LotteryTicketIntro.html').render({"player": player}),
+            your_signal=loader('YourSignalIntro.html').render({"player": player}),
+            signal_interpretation=loader('SignalInterpretationIntro.html').render({"player": player}),
+            your_task=loader('YourTaskIntro.html').render({"player": player}),
+            general_remark=loader('GeneralRemarkIntro.html').render({"player": player}),
+            lottery_types=loader('LotteryTypesIntro.html').render({"player": player}),
         )
 
 

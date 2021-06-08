@@ -72,8 +72,8 @@
       <div class="container-fluid">
         <ul class="list-unstyled multi-steps">
           <li>Question 1</li>
-          <li>Question 2</li>
-          <li class="is-active">Question 3</li>
+          <li class="is-active">Question 2</li>
+          <li>Question 3</li>
         </ul>
       </div>
     </div>
@@ -145,6 +145,21 @@
             <div id="max_worth_error"></div>
           </td>
         </tr>
+        <tr id="confidence-level">
+          <th>
+            <span>Your Confidence</span>
+          </th>
+          <td colspan="3">
+            <input type="number" id="id_updated_worth_confidence" name="updated_worth_confidence" min="0" max="100" step="1"
+                   class="center-input form-control" value="{{ form.updated_worth_confidence.object_data }}" placeholder=""
+                   data-for="max-selected-probability" required>
+            {% if form.updated_worth_confidence.errors %}
+            <div class="alert alert-danger">
+              {{ form.updated_worth_confidence.errors }}
+            </div>
+            {% endif %}
+          </td>
+        </tr>
       </table>
       <div>
         {% next_button %}
@@ -162,27 +177,11 @@
     </h2>
     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
       <div class="accordion-body">
-        <h4>Interval Selection</h4>
-        <p>
-          Now choose an interval that contains the worth of the lottery with a 50% probability; that is,
-          you should be 50% sure that the interval contains the lottery’s true worth. The smaller your chosen
-          interval is, the more you will earn, but you will only earn a payoff if the actual worth of the lottery
-          lies within your chosen interval.
-        </p>
-        <h4>Details about payoff</h4>
-        <img src='{% static "global/img/INT1b.png" %}' alt="graph">
-        <img src='{% static "global/img/INT1a.png" %}' alt="graph">
-        <img src='{% static "global/img/INT.png" %}' alt="graph">
-        <p>The graphs show the trade-off between making your interval wider but not too wide.
-          Increasing the width of the interval increases the chances to capture the true worth of the lottery and to
-          get a payoff (top graph), but at the same time it decreases your payoff (middle graph).
-          The overall effect on your expected payment depends on the actual lottery and your chosen width (bottom graph).
-          Eventually, choosing an interval that is too wide, may decrease your average payment.
-        </p>
-        <h4>Interval Boundaries</h4>
-        <p>Enter here the lower and upper threshold of your interval. Choose the values such that your best guess
-          lies within your selected interval.
-        </p>
+        <h4>Interval</h4>
+        {% include 'questions/IntervalHighestSignalIntro.html' %}
+
+        <h4>Confidence Level</h4>
+        {% include 'questions/ConfidenceLevelHighestSignalIntro.html' %}
       </div>
     </div>
   </div>
@@ -357,40 +356,21 @@
   })
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/intro.min.js" integrity="sha512-QWPjvFqgUJv5X6Sq5NXmwJQSEzUEBxmCCcgqJd5/5luZnS6llRbshsChUNKrFlZ4bshKZEJxAHDB+WWdMsGvUA==" crossorigin="anonymous"></script>
-<script type="text/javascript">
-  INT1a = '{% static "global/img/INT1a.png" %}';
-  INT1b = '{% static "global/img/INT1b.png" %}';
-  INT = '{% static "global/img/INT.png" %}';
-</script>
 <script>
   if (js_vars.display_intro) {
     introJs().setOptions({
       steps: [
         {
-          title: 'Interval Selection',
-          intro: `<p>Now choose an interval that contains the worth of the lottery with a 50% probability; that is,
-          you should be 50% sure that the interval contains the lottery’s true worth. The smaller your chosen
-          interval is, the more you will earn, but you will only earn a payoff if the actual worth of the lottery
-          lies within your chosen interval.</p>`,
+          title: 'Interval',
+          intro: js_vars.interval,
           position: 'top',
           element: document.querySelector(('#question'))
         },
         {
-          title: 'Interval Selection: Details about payoff',
-          intro: `<div><img src="${INT1b}" alt="graph"><img src="${INT1a}" alt="graph"><img src="${INT}" alt="graph"></div>
-            <div><p>The graphs show the trade-off between making your interval wider but not too wide.
-            Increasing the width of the interval increases the chances to capture the true worth of the lottery and to
-            get a payoff (top graph), but at the same time it decreases your payoff (middle graph).
-            The overall effect on your expected payment depends on the actual lottery and your chosen width (bottom graph).
-            Eventually, choosing an interval that is too wide, may decrease your average payment.</p></div>`,
-          position: 'auto',
-        },
-        {
-          title: 'Interval Boundaries',
-          intro: `<div><p>Enter here the lower and upper threshold of your interval. Choose the values such that your
-                  best guess lies within your selected interval.</p></div>`,
-          position: 'top',
-          element: document.querySelector(('#conversion-table'))
+          title: 'Confidence Level',
+          intro: js_vars.confidence_level,
+          position: 'left',
+          element: document.querySelector(('#confidence-level'))
         },
       ]
     }).start()

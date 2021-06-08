@@ -79,7 +79,7 @@
         <span class="credits">C</span>{{earnings_q1a}}.
       </p>
 
-    {% else if  question_number == 3 %}
+    {% elif  question_number == 3 %}
 
       <p>You estimated that your signal of (signal) was the highest one with a probability of {{probability_highest_signal}}.</p>
       <p>The other three bidders hand the signals (s1, s2, s3).</p>
@@ -108,19 +108,6 @@
     <p>In total, you get <span class="credits">C</span>{{earnings_q3}}.</p>
     {% endif %}
   </div>
-
-<div>
-  <h4>Details</h4>
-  The actual lottery worth
-
-</div>
-
-<div>
-
-</div>
-<div>
-
-</div>
 
     {% next_button %}
 {% endblock %}

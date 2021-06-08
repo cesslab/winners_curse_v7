@@ -1,5 +1,8 @@
 import random
 
+import ibis
+from pathlib import Path
+
 from otree.api import Page
 
 from .constants import Constants
@@ -39,6 +42,7 @@ class QuestionOneA(Page):
 
     @staticmethod
     def js_vars(player):
+        loader = ibis.loaders.FileLoader(Path(__file__).parent)
         return dict(
             display_intro=(player.round_number == 1),
             lottery_max_value=player.lottery_max_value,
@@ -46,6 +50,9 @@ class QuestionOneA(Page):
             is_probability_treatment=player.is_probability_treatment,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
+            lottery_worth=loader('LotteryWorthIntro.html').render({"player": player}),
+            your_task=loader('YourTaskIntro.html').render({"player": player}),
+            instructions_for_slider=loader('InstructionsForSliderIntro.html').render({"player": player}),
         )
 
 
@@ -53,7 +60,7 @@ class QuestionOneA(Page):
 
 class QuestionOneB(Page):
     form_model = "player"
-    form_fields = ["worth", "min_worth", "max_worth"]
+    form_fields = ["worth", "min_worth", "max_worth", "worth_confidence"]
 
     @staticmethod
     def vars_for_template(player):
@@ -148,6 +155,7 @@ class QuestionOneB(Page):
 
     @staticmethod
     def js_vars(player):
+        loader = ibis.loaders.FileLoader(Path(__file__).parent)
         return dict(
             display_intro=(player.round_number == 1),
             worth=player.worth,
@@ -156,6 +164,9 @@ class QuestionOneB(Page):
             is_probability_treatment=player.is_probability_treatment,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
+            interval=loader('IntervalIntro.html').render({"player": player}),
+            interval_limits=loader('IntervalLimitsIntro.html').render({"player": player}),
+            confidence_level=loader('ConfidenceLevelIntro.html').render({"player": player}),
         )
 
 
@@ -184,8 +195,8 @@ class QuestionTwo(Page):
         player.prob_computed_loss = (highest - player.probability_highest_signal/100.0)*(highest - player.probability_highest_signal/100.0)
         # Computer draws random number K ~ U[0,1]
         player.random_prob_k = random.uniform(0, 1)
-        # Computer pays 12 credits if L < K; 0 otherwise
-        player.prob_earnings = 12 if player.prob_computed_loss < player.random_prob_k else 0
+        # Computer pays 24 credits if L < K; 0 otherwise
+        player.prob_earnings = 24 if player.prob_computed_loss < player.random_prob_k else 0
 
         if player.lottery_order == player.participant.vars['worth_payoff_lottery_number'] and player.lottery_round_number == player.participant.vars['worth_payoff_lottery_round_number']:
             player.participant.vars['q2_data'] = {
@@ -199,6 +210,7 @@ class QuestionTwo(Page):
 
     @staticmethod
     def js_vars(player):
+        loader = ibis.loaders.FileLoader(Path(__file__).parent)
         return dict(
             display_intro=(player.round_number == 1),
             lottery_max_value=player.lottery_max_value,
@@ -206,6 +218,7 @@ class QuestionTwo(Page):
             is_probability_treatment=player.is_probability_treatment,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
+            your_task=loader('YourTaskProbabilityIntro.html').render({"player": player}),
         )
 
 
@@ -243,6 +256,7 @@ class QuestionThreeA(Page):
 
     @staticmethod
     def js_vars(player):
+        loader = ibis.loaders.FileLoader(Path(__file__).parent)
         return dict(
             display_intro=(player.round_number == 1),
             lottery_max_value=player.lottery_max_value,
@@ -250,12 +264,13 @@ class QuestionThreeA(Page):
             is_probability_treatment=player.is_probability_treatment,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
+            your_task=loader('YourTaskHighestSignalIntro.html').render({"player": player}),
         )
 
 
 class QuestionThreeB(Page):
     form_model = "player"
-    form_fields = ["updated_worth", "updated_min_worth", "updated_max_worth"]
+    form_fields = ["updated_worth_confidence", "updated_worth", "updated_min_worth", "updated_max_worth"]
 
     @staticmethod
     def vars_for_template(player):
@@ -347,6 +362,7 @@ class QuestionThreeB(Page):
 
     @staticmethod
     def js_vars(player):
+        loader = ibis.loaders.FileLoader(Path(__file__).parent)
         return dict(
             display_intro=(player.round_number == 1),
             worth=player.updated_worth,
@@ -355,6 +371,8 @@ class QuestionThreeB(Page):
             is_probability_treatment=player.is_probability_treatment,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
+            interval=loader('IntervalHighestSignalIntro.html').render({"player": player}),
+            confidence_level=loader('ConfidenceLevelHighestSignalIntro.html').render({"player": player}),
         )
 
 

@@ -50,6 +50,8 @@ class Player(BasePlayer, BidHistoryPlayer):
     min_worth = models.IntegerField(min=0, max=100)
     max_worth = models.IntegerField(min=0, max=100)
     worth = models.IntegerField(min=0, max=100)
+    worth_confidence = models.IntegerField(min=0, max=100)
+    updated_worth_confidence = models.IntegerField(min=0, max=100)
     updated_min_worth = models.IntegerField(min=0, max=100)
     updated_max_worth = models.IntegerField(min=0, max=100)
     updated_worth = models.IntegerField(min=0, max=100)

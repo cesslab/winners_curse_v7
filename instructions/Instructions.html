@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block styles %}
+<link rel="stylesheet" href="{% static 'global/css/custom_font.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -20,9 +21,9 @@
     Should you disobey the rules, we will exclude you from the experiment and you will not be paid.
   </p>
   <p>
-    The currency in this experiment is credits. Each credit you earn will
+    The currency in this experiment is credits(<span class="credits">C</span>). Each credit you earn will
     be converted into U.S. dollars at the end of the experiment at the rate of $1
-    equals 6 credits.
+    equals <span class="credits">C</span>6.
   </p>
 </div>
 {% else %}

@@ -66,19 +66,7 @@
       </p>
     </div>
 
-    <div class="lottery" id="lottery-text">
-      {% if player.treatment == 'cv' %}
-        <p>
-          With a probability p of {{ player.fixed_value }}% you get a value v = <span class="credits">C</span>{{ player.ticket_value_before }},
-          <br>otherwise you get <span class="credits">C</span>0.
-        </p>
-      {% else %}
-        <p>
-          With a probability p of {{ player.ticket_probability }}% you get a value v = <span class="credits">C</span>{{ player.fixed_value }},
-          <br>otherwise you get <span class="credits">C</span>0.
-        </p>
-      {% endif %}
-    </div>
+    {% include 'global/RealizedLottery.html' %}
 
     <div id="played-outcome" class="text-center">
         <p>The lottery was played and its outcome was {{ player.ticket_value_after }}.</p>

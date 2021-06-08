@@ -2,32 +2,12 @@
 {% load otree static %}
 
 {% block title %}
-    Instructions for Part Two
 {% endblock %}
 
 {% block styles %}
 {% endblock %}
 
 {% block content %}
-<p>
-  Part II has also 40 rounds. Like in Part I, in each round you will see again lotteries with
-  an unknown {{ player.selected_value_text }}, about which you will receive a signal.
-  Remember that the {{ player.selected_value_text }} is no more than x numbers away from your signal.
-</p>
-<p>
-Again, you will be randomly matched with three other participants from previous experiments. Remember that independently
-  from each other the other three bidders also have received a signal surrounding the same {{ player.selected_value_text }}.
-  The four of you might therefore receive different signals. That means, the four of you face the same lottery ticket,
-  but the signal-updated range for the {{ player.selected_value_text }} may be different.
-</p>
-<p>
-  In every round you will have to answer three different questions. There is a right answer to each question.
-  The closer your answer is to the truth, the more you will earn. For each question you may earn a maximum of 12 credits.
-</p>
-<p>
-  In this part you will not learn anything at the end of the round. At the end of the experiment we will randomly choose one
-  question for payment and only then you will learn how close your answer was to the correct answer for that particular
-  question.
-</p>
+    {% include 'questions/PartTwoInstructions.html' %}
     {% next_button %}
 {% endblock %}

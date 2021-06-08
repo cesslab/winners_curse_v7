@@ -131,25 +131,16 @@
     </h2>
     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
       <div class="accordion-body">
-        <h4>Re-Read Instructions</h4>
-        <p>
-          Part II has also 40 rounds. Like in Part I, in each round you will see again lotteries with an unknown Selected Value, about which you will receive a signal. Remember that the Selected Value is no more than x numbers away from your signal.
-          Again, you will be randomly matched with three other participants from previous experiments. Remember that the other three bidders also have independently from each other received a signal surrounding the same Selected Value. The four of you might therefore receive different signals. That means, the four of you face the same lottery ticket, but the signal-updated range for the Selected Value may be different.
-          In every round you will have to answer three different questions. There is a right answer to each question. The closer your answer is to the truth, the more you will earn. For each question you may earn a maximum of <span class="credits">C</span>12.
-          In this part you will not learn anything at the of the round. At the end of the experiment we will randomly choose one question for payment and only then you will learn how close your answer was to the correct answer for that particular question.
-        </p>
+        {% include 'questions/PartTwoInstructions.html' %}
+
         <h4>What is the lottery, on average, worth?</h4>
-        <p>
-         The correct answer to that question depends on the true Selected Value in the auction. Keep in mind that the lottery pays either the Selected Value or nothing. Therefore, the lottery cannot be worth less than zero or more than the Selected Value. In general, the lottery is worth what you get, on average, if you play the lottery very often.
-        </p>
+        {% include 'questions/LotteryWorthIntro.html' %}
+
         <h4>Your task</h4>
-        <p>
-         Guess the worth of the lottery. You will earn <span class="credits">C</span>12 if your guess is sufficiently close to the actual worth of the lottery; and nothing if it is too far away.
-       I</p>
-        <img src="{% static "global/img/q1a_graph.png" %}" alt="">
-        <p>
-          The graph shows how the chance of getting <span class="credits">C</span>12 drops the further away your guess is from the actual worth of the lottery. If it is too far away, you will get nothing.
-        </p>
+        {% include 'questions/YourTaskIntro.html' %}
+
+        <h4>Instructions for Slider</h4>
+        {% include 'questions/InstructionsForSliderIntro.html' %}
       </div>
     </div>
   </div>
@@ -294,43 +285,21 @@ let alertList = document.querySelectorAll('.alert')
       steps: [
         {
           title: 'What is the lottery, on average, worth?',
-          intro: `<p>The correct answer to that question depends on the true Selected Probability in the auction.
-          Keep in mind that the lottery pays either the value or nothing. Therefore, the lottery cannot be worth
-          less than zero or more than the value. In general, the lottery is worth what you get, on average,
-          if you play the lottery very often.</p>`,
+          intro: js_vars.lottery_worth,
           position: 'top',
           element: document.querySelector(('#question'))
         },
         {
           title: 'Your task',
-          intro: `<div><p>Guess the worth of the lottery. You will earn <span class="credits">C</span>12 if your guess is sufficiently close to
-            the actual worth of the lottery; and nothing if it is too far away. How close your guess is to the actual
-            worth regulates your chance of getting <span class="credits">C</span>12.</p></div>`,
-          position: 'top',
-          element: document.querySelector(('#task'))
-        },
-        {
-          title: 'Your task',
-          intro: `<div><img src="${IMG_URL}" alt="graph"></div><div><p>The graph shows how the chance of getting <span class="credits">C</span>12
-            drops the further away your guess is from the actual worth of the lottery. If it is too far away, you will get
-            nothing.</p></div>`,
+          intro: js_vars.your_task,
           position: 'top',
           element: document.querySelector(('#task'))
         },
         {
           title: 'Instructions for slider',
-          intro: `<p>Click anywhere on the slider to select your best guess. After clicking the first time, you may change
-          your guess by dragging the slider to the left or right.</p><p>Alternatively, you may also enter your best guess
-          directly in the box below.</p>`,
+          intro: js_vars.instructions_for_slider,
           position: 'top',
           element: document.querySelector(('#slider'))
-        },
-        {
-          title: 'Conversion lottery worth and ' + js_vars.selected_value_text,
-          intro: `<p>The computer automatically converts your guess about the average lottery worth in your guess
-                    about the ${js_vars.selected_value_text}.</p>`,
-          position: 'top',
-          element: document.querySelector(('#conversion-table'))
         },
       ]
     }).start()
