@@ -2,127 +2,107 @@
 {% load otree static %}
 
 {% block styles %}
-<link rel="stylesheet" href="{% static 'global/css/bid.css' %}">
-<link rel="stylesheet" href="{% static 'global/css/multi_step_progress_bar.css' %}">
-
-<link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
-<link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
-
-<link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
-<link rel="stylesheet" href="{% static 'global/css/questions.css' %}">
-
-<link rel="stylesheet" href="{% static 'global/css/custom_font.css' %}">
-
-<link rel="stylesheet" href="{% static 'global/css/nouislider.css' %}">
-<link rel="stylesheet" href="{% static 'global/css/nouislider_hide.css' %}">
-<link rel="stylesheet" href="{% static 'global/css/custom_nouislider.css' %}">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.css" integrity="sha512-i+WzzATeaDcwcfi5CfLn63qBxrKqiQvDLC+IChU1zVlaPguPgJlddOR07nU28XOoIOno9WPmJ+3ccUInpmHxBg==" crossorigin="anonymous" />
-<link rel="stylesheet" href="{% static 'global/css/tooltip.css' %}">
+  {% include 'questions/QuestionCSS.html' %}
 {% endblock %}
 
 {% block content %}
-{% if new_lottery %}
-{% include 'global/LotteryUpdate.html' %}
-{% endif %}
-{% include 'global/LotteryRoundNavbar.html' %}
+  {% if new_lottery %}
+    {% include 'global/LotteryUpdate.html' %}
+  {% endif %}
 
-<div class="grid-container">
+  {% include 'global/LotteryRoundNavbar.html' %}
 
-  <div>
-    <div class="lottery-header">
-      <h4 class="text-center"><u>Lottery of type {{ player.lottery_order }}</u></h4>
-    </div>
+  <div class="grid-container">
     <div>
-      <p>Consider the following lottery ticket with two possible prizes,
-        0 and a value v.</p>
+      <div class="lottery-header">
+        <h4 class="text-center"><u>Lottery of type {{ player.lottery_order }}</u></h4>
+      </div>
+      <div>
+        <p>Consider the following lottery ticket with two possible prizes,
+          0 and a value v.</p>
+      </div>
+
+      {% include 'global/Lottery.html' %}
+
+      {% include 'global/YourSignal.html' %}
+
+      {% include 'global/SignalInterpretation.html' %}
     </div>
 
-    {% include 'global/Lottery.html' %}
-
-    {% include 'global/YourSignal.html' %}
-
-    {% include 'global/SignalInterpretation.html' %}
-
-    <div id="plot-container"></div>
-
-  </div>
-
-  <div>
     <div>
       <div>
-        <ul class="list-unstyled multi-steps">
-          <li>Question 1</li>
-          <li class="is-active">Question 2</li>
-          <li>Question 3</li>
-        </ul>
+        <div>
+          <ul class="list-unstyled multi-steps">
+            <li>Question 1</li>
+            <li class="is-active">Question 2</li>
+            <li>Question 3</li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <div id="task">
-      <div id="question">
-        <h5>As before you guess the worth of the lottery given a signal.
-          Let’s say that four people including you received such a signal and you were told that your signal was the highest among them.
-        </h5>
-        <h5>Given this new information what, do you think, is now the average worth for the lottery in credits?</h5>
-      </div>
-      <div id="slider">
-      </div>
-    </div>
-    <div class="worth-table" id="conversion-table">
-      <table>
-        <thead>
-        <tr>
-          <th class="text-center">
-          </th>
-          <th class="text-center">
-            <span>Best Guess</span>
-          </th>
-        </tr>
-        </thead>
-        <tr>
-          <th>
-            <span>Lottery Worth</span>
-          </th>
-          <td class="text-center">
-            <input type="number" id="id_bid" name="updated_worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
-                   class="center-input form-control" value="{{ form.updated_worth.object_data }}" placeholder=""
-                   data-for="bid-selected-probability" data-handle="0" required>
-            <span id="worth_display"></span>
 
-            {% if form.updated_worth.errors %}
-            <div class="alert alert-danger">
-              {{ form.updated_worth.errors }}
-            </div>
-            {% endif %}
-            <div id="worth_error"></div>
-          </td>
-        </tr>
-      </table>
+      <div id="task">
+        <div>
+          <div id="question">
+            <h5>What is the lottery, on average, worth if you learn that, among all four bidders, you have the highest signal?</h5>
+          </div>
+          <div id="slider">
+          </div>
+        </div>
+
+        <div class="worth-table" id="conversion-table">
+          <table>
+            <thead>
+            <tr>
+              <th class="text-center">
+              </th>
+              <th class="text-center">
+                <span>Best Guess</span>
+              </th>
+            </tr>
+            </thead>
+            <tr>
+              <th>
+                <span>Lottery Worth</span>
+              </th>
+              <td class="text-center">
+                <input type="number" id="id_bid" name="updated_worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
+                       class="center-input form-control" value="{{ form.updated_worth.object_data }}" placeholder=""
+                       data-for="bid-selected-probability" data-handle="0" required>
+
+                {% if form.updated_worth.errors %}
+                <div class="alert alert-danger">
+                  {{ form.updated_worth.errors }}
+                </div>
+                {% endif %}
+                <div id="worth_error"></div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
       <div>
         {% next_button %}
       </div>
     </div>
   </div>
-</div>
 
-<div class="accordion" id="accordionExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingOne">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        Re-Read Instructions
-      </button>
-    </h2>
-    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        {% include 'questions/PartTwoInstructions.html' %}
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Re-Read Instructions
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          {% include 'questions/PartTwoInstructions.html' %}
 
-        <h4>Your Task</h4>
-        {% include 'questions/YourTaskHighestSignalIntro.html' %}
+          <h4>Your Task</h4>
+          {% include 'questions/YourTaskHighestSignalIntro.html' %}
+        </div>
       </div>
     </div>
   </div>
-</div>
 {% endblock %}
 
 {% block scripts %}
@@ -203,8 +183,11 @@ alertList.forEach(function (alert) {
   }
 
   function validateInput(value, handle) {
-    if (handle === 0 && value > 100) {
-      return {isValid: false, resetValue: 100, errorMessage: `Your entered value must be less than or equal to 100.`};
+    if (handle === 0 && value < 0) {
+      return {isValid: false, resetValue: 0, errorMessage: `Your "Best Guess" must be greater than or equal to 0.`};
+    }
+    else if (handle === 0 && value > 100) {
+      return {isValid: false, resetValue: 100, errorMessage: `Your "Best Guess" must be less than or equal to 100.`};
     }
     else {
       return {isValid: true, errorMessage: ''};
@@ -216,6 +199,7 @@ alertList.forEach(function (alert) {
     let inputString = element.value
 
     if (!isInteger(inputString)) {
+      errorElements[handleId].innerHTML = '';
       return;
     }
 
@@ -223,7 +207,7 @@ alertList.forEach(function (alert) {
 
     let inputValidation = validateInput(inputValue, handleId)
     if (!inputValidation.isValid) {
-      errorElements[handleId].innerHTML = `<span class="error">${inputValidation.errorMessage}</span>`;
+      errorElements[handleId].innerHTML = `<small class="is-invalid text-danger">${inputValidation.errorMessage}</small>`;
     }
     else {
       errorElements[handleId].innerHTML = '';

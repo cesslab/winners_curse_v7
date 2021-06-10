@@ -63,49 +63,11 @@
     <h4>Your Earnings</h4>
 
     {% if question_number == 1 %}
-
-      <p>You estimated the lottery to be, on average, worth between <span class="credits">C</span>{{min_worth}} and <span class="credits">C</span>{{max_worth}}. Your best guess was <span class="credits">C</span>{{worth}}.</p>
-      <p>Your earnings in this round are <span class="credits">C</span>{{earnings_q1}}.</p>
-
-      <h4>Earnings Details</h4>
-      <p>
-        The actual lottery worth {% if is_worth_within_interval %} was {% else %} was not {% endif %} within your chosen
-        interval, therefore you get {{earnings_q1b}}.
-      </p>
-      <p>
-        Your best guess {% if is_guess_sufficiently_close_to_worth %} was {% else %} was not {% endif %} sufficiently
-        close to the actual lottery worth, therefore you get <span class="credits">C</span>12 with a (prob) chance.
-        The computer used a random device with this chance to compute your payoff and you get
-        <span class="credits">C</span>{{earnings_q1a}}.
-      </p>
-
-    {% elif  question_number == 3 %}
-
-      <p>You estimated that your signal of (signal) was the highest one with a probability of {{probability_highest_signal}}.</p>
-      <p>The other three bidders hand the signals (s1, s2, s3).</p>
-      <p>Therefore your signal {% if highest_market_signal %} was {% else %} was not {% endif %} the highest one.</p>
-
-      <h4>Earnings Details</h4>
-      <p>You get <span class="credits">C</span>12 with a {{ prob_computed_loss}} chance. The computer used a random
-        device with this chance to compute your payoff and you get <span class="credits">C</span>{{prob_earnings}}.
-      </p>
+      {% include 'payoff/QuestionOnePayoff.html' %}
+    {% elif  question_number == 2 %}
+      {% include 'payoff/QuestionThreePayoff.html' %}
     {% else %}
-    <p>
-      Given your signal being highest, you estimated the lottery to be, on average, worth between {{updated_min_worth}}
-      and {{updated_max_worth}}. Your best guess was {{updated_worth}}.
-    </p>
-    <p>Your earnings for this round are <span class="credits">C</span>{{earnings_3b}}.</p>
-
-    <h4>Earnings Details</h4>
-    <p>
-      The correct estimate {% if guess_within_chosen_interval %} was {% else %} was not {% endif %} within your
-      chosen interval, therefore you get {{earnings_3b}} credits.
-    </p>
-    <p>Your best guess {% if guess_sufficiently_close_to_estimate %} was {% else %} was not {% endif %} sufficiently
-      close to the correct estimate, therefore you get <span class="credits">C</span>12 with a (prob)
-      chance. The computer used a random device with this chance to compute your payoff and you get {{earnings_3a}} credits.
-    </p>
-    <p>In total, you get <span class="credits">C</span>{{earnings_q3}}.</p>
+      {% include 'payoff/QuestionTwoPayoff.html' %}
     {% endif %}
   </div>
 

@@ -43,48 +43,27 @@
         <li class="is-active">Question 3</li>
       </ul>
     </div>
-    <div id="task" class="d-flex flex-column align-items-center justify-content-center" style="height: 100%;">
-      <div id="question" class="align-self-center">
-        <h5>What is the probability that you have the highest signal among all four bidders?</h5>
-      </div>
-      <div>
-        <input type="number" id="id_probability_highest_signal" name="probability_highest_signal" min="0" max="100" step="1"
-               class="center-input form-control" value="{{ form.probability_highest_signal.object_data }}"
-               placeholder="Enter a number between 0 and 100"
-               data-for="bid-selected-probability" required>
-
-        {% if form.probability_highest_signal.errors %}
-        <div class="alert alert-danger">
-          {{ form.probability_highest_signal.errors }}
+    <div class="d-flex flex-column align-items-center justify-content-center" style="height: 100%;">
+      <div id="task" >
+        <div id="question" class="align-self-center">
+          <h5>What is the probability that you have the highest signal among all four bidders?</h5>
         </div>
-        {% endif %}
+        <div style="width: 100%">
+          <input type="number" id="id_probability_highest_signal" name="probability_highest_signal" min="0" max="100" step="1"
+                 class="center-input form-control" value="{{ form.probability_highest_signal.object_data }}"
+                 placeholder=""
+                 data-for="bid-selected-probability" required>
+          <small class="text-muted">Enter a value between 0 and 100</small>
+
+          {% if form.probability_highest_signal.errors %}
+          <div class="alert alert-danger">
+            {{ form.probability_highest_signal.errors }}
+          </div>
+          {% endif %}
+        </div>
       </div>
       <div>
         {% next_button %}
-      </div>
-
-    </div>
-  </div>
-</div>
-
-
-
-<div class="modal" id="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Notification</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Your willingness to pay is larger than the highest possible outcome of the lottery.</p>
-        <p>Please submit a reasonable willingness to pay that does not exceed the highest possible outcome of the
-          lottery.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="modal-btn btn btn-secondary" data-dismiss="modal">Back</button>
       </div>
     </div>
   </div>
@@ -99,6 +78,9 @@
     </h2>
     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
       <div class="accordion-body">
+        <h4>Question</h4>
+        {% include 'questions/QuestionIntro.html' %}
+
         <h4>Your Task</h4>
         {% include 'questions/YourTaskProbabilityIntro.html' %}
       </div>
@@ -160,6 +142,12 @@
   if (js_vars.display_intro) {
     introJs().setOptions({
       steps: [
+        {
+          title: 'Question',
+          intro: js_vars.question,
+          position: 'left',
+          element: document.querySelector(('#question'))
+        },
         {
           title: 'Your Task',
           intro: js_vars.your_task,
