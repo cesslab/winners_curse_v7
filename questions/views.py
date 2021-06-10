@@ -100,10 +100,11 @@ class QuestionOneB(Page):
         # ---------------------------------------------------------------------
         # Question 1a: point belief about worth of the lottery (unconditional)
         # ---------------------------------------------------------------------
+        MAX_DISTANCE = 1296
         # Computer computes loss function L= (X-worth)^2
         player.computed_loss = float((player.worth - player.prep_worth)**2)
         # Computer draws random number K ~ U[0,1296]
-        player.random_k = random.randint(0, 1296)
+        player.random_k = random.randint(0, MAX_DISTANCE)
         # Computer pays 12 credits if L<K ; 0 otherwise (in particular if L>1296)
         is_guess_sufficiently_close_to_worth = player.computed_loss < player.random_k
         if is_guess_sufficiently_close_to_worth:
@@ -124,15 +125,24 @@ class QuestionOneB(Page):
 
         if player.lottery_order == player.participant.vars['worth_payoff_lottery_number'] and player.lottery_round_number == player.participant.vars['worth_payoff_lottery_round_number']:
             player.participant.vars['q1_data'] = {
-                "previous_highest_bid": player.previous_highest_bid,
+                # "previous_highest_bid": player.previous_highest_bid,
                 "fixed_value": player.fixed_value,
                 "alpha": player.alpha,
                 "beta": player.beta,
-                "prep_emax": player.prep_emax,
-                "prep_emin": player.prep_emin,
                 "epsilon": player.epsilon,
                 "signal": player.signal,
                 "treatment": player.treatment,
+                "lottery_order": player.lottery_order,
+                "lottery_round_number": player.lottery_round_number,
+                "ticket_value_after": player.ticket_value_after,
+                "ticket_value_before": player.ticket_value_before,
+                "ticket_probability": player.ticket_probability,
+                "is_probability_treatment": player.is_probability_treatment,
+                "is_value_treatment": player.is_value_treatment,
+                # Question 1 Variables
+                "prob": int((MAX_DISTANCE - player.computed_loss) / MAX_DISTANCE),
+                "prep_emax": player.prep_emax,
+                "prep_emin": player.prep_emin,
                 "earnings_q1a": player.point_earnings,
                 "max_worth": player.max_worth,
                 "min_worth": player.min_worth,
@@ -140,16 +150,10 @@ class QuestionOneB(Page):
                 "earnings_q1b": player.confidence_earnings,
                 "earnings_q1": player.point_earnings + player.confidence_earnings,
                 "is_worth_within_interval": is_worth_within_interval,
-                "lottery_order": player.lottery_order,
-                "lottery_round_number": player.lottery_round_number,
-                "ticket_value_after": player.ticket_value_after,
-                "ticket_value_before": player.ticket_value_before,
-                "ticket_probability": player.ticket_probability,
                 "prep_worth": player.prep_worth,
                 "random_k": player.random_k,
                 "computed_loss": player.computed_loss,
                 "confidence_value": player.confidence_value,
-                "is_probability_treatment": player.is_probability_treatment,
                 "is_guess_sufficiently_close_to_worth": is_guess_sufficiently_close_to_worth,
             }
 
@@ -200,12 +204,29 @@ class QuestionTwo(Page):
 
         if player.lottery_order == player.participant.vars['worth_payoff_lottery_number'] and player.lottery_round_number == player.participant.vars['worth_payoff_lottery_round_number']:
             player.participant.vars['q2_data'] = {
+                "fixed_value": player.fixed_value,
+                "alpha": player.alpha,
+                "beta": player.beta,
+                "epsilon": player.epsilon,
+                "signal": player.signal,
+                "treatment": player.treatment,
+                "lottery_order": player.lottery_order,
+                "lottery_round_number": player.lottery_round_number,
+                "ticket_value_after": player.ticket_value_after,
+                "ticket_value_before": player.ticket_value_before,
+                "ticket_probability": player.ticket_probability,
+                "is_probability_treatment": player.is_probability_treatment,
+                "is_value_treatment": player.is_value_treatment,
+                "prep_worth": player.prep_worth,
+                # Question 2 variables
                 "highest": highest,
                 "highest_market_signal": player.highest_market_signal,
+                "highest_other_signal": player.highest_other_signal,
                 "random_prob_k": player.random_prob_k,
                 "prob_earnings": player.prob_earnings,
                 "probability_highest_signal": player.probability_highest_signal,
-                "prob_computed_loss": player.prob_computed_loss
+                "prob_computed_loss": player.prob_computed_loss,
+                "prob": int((1 - player.prob_computed_loss) * 100)
             }
 
     @staticmethod
@@ -218,6 +239,7 @@ class QuestionTwo(Page):
             is_probability_treatment=player.is_probability_treatment,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
+            question=loader('QuestionIntro.html').render({"player": player}),
             your_task=loader('YourTaskProbabilityIntro.html').render({"player": player}),
         )
 
@@ -300,13 +322,14 @@ class QuestionThreeB(Page):
         # ---------------------------------------------------------------------
         # Question 3a: point belief about conditional worth of the lottery.
         # ---------------------------------------------------------------------
+        MAX_DISTANCE = 1296
         # Prep Work
         cworth = player.be_bid
         # subject enters Cx (updated_worth)
         cx = player.updated_worth
         # Computer computes loss function L= (Cx-Cworth)^2
         l_3a = (cx - cworth)**2
-        k_3a = random.randint(0, 1296)
+        k_3a = random.randint(0, MAX_DISTANCE)
         # Computer pays 12 credits if L<K ; 0 otherwise (in particular if L>1296).
         guess_sufficiently_close_to_estimate = l_3a < k_3a
         if guess_sufficiently_close_to_estimate:
@@ -317,16 +340,7 @@ class QuestionThreeB(Page):
         player.l_3a = l_3a
         player.k_3a = k_3a
         player.earnings_3a = earnings_3a
-        player.participant.vars['q3a_data'] = {
-            "cworth": cworth,
-            "cx": cx,
-            "l_3a": l_3a,
-            "k_3a": k_3a,
-            "earnings_3a": earnings_3a,
-            "updated_worth": player.updated_worth,
-            "guess_sufficiently_close_to_estimate": guess_sufficiently_close_to_estimate,
 
-        }
         # ---------------------------------------------------------------------
         # Question 3b: confidence interval about conditional worth of the lottery.
         # ---------------------------------------------------------------------
@@ -345,19 +359,38 @@ class QuestionThreeB(Page):
 
         player.computed_3b = computed_3b
         player.earnings_3b = earnings_3b
-        player.participant.vars['q3b_data'] = {
+        player.participant.vars['q3_data'] = {
+            "fixed_value": player.fixed_value,
+            "alpha": player.alpha,
+            "beta": player.beta,
+            "epsilon": player.epsilon,
+            "signal": player.signal,
+            "treatment": player.treatment,
+            "lottery_order": player.lottery_order,
+            "lottery_round_number": player.lottery_round_number,
+            "ticket_value_after": player.ticket_value_after,
+            "ticket_value_before": player.ticket_value_before,
+            "ticket_probability": player.ticket_probability,
+            "is_probability_treatment": player.is_probability_treatment,
+            "is_value_treatment": player.is_value_treatment,
+            "prep_worth": player.prep_worth,
+            # Question 3 variables
             "cworth": cworth,
             "cx": cx,
+            "l_3a": l_3a,
+            "k_3a": k_3a,
+            "earnings_3a": earnings_3a,
+            "updated_worth": player.updated_worth,
+            "guess_sufficiently_close_to_estimate": guess_sufficiently_close_to_estimate,
             "cu": cu,
             "cl": cl,
             "computed_3b": computed_3b,
-            "l_3a": l_3a,
-            "k_3a": k_3a,
             "earnings_3b": earnings_3b,
             "updated_min_worth": player.updated_min_worth,
             "updated_max_worth": player.updated_max_worth,
             "earnings_q3": earnings_3a + earnings_3b,
             "guess_within_chosen_interval": guess_within_chosen_interval,
+            "prob": int(((MAX_DISTANCE - l_3a) / MAX_DISTANCE) * 100),
         }
 
     @staticmethod
