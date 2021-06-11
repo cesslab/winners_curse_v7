@@ -1,12 +1,12 @@
 <p>You estimated that your signal of {{ signal }} was the highest one with a probability of {{probability_highest_signal}}.</p>
 <p>
-  The highest signal in this auction was {% if highest_market_signal %}{{signal}}{% else %}{{highest_other_signal}}{% endif %}}.
+  The highest signal in this auction was
+  {% if highest_market_signal %}{{signal}}{% else %}{{highest_other_signal}}{% endif %}.
 </p>
-<p>Therefore your signal {% if highest_market_signal %} was {% else %} was not {% endif %} the highest one.</p>
 
 <h4>Details</h4>
 <p>
-  Given your answer you get <span class="credits">C</span>12 with a {{ prob }}% chance.
+  Given your answer you get <span class="credits">C</span>24 with a {{ prob }}% chance.
   To compute your payoff the computer used a random device with this probability and you get
   <span class="credits">C</span>{{prob_earnings}}.
 </p>

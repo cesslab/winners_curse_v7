@@ -53,28 +53,23 @@
         {% endif %}
         </span>
     </div>
+
     <div id="lottery-ticket-header" class="text-center">
-        {% if treatment == 'cv' %}
-        <h4>Actual Lottery with Selected Value</h4>
+      <p>
+        The {{ player.selected_value_text }} was
+        {% if player.is_value_treatment %}
+        {{ player.ticket_value_before }}.
         {% else %}
-            <h4>Actual Lottery with Selected Probability</h4>
+        {{ player.ticket_probability }}.
         {% endif %}
-        <p>
-            {% if treatment == 'cv' %}
-                The Selected Value was {{ ticket_value_after }}. Therefore, the actual lottery ticket was:
-            {% else %}
-                The Selected Probability was {{ ticket_probability }}%. Therefore, the actual lottery ticket was:
-            {% endif %}
-        </p>
-    </div>
-    <div class="text-center lottery">
-        <p>
-            With a probability of {{ ticket_probability }}% you get a value of {{ fixed_value }}, <br>otherwise you get 0.
-        </p>
+        Therefore, the actual lottery ticket was:
+      </p>
     </div>
 
+    {% include 'global/RealizedLottery.html' %}
+
     <div id="played-outcome" class="text-center">
-        <p>The lottery was played and its outcome was {{ earnings }}.</p>
+      <p>The lottery was played and its outcome was {{ player.ticket_value_after }}.</p>
     </div>
 
     <div id="earnings-header" class="text-center">
