@@ -1,0 +1,37 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+Quiz
+{% endblock %}
+
+{% block content %}
+<div>
+  <span>1. Suppose that you are not the highest bidder in an auction. How much do you have to pay?</span>
+  {{ formfield 'q1'}}
+</div>
+<div>
+  <span>2. Which of the following alternatives is correct?</span>
+  {{ formfield 'q2'}}
+</div>
+<div>
+  <span>3. Which of the following alternatives is correct?</span>
+  {{ formfield 'q3'}}
+</div>
+<div>
+  <span>4. Suppose you win the lottery ticket in a given auction. What are your earnings from this auction?</span>
+  {{ formfield 'q4'}}
+</div>
+
+<div>Insert lottery Here</div>
+
+<div>
+  <span>5. Suppose that you receive a signal 30 that is at most 8 percentage points away from the Selected Probability. What could be the Selected Probability?</span>
+  {{ formfield 'q5'}}
+</div>
+<div>
+  <span>6. Suppose the Selected Probability is 30%. The outcome of the lottery...</span>
+  {{ formfield 'q6'}}
+</div>
+{{ next_button }}
+{% endblock %}}
