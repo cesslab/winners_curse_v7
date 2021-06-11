@@ -32,9 +32,9 @@ def creating_session(subsession):
     save_bid_history_for_all_players(subsession.get_players(), Phase.QUESTION_PHASE)
     if subsession.round_number == 1:
         for player in subsession.get_players():
-            player.participant.vars['worth_payoff_lottery_number'] = random.randint(1, Constants.NUM_LOTTERIES)
-            player.participant.vars['worth_payoff_lottery_round_number'] = random.randint(1, Constants.ROUNDS_PER_LOTTERY)
-            player.participant.vars['worth_payoff_question_number'] = random.randint(1, 3)
+            player.participant.vars['question_phase_payoff_lottery_number'] = random.randint(1, Constants.NUM_LOTTERIES)
+            player.participant.vars['question_phase_payoff_lottery_round_number'] = random.randint(1, Constants.ROUNDS_PER_LOTTERY)
+            player.participant.vars['question_phase_payoff_question_number'] = random.randint(1, 3)
     close_db()
 
 

@@ -1,6 +1,6 @@
 import random
 
-from otree.api import Page
+from otree.api import Page, cu
 
 from .constants import Constants
 
@@ -57,6 +57,7 @@ class Bid(Page):
             player.winner = player.win_tie_break
 
         if player.lottery_order == player.participant.vars['payoff_lottery_number'] and player.lottery_round_number == player.participant.vars['payoff_lottery_round_number']:
+            player.payoff = cu(player.earnings)
             player.participant.vars['bid_payoff_data'] = {
                 "bid": player.bid,
                 "new_highest_bid": player.new_highest_bid,

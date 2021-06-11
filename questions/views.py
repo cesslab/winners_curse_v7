@@ -3,7 +3,7 @@ import random
 import ibis
 from pathlib import Path
 
-from otree.api import Page
+from otree.api import Page, cu
 
 from .constants import Constants
 
@@ -123,7 +123,9 @@ class QuestionOneB(Page):
         else:
             player.confidence_earnings = 0
 
-        if player.lottery_order == player.participant.vars['worth_payoff_lottery_number'] and player.lottery_round_number == player.participant.vars['worth_payoff_lottery_round_number']:
+        if player.is_question_phase_payoff(question_number=1):
+            print("saving payoff data for question 1")
+            player.payoff = cu(player.point_earnings + player.confidence_earnings)
             player.participant.vars['q1_data'] = {
                 # "previous_highest_bid": player.previous_highest_bid,
                 "fixed_value": player.fixed_value,
@@ -202,7 +204,9 @@ class QuestionTwo(Page):
         # Computer pays 24 credits if L < K; 0 otherwise
         player.prob_earnings = 24 if player.prob_computed_loss < player.random_prob_k else 0
 
-        if player.lottery_order == player.participant.vars['worth_payoff_lottery_number'] and player.lottery_round_number == player.participant.vars['worth_payoff_lottery_round_number']:
+        if player.is_question_phase_payoff(question_number=3):
+            print("saving payoff data for question 2")
+            player.payoff = cu(player.prob_earnings)
             player.participant.vars['q2_data'] = {
                 "fixed_value": player.fixed_value,
                 "alpha": player.alpha,
@@ -224,6 +228,8 @@ class QuestionTwo(Page):
                 "highest_other_signal": player.highest_other_signal,
                 "random_prob_k": player.random_prob_k,
                 "prob_earnings": player.prob_earnings,
+                # TODO: replace prob_earnings with earnings_q2
+                "earnings_q2": player.prob_earnings,
                 "probability_highest_signal": player.probability_highest_signal,
                 "prob_computed_loss": player.prob_computed_loss,
                 "prob": int((1 - player.prob_computed_loss) * 100)
@@ -359,39 +365,44 @@ class QuestionThreeB(Page):
 
         player.computed_3b = computed_3b
         player.earnings_3b = earnings_3b
-        player.participant.vars['q3_data'] = {
-            "fixed_value": player.fixed_value,
-            "alpha": player.alpha,
-            "beta": player.beta,
-            "epsilon": player.epsilon,
-            "signal": player.signal,
-            "treatment": player.treatment,
-            "lottery_order": player.lottery_order,
-            "lottery_round_number": player.lottery_round_number,
-            "ticket_value_after": player.ticket_value_after,
-            "ticket_value_before": player.ticket_value_before,
-            "ticket_probability": player.ticket_probability,
-            "is_probability_treatment": player.is_probability_treatment,
-            "is_value_treatment": player.is_value_treatment,
-            "prep_worth": player.prep_worth,
-            # Question 3 variables
-            "cworth": cworth,
-            "cx": cx,
-            "l_3a": l_3a,
-            "k_3a": k_3a,
-            "earnings_3a": earnings_3a,
-            "updated_worth": player.updated_worth,
-            "guess_sufficiently_close_to_estimate": guess_sufficiently_close_to_estimate,
-            "cu": cu,
-            "cl": cl,
-            "computed_3b": computed_3b,
-            "earnings_3b": earnings_3b,
-            "updated_min_worth": player.updated_min_worth,
-            "updated_max_worth": player.updated_max_worth,
-            "earnings_q3": earnings_3a + earnings_3b,
-            "guess_within_chosen_interval": guess_within_chosen_interval,
-            "prob": int(((MAX_DISTANCE - l_3a) / MAX_DISTANCE) * 100),
-        }
+        earnings_q3 = earnings_3a + earnings_3b
+
+        if player.is_question_phase_payoff(question_number=2):
+            print("saving payoff data for question 3")
+            player.payoff = cu(earnings_q3)
+            player.participant.vars['q3_data'] = {
+                "fixed_value": player.fixed_value,
+                "alpha": player.alpha,
+                "beta": player.beta,
+                "epsilon": player.epsilon,
+                "signal": player.signal,
+                "treatment": player.treatment,
+                "lottery_order": player.lottery_order,
+                "lottery_round_number": player.lottery_round_number,
+                "ticket_value_after": player.ticket_value_after,
+                "ticket_value_before": player.ticket_value_before,
+                "ticket_probability": player.ticket_probability,
+                "is_probability_treatment": player.is_probability_treatment,
+                "is_value_treatment": player.is_value_treatment,
+                "prep_worth": player.prep_worth,
+                # Question 3 variables
+                "cworth": cworth,
+                "cx": cx,
+                "l_3a": l_3a,
+                "k_3a": k_3a,
+                "earnings_3a": earnings_3a,
+                "updated_worth": player.updated_worth,
+                "guess_sufficiently_close_to_estimate": guess_sufficiently_close_to_estimate,
+                "cu": cu,
+                "cl": cl,
+                "computed_3b": computed_3b,
+                "earnings_3b": earnings_3b,
+                "updated_min_worth": player.updated_min_worth,
+                "updated_max_worth": player.updated_max_worth,
+                "earnings_q3": earnings_q3,
+                "guess_within_chosen_interval": guess_within_chosen_interval,
+                "prob": int(((MAX_DISTANCE - l_3a) / MAX_DISTANCE) * 100),
+            }
 
     @staticmethod
     def js_vars(player):
