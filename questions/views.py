@@ -351,13 +351,13 @@ class QuestionThreeB(Page):
         # Question 3b: confidence interval about conditional worth of the lottery.
         # ---------------------------------------------------------------------
         # cl for lower boundary and cu for upper boundary
-        cl = player.updated_min_worth
-        cu = player.updated_max_worth
+        c_lower = player.updated_min_worth
+        c_upper = player.updated_max_worth
         emax = player.prep_emax
         emin = player.prep_emin
         # Computer computes 12*[1- (cu-cl)/(Emax-Emin)] if positive and worth in [cl,cu] (Cworth is in interval); 0 otherwise
-        computed_3b = 12.0*(1.0 - float(cu-cl)/float(emax-emin))
-        guess_within_chosen_interval = cl <= cworth <= cu
+        computed_3b = 12.0*(1.0 - float(c_upper-c_lower)/float(emax-emin))
+        guess_within_chosen_interval = c_lower <= cworth <= c_upper
         if computed_3b > 0 and guess_within_chosen_interval:
             earnings_3b = computed_3b
         else:
@@ -393,8 +393,8 @@ class QuestionThreeB(Page):
                 "earnings_3a": earnings_3a,
                 "updated_worth": player.updated_worth,
                 "guess_sufficiently_close_to_estimate": guess_sufficiently_close_to_estimate,
-                "cu": cu,
-                "cl": cl,
+                "cu": c_upper,
+                "cl": c_lower,
                 "computed_3b": computed_3b,
                 "earnings_3b": earnings_3b,
                 "updated_min_worth": player.updated_min_worth,
