@@ -1,0 +1,46 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'global/css/payoff_outcome.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/bid.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/custom_font.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="outcome-header lottery-header">
+    <h2 class="text-center">Part I Payoff</h2>
+  </div>
+  <div class="text-center">
+    <span>
+      Your Payoff in Part I was: <b><span class="credits">C</span>{{ payoff_part_1 }}</b>.
+    </span>
+  </div>
+
+  <div class="outcome-header lottery-header">
+    <h2 class="text-center">Part II Payoff</h2>
+  </div>
+  <div class="text-center">
+    <span>
+      Your Payoff in Part II was: <b><span class="credits">C</span>{{ payoff_part_2 }}</b>.
+    </span>
+  </div>
+
+<div class="outcome-header lottery-header">
+  <h2 class="text-center">Total Payoff</h2>
+</div>
+<div class="text-center">
+    <p>
+      Your total payment in dollars is <b>${{ final_payment }}</b> It consists of:<br>
+    </p>
+    <p>
+      $10 Participation fee
+      + $12 endowment
+      + $(0.5 x <span class="credits">C</span>{{ payoff_part_1}})
+      + $(0.5 x <span class="credits">C</span>{{ payoff_part_2 }})
+    </p>
+</div>
+{% endblock %}
