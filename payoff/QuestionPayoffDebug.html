@@ -17,86 +17,27 @@
           The computer randomly selected question {{question_number}} in {{lottery_round_number}} for a lottery of type {{ lottery_order }}.
       </span>
   </div>
-<div>
-  <h4>Prep Work</h4>
-  <span>Worth = vLotto*fix or pLotto*fix</span>
-  <span> =
-    {% if is_probability_treatment %}
-      {{ticket_probability}} * {{fixed_value}}
-    {% else %}
-      {{ticket_value_before}} * {{fixed_value}}
-    {% endif %}
-  </span><br>
-  <span>Emin = fix*alpha = {{fixed_value}} * {{alpha}}</span>
-  <span>Emax = fix*beta = {{fixed_value}} * {{beta}}</span>
-</div>
+  <div>
+    <h4>Prep Work</h4>
+    <span>Worth = vLotto*fix or pLotto*fix</span>
+    <span> =
+      {% if is_probability_treatment %}
+        {{ticket_probability}} * {{fixed_value}}
+      {% else %}
+        {{ticket_value_before}} * {{fixed_value}}
+      {% endif %}
+    </span><br>
+    <span>Emin = fix*alpha = {{fixed_value}} * {{alpha}}</span>
+    <span>Emax = fix*beta = {{fixed_value}} * {{beta}}</span>
+  </div>
 
-<div>
- <h4>Earnings for Question 1.a</h4>
-  <span>Computer computes loss function L = (X-worth)^2 => ({{worth}} - {{prep_worth}})^2 = {{computed_loss}}</span><br>
-  <span>K = U[0,1296] = {{random_k}}</span><br>
-  <span>{% if computed_loss < random_k %}
-    {{computed_loss}} is less than {{random_k}}, so the the payoff is {{earnings_q1a}}
-    {% else %}
-    {{computed_loss}} is greater than or equal {{random_k}}, so the the payoff is {{earnings_q1a}}
-    {% endif %}}
-  </span>
-</div>
-<div>
-  <h4>Earnings for Question 1.b</h4>
-  <span>Computer computes 12*[1 - (u - l)/(Emax - Emin) = 12*[1 - ({{max_worth}} - {{min_worth}})/({{prep_emax}} - {{prep_emin}})] = {{confidence_value}}</span><br>
-  {% if confidence_value  > 0 %}
-    Since {{confidence_value}} is greater than or equal to zero and worth is
-  {% if min_worth <= prep_worth and prep_worth <= max_worth %} {{prep_worth }} <b>is</b> between l = {{min_worth}} and u = {{max_worth}} the payoff
-      for this question is {{earnings_q1b}}.
-    {% else %}
-      {{prep_worth }} <b>is not</b> between l = {{min_worth}} and u = {{max_worth}} the payoff
-      for this question is {{earnings_q1b}}.
-    {% endif %}
+  {% if question_number == 1 %}
+    {% include 'payoff/QuestionOneDebugPayoff.html' %}
+  {% elif  question_number == 2 %}
+    {% include 'payoff/QuestionThreeDebugPayoff.html' %}
   {% else %}
-    Since {{confidence_value}} is less than zero the payoff for this question is 0.
+    {% include 'payoff/QuestionTwoDebugPayoff.html' %}
   {% endif %}
-</div>
 
-<div>
-  <h4>Earnings for Question 2</h4>
-
-  <span>
-  {% if highest_market_signal %}You had the highest signal (Highest = 1) in the market{% else %}You did not have the highest signal (Highest = 0) in the market{% endif %}
-  </span><br>
-  <span>Computer computes loss function L = (Highest - p/100)^2 = ({{highest}} - {{probability_highest_signal}}/100)^2 = {{prob_computed_loss}}</span><br>
-  <span>Computer draws random number k = U[0,1] = {{random_prob_k}}</span><br>
-  <span>
-    {% if prob_computed_loss < random_prob_k %} The value L = {{prob_computed_loss}} is less than K = {{random_prob_k}},
-    {% else %} The value L = {{prob_computed_loss}} is greater than or equal to {{random_prob_k}},
-    {% endif %} so the payoff is {{prob_earnings}}.
-  </span>
-</div>
-<div>
-  <h4>Earnings for Question 3a</h4>
-  <span>Computer computes loss function L = (Cx-worth)^2 => ({{cx}} - {{cworth}})^2 = {{l_3a}}</span><br>
-  <span>K = U[0,1296] = {{k_3a}}</span><br>
-  <span>{% if l_3a < k_3a %}
-    {{l_3a}} is less than {{k_3a}}, so the the payoff is {{earnings_3a}}
-    {% else %}
-    {{l_3a}} is greater than or equal {{k_3a}}, so the the payoff is {{earnings_3a}}
-    {% endif %}
-  </span>
-</div>
-<div>
-  <h4>Earnings for Question 3b</h4>
-  <span>Computer computes 12*[1 - (cu - cl)/(Emax - Emin) = 12*[1 - ({{cu}} - {{cl}})/({{prep_emax}} - {{prep_emin}})] = {{computed_3b}}</span><br>
-  {% if computed_3b  > 0 %}
-    Since {{computed_3b}} is greater than or equal to zero and worth is
-    {% if cl <= cworth and cworth <= cu %}
-      {{ cworth }} between cl = {{cl}} and cu = {{cu}}, the payoff for this question is {{earnings_3b}}.
-    {% else %}
-      {{ cworth }} <b>is not</b> between cl = {{cl}} and cu = {{cu}} the payoff for this question is {{earnings_3b}}.
-    {% endif %}
-  {% else %}
-    Since {{computed_3b}} <b>is</b> less than zero the payoff for this question is 0.
-  {% endif %}
-</div>
-
-    {% next_button %}
+  {% next_button %}
 {% endblock %}

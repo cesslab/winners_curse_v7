@@ -1,0 +1,25 @@
+<div>
+  <h4>Earnings for Question 2a</h4>
+  <span>Computer computes loss function L = (Cx-worth)^2 => ({{cx}} - {{cworth}})^2 = {{l_3a}}</span><br>
+  <span>K = U[0,1296] = {{k_3a}}</span><br>
+  <span>{% if l_3a < k_3a %}
+    {{l_3a}} is less than {{k_3a}}, so the the payoff is {{earnings_3a}}
+    {% else %}
+    {{l_3a}} is greater than or equal {{k_3a}}, so the the payoff is {{earnings_3a}}
+    {% endif %}
+  </span>
+</div>
+<div>
+  <h4>Earnings for Question 2b</h4>
+  <span>Computer computes 12*[1 - (cu - cl)/(Emax - Emin) = 12*[1 - ({{cu}} - {{cl}})/({{prep_emax}} - {{prep_emin}})] = {{computed_3b}}</span><br>
+  {% if computed_3b  > 0 %}
+  Since {{computed_3b}} is greater than or equal to zero and worth is
+  {% if cl <= cworth and cworth <= cu %}
+  {{ cworth }} between cl = {{cl}} and cu = {{cu}}, the payoff for this question is {{earnings_3b}}.
+  {% else %}
+  {{ cworth }} <b>is not</b> between cl = {{cl}} and cu = {{cu}} the payoff for this question is {{earnings_3b}}.
+  {% endif %}
+  {% else %}
+  Since {{computed_3b}} <b>is</b> less than zero the payoff for this question is 0.
+  {% endif %}
+</div>

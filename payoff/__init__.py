@@ -75,12 +75,19 @@ class FinalPayoff(Page):
 class QuestionPayoffDebug(Page):
     @staticmethod
     def vars_for_template(player):
-        question_number = player.participant.vars['question_phase_payoff_lottery_number']
+        part_one_payoff_data = player.participant.vars['bid_payoff_data']
+        if player.payoff_question_number == 1:
+            part_two_payoff_data = player.question_one_data
+        elif player.payoff_question_number == 2:
+            part_two_payoff_data = player.question_three_data
+        else:
+            part_two_payoff_data = player.question_two_data
+
         return {
-            "question_number": question_number,
-            **player.participant.vars['q1_data'],
-            **player.participant.vars['q2_data'],
-            **player.participant.vars['q3_data'],
+            "question_number": player.payoff_question_number,
+            "selected_value_text": player.selected_value_text,
+            **part_one_payoff_data,
+            **part_two_payoff_data,
         }
 
 

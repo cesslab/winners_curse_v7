@@ -1,0 +1,28 @@
+<div>
+  <h4>Earnings for Question 1.a</h4>
+  <span>Computer computes loss function L = (X-worth)^2 => ({{worth}} - {{prep_worth}})^2 = {{computed_loss}}</span><br>
+  <span>K = U[0,1296] = {{random_k}}</span><br>
+  <span>{% if computed_loss < random_k %}
+    {{computed_loss}} is less than {{random_k}}, so the the payoff is {{earnings_q1a}}
+    {% else %}
+    {{computed_loss}} is greater than or equal {{random_k}}, so the the payoff is {{earnings_q1a}}
+    {% endif %}}
+  </span>
+</div>
+<div>
+  <h4>Earnings for Question 1.b</h4>
+  <span>Computer computes 12*[1 - (u - l)/(Emax - Emin) = 12*[1 - ({{max_worth}} - {{min_worth}})/({{prep_emax}} - {{prep_emin}})] = {{confidence_value}}</span><br>
+  {% if confidence_value  > 0 %}
+  Since {{confidence_value}} is greater than or equal to zero and worth is
+
+  {% if is_worth_within_interval %}
+  {{prep_worth }} <b>is</b> between l = {{min_worth}} and u = {{max_worth}} the payoff for this question is {{earnings_q1b}}.
+  {% else %}
+  {{prep_worth }} <b>is not</b> between l = {{min_worth}} and u = {{max_worth}} the payoff
+  for this question is {{earnings_q1b}}.
+  {% endif %}
+
+  {% else %}
+  Since {{confidence_value}} is less than zero the payoff for this question is 0.
+  {% endif %}
+</div>
