@@ -170,7 +170,8 @@ class QuestionOneB(Page):
             is_probability_treatment=player.is_probability_treatment,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
-            interval=loader('IntervalIntro.html').render({"player": player}),
+            interval_part_one=loader('IntervalPartOneIntro.html').render({"player": player}),
+            interval_part_two=loader('IntervalPartTwoIntro.html').render({"player": player}),
             interval_limits=loader('IntervalLimitsIntro.html').render({"player": player}),
             confidence_level=loader('ConfidenceLevelIntro.html').render({"player": player}),
         )
@@ -245,8 +246,8 @@ class QuestionTwo(Page):
             is_probability_treatment=player.is_probability_treatment,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
-            question=loader('QuestionIntro.html').render({"player": player}),
             your_task=loader('YourTaskProbabilityIntro.html').render({"player": player}),
+            your_task_continued=loader('YourTaskProbabilityContinuedIntro.html').render({"player": player}),
         )
 
 
@@ -415,7 +416,8 @@ class QuestionThreeB(Page):
             is_probability_treatment=player.is_probability_treatment,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
-            interval=loader('IntervalHighestSignalIntro.html').render({"player": player}),
+            interval_part_one=loader('IntervalPartOneIntro.html').render({"player": player}),
+            interval_part_two=loader('IntervalPartTwoIntro.html').render({"player": player}),
             confidence_level=loader('ConfidenceLevelHighestSignalIntro.html').render({"player": player}),
         )
 

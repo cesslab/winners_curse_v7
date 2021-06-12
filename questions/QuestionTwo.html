@@ -53,7 +53,7 @@
                  class="center-input form-control" value="{{ form.probability_highest_signal.object_data }}"
                  placeholder=""
                  data-for="bid-selected-probability" required>
-          <small class="text-muted">Enter a value between 0 and 100</small>
+          <small class="text-muted">Please enter an integer between 0 and 100</small>
 
           {% if form.probability_highest_signal.errors %}
           <div class="alert alert-danger">
@@ -143,14 +143,14 @@
     introJs().setOptions({
       steps: [
         {
-          title: 'Question',
-          intro: js_vars.question,
-          position: 'left',
-          element: document.querySelector(('#question'))
-        },
-        {
           title: 'Your Task',
           intro: js_vars.your_task,
+          position: 'left',
+          element: document.querySelector(('#task'))
+        },
+        {
+          title: 'Your Task (Continued)',
+          intro: js_vars.your_task_continued,
           position: 'left',
           element: document.querySelector(('#task'))
         },

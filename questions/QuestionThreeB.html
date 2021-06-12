@@ -131,7 +131,8 @@
       <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
         <div class="accordion-body">
           <h4>Interval</h4>
-          {% include 'questions/IntervalHighestSignalIntro.html' %}
+          {% include 'questions/IntervalPartOneIntro.html' %}
+          {% include 'questions/IntervalPartTwoIntro.html' %}
 
           <h4>Confidence Level</h4>
           {% include 'questions/ConfidenceLevelHighestSignalIntro.html' %}
@@ -318,15 +319,15 @@
       steps: [
         {
           title: 'Interval',
-          intro: js_vars.interval,
-          position: 'top',
+          intro: js_vars.interval_part_one,
+          position: 'left',
           element: document.querySelector(('#task'))
         },
         {
-          title: 'Confidence Level',
-          intro: js_vars.confidence_level,
+          title: 'Interval (Continued)',
+          intro: js_vars.interval_part_two,
           position: 'left',
-          element: document.querySelector(('#confidence-level'))
+          element: document.querySelector(('#task'))
         },
       ]
     }).start()

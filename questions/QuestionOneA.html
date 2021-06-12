@@ -67,6 +67,7 @@
                 <input type="number" id="id_bid" name="worth" min="{{ min_valuation }}" max="{{ max_valuation }}" step="1"
                        class="center-input form-control" value="{{ form.worth.object_data }}"
                        placeholder="" data-for="bid-selected-probability" data-handle="0" required>
+                <small class="text-muted">Please enter an integer value</small>
 
                 {% if form.worth.errors %}
                 <div class="alert alert-danger">
@@ -234,6 +235,12 @@ let alertList = document.querySelectorAll('.alert')
 
     slider.noUiSlider.set(handleValues);
   }
+
+  handlesHiddenState.forEach((isHidden, handle) => {
+    if (isHidden) {
+      document.getElementsByClassName('noUi-handle')[handle].style.display = "none";
+    }
+  })
 
   slider.noUiSlider.on('set', handleSliderSet)
   slider.noUiSlider.on('slide', handleSliderSlide)

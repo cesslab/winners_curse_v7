@@ -139,7 +139,8 @@
           {% include 'questions/PartTwoInstructions.html' %}
 
           <h4>Interval</h4>
-          {% include 'questions/IntervalIntro.html' %}
+          {% include 'questions/IntervalPartOneIntro.html' %}
+          {% include 'questions/IntervalPartTwoIntro.html' %}
 
           <h4>Interval Limits</h4>
           {% include 'questions/IntervalLimitsIntro.html' %}
@@ -331,7 +332,13 @@
       steps: [
         {
           title: 'Interval',
-          intro: js_vars.interval,
+          intro: js_vars.interval_part_one,
+          position: 'left',
+          element: document.querySelector(('#task'))
+        },
+        {
+          title: 'Interval (Continued)',
+          intro: js_vars.interval_part_two,
           position: 'left',
           element: document.querySelector(('#task'))
         },
