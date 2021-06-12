@@ -114,27 +114,6 @@
         </div>
       </div>
 
-
-      <div>
-        <table>
-          <tr id="confidence-level">
-            <th class="no-wrap">
-              <span>Your Confidence</span>
-            </th>
-            <td class="full-width">
-              <input type="number" id="id_updated_worth_confidence" name="updated_worth_confidence" min="0" max="100" step="1"
-                     class="center-input form-control" value="{{ form.updated_worth_confidence.object_data }}" placeholder=""
-                     data-for="max-selected-probability" required>
-              <small class="text-muted">Enter a value between 0 and 100</small>
-              {% if form.updated_worth_confidence.errors %}
-              <div class="alert alert-danger">
-                {{ form.updated_worth_confidence.errors }}
-              </div>
-              {% endif %}
-            </td>
-          </tr>
-        </table>
-      </div>
       <div>
         {% next_button %}
       </div>

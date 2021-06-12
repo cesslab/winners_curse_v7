@@ -60,7 +60,7 @@ class QuestionOneA(Page):
 
 class QuestionOneB(Page):
     form_model = "player"
-    form_fields = ["worth", "min_worth", "max_worth", "worth_confidence"]
+    form_fields = ["worth", "min_worth", "max_worth"]
 
     @staticmethod
     def vars_for_template(player):
@@ -298,7 +298,7 @@ class QuestionThreeA(Page):
 
 class QuestionThreeB(Page):
     form_model = "player"
-    form_fields = ["updated_worth_confidence", "updated_worth", "updated_min_worth", "updated_max_worth"]
+    form_fields = ["updated_worth", "updated_min_worth", "updated_max_worth"]
 
     @staticmethod
     def vars_for_template(player):

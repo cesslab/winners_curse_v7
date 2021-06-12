@@ -120,26 +120,6 @@
 
 
       </div>
-      <div id="confidence-level">
-        <table style="width: 100%">
-          <tr>
-            <th style="white-space: nowrap;">
-              <span>Your Confidence</span>
-            </th>
-            <td class="text-center" style="width:100%;">
-              <input type="number" id="id_worth_confidence" name="worth_confidence" min="0" max="100" step="1"
-                     class="center-input form-control" value="{{ form.worth_confidence.object_data }}" placeholder=""
-                     data-for="max-selected-probability" required>
-              <small class="text-muted">Enter a value between 0 and 100</small>
-              {% if form.worth_confidence.errors %}
-              <div class="alert alert-danger">
-                {{ form.worth_confidence.errors }}
-              </div>
-              {% endif %}
-            </td>
-          </tr>
-        </table>
-      </div>
       <div>
         {% next_button %}
       </div>
@@ -360,12 +340,6 @@
           intro: js_vars.interval_limits,
           position: 'left',
           element: document.querySelector(('#task'))
-        },
-        {
-          title: 'Confidence Level',
-          intro: js_vars.confidence_level,
-          position: 'left',
-          element: document.querySelector(('#confidence-level'))
         },
       ]
     }).start()
