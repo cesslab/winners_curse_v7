@@ -39,16 +39,15 @@ class BidPayoff(Page):
 class QuestionPayoff(Page):
     @staticmethod
     def vars_for_template(player):
-        question_number = player.participant.vars['question_phase_payoff_lottery_number']
-        if question_number == 1:
-            payoff_data = player.participant.vars['q1_data']
-        elif question_number == 2:
-            payoff_data = player.participant.vars['q3_data']
+        if player.payoff_question_number == 1:
+            payoff_data = player.question_one_data
+        elif player.payoff_question_number == 2:
+            payoff_data = player.question_three_data
         else:
-            payoff_data = player.participant.vars['q2_data']
+            payoff_data = player.question_two_data
 
         return {
-            "question_number": question_number,
+            "question_number": player.payoff_question_number,
             "selected_value_text": player.selected_value_text,
             **payoff_data,
         }
@@ -57,11 +56,10 @@ class QuestionPayoff(Page):
 class FinalPayoff(Page):
     @staticmethod
     def vars_for_template(player):
-        question_number = player.participant.vars['question_phase_payoff_lottery_number']
         part_one_final_payoff_credits = player.participant.vars['bid_payoff_data']['earnings']
-        if question_number == 1:
+        if player.payoff_question_number == 1:
             part_two_final_payoff_credits = player.participant.vars['q1_data']['earnings_q1']
-        elif question_number == 2:
+        elif player.payoff_question_number == 2:
             part_two_final_payoff_credits = player.participant.vars['q3_data']['earnings_q3']
         else:
             # TODO: replace prob_earnings with earnings_q2

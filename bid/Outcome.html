@@ -66,7 +66,7 @@
       </p>
     </div>
 
-    {% include 'global/RealizedLottery.html' %}
+    {% include 'global/RealizedLottery.html' with is_value_treatment=player.is_value_treatment & fixed_value=player.fixed_value & ticket_probability=player.ticket_probability & ticket_value_before=player.ticket_value_before & fixed_value=player.fixed_value %}
 
     <div id="played-outcome" class="text-center">
         <p>The lottery was played and its outcome was {{ player.ticket_value_after }}.</p>

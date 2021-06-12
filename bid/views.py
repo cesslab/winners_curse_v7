@@ -75,6 +75,7 @@ class Bid(Page):
                 "lottery_order": player.lottery_order,
                 "lottery_round_number": player.lottery_round_number,
                 "ticket_value_after": player.ticket_value_after,
+                "ticket_value_before": player.ticket_value_before,
                 "ticket_probability": player.ticket_probability
             }
 

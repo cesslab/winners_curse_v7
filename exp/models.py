@@ -115,6 +115,22 @@ class BidHistoryPlayer:
         payoff_lottery_number = self.participant.vars['question_phase_payoff_lottery_number']
         return round_number == payoff_round_number and lottery_number == payoff_lottery_number and question_number == payoff_question_number
 
+    @property
+    def payoff_question_number(self):
+        return self.participant.vars['question_phase_payoff_question_number']
+
+    @property
+    def question_one_data(self):
+        return self.participant.vars['q1_data']
+
+    @property
+    def question_two_data(self):
+        return self.participant.vars['q2_data']
+
+    @property
+    def question_three_data(self):
+        return self.participant.vars['q3_data']
+
     def get_lottery_round_number(self):
         return (self.round_number - 1) % ExperimentConstants.ROUNDS_PER_LOTTERY + 1
 

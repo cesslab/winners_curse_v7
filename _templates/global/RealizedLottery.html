@@ -1,15 +1,14 @@
 <div class="lottery" id="lottery-text">
-  {% if player.is_value_treatment %}
   <p>
-    With a probability p of <span class="text-primary font-weight-bold">{{ player.fixed_value }}%</span>
-    you get a value v = <span class="text-success font-weight-bold"><span class="credits">C</span>{{ player.ticket_value_before }}</span>,
+    With a probability p of
+    <span class="text-primary font-weight-bold">
+      {% if is_value_treatment %} {{ fixed_value }}% {% else %} {{ ticket_probability }}% {% endif %}
+    </span>
+    you get a value v =
+      <span class="text-success font-weight-bold"><span class="credits">C</span>
+        {% if is_value_treatment %} {{ ticket_value_before }} {% else %} {{ fixed_value }} {% endif %}
+      </span>,
     <br>otherwise you get <span class="text-success font-weight-bold"><span class="credits">C</span>0</span>.
   </p>
-  {% else %}
-  <p>
-    With a probability p of <span class="text-success font-weight-bold">{{ player.ticket_probability }}%</span> you get
-    a value v = <span class="text-primary font-weight-bold"><span class="credits">C</span>{{ player.fixed_value }}</span>,
-    <br>otherwise you get <span class="text-primary font-weight-bold"><span class="credits">C</span>0</span>.
-  </p>
-  {% endif %}
 </div>
+

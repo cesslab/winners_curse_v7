@@ -36,20 +36,10 @@
     <div class="text-center">
         <span>
         {% if tie %}
-            {% if winner %}
                 You and at least one other bidder submitted identical highest bids. The computer randomly selected
-                you as the winner.
-            {% else %}
-                You and at least one other bidder submitted identical highest bids. The computer randomly selected
-                one other bidder
-                as the winner.
-            {% endif %}
+                {% if winner %}you{% else %}one other{% endif %} as the winner.
         {% else %}
-            {% if winner %}
-                You won the auction.
-            {% else %}
-                You did not win the auction.
-            {% endif %}
+            You {% if winner %} won {% else %} did not win {% endif %} the auction.
         {% endif %}
         </span>
     </div>
@@ -58,18 +48,18 @@
       <p>
         The {{ player.selected_value_text }} was
         {% if player.is_value_treatment %}
-        {{ player.ticket_value_before }}.
+        {{ ticket_value_before }}.
         {% else %}
-        {{ player.ticket_probability }}.
+        {{ ticket_probability }}.
         {% endif %}
         Therefore, the actual lottery ticket was:
       </p>
     </div>
 
-    {% include 'global/RealizedLottery.html' %}
+    {% include 'global/RealizedLottery.html' with  is_value_treatment=player.is_value_treatment %}
 
     <div id="played-outcome" class="text-center">
-      <p>The lottery was played and its outcome was {{ player.ticket_value_after }}.</p>
+      <p>The lottery was played and its outcome was {{ ticket_value_after }}.</p>
     </div>
 
     <div id="earnings-header" class="text-center">
