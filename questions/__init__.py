@@ -103,4 +103,4 @@ class Player(BasePlayer, BidHistoryPlayer):
     be_bid = models.IntegerField()
 
 
-page_sequence = [Instructions, QuestionOneA, QuestionOneB, QuestionThreeA, QuestionThreeB, QuestionTwo]
+page_sequence = [QuestionOneA, QuestionOneB, QuestionThreeA, QuestionThreeB, QuestionTwo]
