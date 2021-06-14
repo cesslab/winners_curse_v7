@@ -170,8 +170,8 @@ class QuestionOneB(Page):
             is_probability_treatment=player.is_probability_treatment,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
-            interval_part_one=loader('IntervalPartOneIntro.html').render({"player": player}),
-            interval_part_two=loader('IntervalPartTwoIntro.html').render({"player": player}),
+            interval_part_one=loader('IntervalOneBIntro.html').render({"player": player}),
+            interval_part_two=loader('IntervalOneBContinuedIntro.html').render({"player": player}),
             interval_limits=loader('IntervalLimitsIntro.html').render({"player": player}),
             confidence_level=loader('ConfidenceLevelIntro.html').render({"player": player}),
         )
@@ -199,7 +199,7 @@ class QuestionTwo(Page):
         # Computer checks: is signal highest in market? Define variable Highest: 1=yes; 0=no
         highest = 1 if player.highest_market_signal else 0
         # Computer computes loss function: L=(Highest – p/100)^2
-        player.prob_computed_loss = (highest - player.probability_highest_signal/100.0)*(highest - player.probability_highest_signal/100.0)
+        player.prob_computed_loss = (highest - player.probability_highest_signal/100.0)**2
         # Computer draws random number K ~ U[0,1]
         player.random_prob_k = random.uniform(0, 1)
         # Computer pays 24 credits if L < K; 0 otherwise
@@ -391,6 +391,8 @@ class QuestionThreeB(Page):
                 "cx": cx,
                 "l_3a": l_3a,
                 "k_3a": k_3a,
+                "emax": emax,
+                "emin": emin,
                 "earnings_3a": earnings_3a,
                 "updated_worth": player.updated_worth,
                 "guess_sufficiently_close_to_estimate": guess_sufficiently_close_to_estimate,
@@ -416,8 +418,8 @@ class QuestionThreeB(Page):
             is_probability_treatment=player.is_probability_treatment,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
-            interval_part_one=loader('IntervalPartOneIntro.html').render({"player": player}),
-            interval_part_two=loader('IntervalPartTwoIntro.html').render({"player": player}),
+            interval_part_one=loader('IntervalThreeBIntro.html').render({"player": player}),
+            interval_part_two=loader('IntervalThreeBContinuedIntro.html').render({"player": player}),
             confidence_level=loader('ConfidenceLevelHighestSignalIntro.html').render({"player": player}),
         )
 

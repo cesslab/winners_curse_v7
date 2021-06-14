@@ -47,15 +47,15 @@ class QuestionPayoff(Page):
             payoff_data = player.question_two_data
 
         return {
-            "question_number": player.payoff_question_number,
             "selected_value_text": player.selected_value_text,
             **payoff_data,
+            "question_number": player.payoff_question_number,
         }
 
 
 class FinalPayoff(Page):
     @staticmethod
-    def vars_for_template(player):
+    def vars_for_template(player: Player):
         part_one_final_payoff_credits = player.participant.vars['bid_payoff_data']['earnings']
         if player.payoff_question_number == 1:
             part_two_final_payoff_credits = player.participant.vars['q1_data']['earnings_q1']
@@ -66,8 +66,8 @@ class FinalPayoff(Page):
             part_two_final_payoff_credits = player.participant.vars['q2_data']['prob_earnings']
 
         return {
-            "payoff_part_1": part_one_final_payoff_credits,
-            "payoff_part_2": part_two_final_payoff_credits,
+            "payoff_part_1": cu(part_one_final_payoff_credits).to_real_world_currency(player.session),
+            "payoff_part_2": cu(part_two_final_payoff_credits).to_real_world_currency(player.session),
             "final_payment": 10 + 12 + 0.5 * part_one_final_payoff_credits + 0.5 * part_two_final_payoff_credits,
         }
 
@@ -84,10 +84,10 @@ class QuestionPayoffDebug(Page):
             part_two_payoff_data = player.question_two_data
 
         return {
-            "question_number": player.payoff_question_number,
             "selected_value_text": player.selected_value_text,
             **part_one_payoff_data,
             **part_two_payoff_data,
+            "question_number": player.payoff_question_number,
         }
 
 

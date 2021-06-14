@@ -6,9 +6,6 @@
 {% endblock %}
 
 {% block content %}
-  {% if new_lottery %}
-    {% include 'global/LotteryUpdate.html' %}
-  {% endif %}
 
   {% include 'global/LotteryRoundNavbar.html' %}
 
@@ -49,7 +46,7 @@
           </div>
         </div>
 
-        <div class="worth-table" id="conversion-table">
+        <div class="worth-table" id="worth-table">
           <table style="table-layout: fixed; width: 100%">
             <thead>
             <tr>
@@ -139,8 +136,8 @@
           {% include 'questions/PartTwoInstructions.html' %}
 
           <h4>Interval</h4>
-          {% include 'questions/IntervalPartOneIntro.html' %}
-          {% include 'questions/IntervalPartTwoIntro.html' %}
+          {% include 'questions/IntervalOneBIntro.html' %}
+          {% include 'questions/IntervalOneBContinuedIntro.html' %}
 
           <h4>Interval Limits</h4>
           {% include 'questions/IntervalLimitsIntro.html' %}
@@ -334,19 +331,19 @@
           title: 'Interval',
           intro: js_vars.interval_part_one,
           position: 'left',
-          element: document.querySelector(('#task'))
+          element: document.querySelector(('#worth-table'))
         },
         {
           title: 'Interval (Continued)',
           intro: js_vars.interval_part_two,
           position: 'left',
-          element: document.querySelector(('#task'))
+          element: document.querySelector(('#worth-table'))
         },
         {
           title: 'Interval Limits',
           intro: js_vars.interval_limits,
           position: 'left',
-          element: document.querySelector(('#task'))
+          element: document.querySelector(('#worth-table'))
         },
       ]
     }).start()

@@ -118,10 +118,6 @@ class Player(BasePlayer, BidHistoryPlayer):
 
 
 # PAGES
-class Instructions(Page):
-    pass
-
-
 class Quiz(Page):
     form_model = 'player'
 
@@ -188,4 +184,4 @@ def cp_q6_error_message(player: Player, value):
         return Error_Message
 
 
-page_sequence = [Instructions, Quiz]
+page_sequence = [Quiz]

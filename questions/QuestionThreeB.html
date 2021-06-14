@@ -6,9 +6,6 @@
 {% endblock %}
 
 {% block content %}
-  {% if new_lottery %}
-    {% include 'global/LotteryUpdate.html' %}
-  {% endif %}
 
   {% include 'global/LotteryRoundNavbar.html' %}
 
@@ -131,8 +128,8 @@
       <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
         <div class="accordion-body">
           <h4>Interval</h4>
-          {% include 'questions/IntervalPartOneIntro.html' %}
-          {% include 'questions/IntervalPartTwoIntro.html' %}
+          {% include 'questions/IntervalThreeBIntro.html' %}
+          {% include 'questions/IntervalThreeBContinuedIntro.html' %}
 
           <h4>Confidence Level</h4>
           {% include 'questions/ConfidenceLevelHighestSignalIntro.html' %}

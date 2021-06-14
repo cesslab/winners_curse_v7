@@ -59,17 +59,13 @@
   </p>
 </div>
 
-  <div id="earnings-header" class="text-center">
-    <h4>Your Earnings</h4>
+  {% if question_number == 1 %}
+    {% include 'payoff/QuestionOnePayoff.html' %}
+  {% elif  question_number == 2 %}
+    {% include 'payoff/QuestionThreePayoff.html' %}
+  {% else %}
+    {% include 'payoff/QuestionTwoPayoff.html' %}
+  {% endif %}
 
-    {% if question_number == 1 %}
-      {% include 'payoff/QuestionOnePayoff.html' %}
-    {% elif  question_number == 2 %}
-      {% include 'payoff/QuestionThreePayoff.html' %}
-    {% else %}
-      {% include 'payoff/QuestionTwoPayoff.html' %}
-    {% endif %}
-  </div>
-
-    {% next_button %}
+  {% next_button %}
 {% endblock %}
