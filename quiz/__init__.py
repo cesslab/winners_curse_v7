@@ -76,23 +76,23 @@ class Player(BasePlayer, BidHistoryPlayer):
         widget=widgets.RadioSelect
     )
     cp_q5 = models.IntegerField(
-        label='5. Suppose that you receive a signal 30 that is at most 8 percentage points away from the Selected Probability. What could be the Selected Probability?',
+        label='5. Suppose that you receive a signal 30 that is at most 4 percentage points away from the Selected Probability. What could be the Selected Probability?',
         choices=[
             [1, '18%'],
             [2, '28%'],
-            [3, '48%']],
+            [3, '38%']],
         widget=widgets.RadioSelect
     )
     cv_q5 = models.IntegerField(
-        label='5. Suppose that you receive a signal 30 that is at most 8 percentage points away from the Selected Probability. What could be the Selected Probability?',
+        label='5. Suppose that you receive a signal of 30 that is at most 4 units away from the Selected Value. What could be the Selected Value?',
         choices=[
             [1, '18'],
             [2, '28'],
-            [3, '48']],
+            [3, '38']],
         widget=widgets.RadioSelect
     )
     cp_q6 = models.IntegerField(
-        label='6. Suppose the Selected Probability is 30%. The outcome of the lottery...',
+        label='6. Suppose the Selected Probability is 30%. The outcome of the lottery in credits...',
         choices=[
             [1, 'can only be 70'],
             [2, '21 ( = 30% x 70 + 70% x 0)'],
@@ -100,7 +100,7 @@ class Player(BasePlayer, BidHistoryPlayer):
         widget=widgets.RadioSelect
     )
     cv_q6 = models.IntegerField(
-        label='6. Suppose the Selected Probability is 30%. The outcome of the lottery...',
+        label='6. Suppose the Selected Value is 30.The outcome of the lottery in credits...',
         choices=[
             [1, 'can only be 30'],
             [2, '21 ( = 30 x 70% +  0 x 30%)'],
