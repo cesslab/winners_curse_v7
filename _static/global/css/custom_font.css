@@ -4,7 +4,9 @@ span.credits::before {
     margin-left: 2px;
     font-size: 1rem;
     font-weight: 400;
-    white-space: pre-wrap;
+}
+span.credits {
+    white-space: nowrap;
 }
 
 .font-weight-bold {
