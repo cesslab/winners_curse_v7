@@ -16,7 +16,7 @@
   </div>
   <div class="text-center">
     <span>
-      Your Payoff in Part I was: <b>{{ payoff_part_1 }}</b>.
+      Your Payoff in Part I was: <b>{{ payoff_part_1_dollars }} (<span class="credits">C</span>{{payoff_part_1_credits}})</b>.
     </span>
   </div>
 
@@ -25,7 +25,7 @@
   </div>
   <div class="text-center">
     <span>
-      Your Payoff in Part II was: <b>{{ payoff_part_2 }}</b>.
+      Your Payoff in Part II was: <b>{{ payoff_part_2_dollars }} (<span class="credits">C</span>{{payoff_part_2_credits}})</b>.
     </span>
   </div>
 
@@ -34,13 +34,13 @@
 </div>
 <div class="text-center">
     <p>
-      Your total payment in dollars is <b>${{ final_payment }}</b> It consists of:<br>
+      Your total payment in dollars is <b>{{ final_payment }}</b> It consists of:<br>
     </p>
     <p>
       $10 Participation fee
       + $12 endowment
-      + (0.5 x {{ payoff_part_1 }})
-      + (0.5 x {{ payoff_part_2 }})
+      + (0.5 x {{ payoff_part_1_dollars }})
+      + (0.5 x {{ payoff_part_2_dollars }})
     </p>
 </div>
 {% next_button %}

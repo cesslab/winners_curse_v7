@@ -65,10 +65,14 @@ class FinalPayoff(Page):
             # TODO: replace prob_earnings with earnings_q2
             part_two_final_payoff_credits = player.participant.vars['q2_data']['prob_earnings']
 
+        part_one_final_payoff_dollars = cu(part_one_final_payoff_credits).to_real_world_currency(player.session)
+        part_two_final_payoff_dollars = cu(part_two_final_payoff_credits).to_real_world_currency(player.session)
         return {
-            "payoff_part_1": cu(part_one_final_payoff_credits).to_real_world_currency(player.session),
-            "payoff_part_2": cu(part_two_final_payoff_credits).to_real_world_currency(player.session),
-            "final_payment": 10 + 12 + 0.5 * part_one_final_payoff_credits + 0.5 * part_two_final_payoff_credits,
+            "payoff_part_1_credits": part_one_final_payoff_credits,
+            "payoff_part_1_dollars": part_one_final_payoff_dollars,
+            "payoff_part_2_credits": part_two_final_payoff_credits,
+            "payoff_part_2_dollars": part_two_final_payoff_dollars,
+            "final_payment": 10 + 12 + 0.5 * part_one_final_payoff_dollars + 0.5 * part_two_final_payoff_dollars,
         }
 
 
