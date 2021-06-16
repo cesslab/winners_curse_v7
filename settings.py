@@ -1,16 +1,16 @@
 from os import environ, getenv
 
 GENERIC_CONFIG = {
-    "app_sequence": ["instructions", "bidsample", "quiz", "bid", "questions", "payoff"],
+    "app_sequence": ["instructions", "bidsample", "quiz", "bid", "questions", "payoff", "questionnaire"],
     "num_demo_participants": 2,
-    "lottery_1": "1",
-    "lottery_2": "2",
-    "lottery_3": "3",
-    "lottery_4": "4",
-    "lottery_5": "5",
-    "lottery_6": "6",
-    "lottery_7": "7",
-    "lottery_8": "8",
+    "bid_lottery_1": "1",
+    "bid_lottery_2": "2",
+    "bid_lottery_3": "3",
+    "bid_lottery_4": "4",
+    "questions_lottery_1": "1",
+    "questions_lottery_2": "2",
+    "questions_lottery_3": "3",
+    "questions_lottery_4": "4",
     "endowment_tokens": "100",
 }
 
@@ -46,3 +46,16 @@ SECRET_KEY = getenv("SECRET_KEY", "9910429831890")
 
 # if an app is included in SESSION_CONFIGS, you don't need to list it here
 INSTALLED_APPS = ["otree"]
+
+ROOMS = [
+    {
+        'name': 'cess_lab',
+        'display_name': 'CESS Lab',
+    },
+]
+# for flexibility, you can set it in the environment variable OTREE_AUTH_LEVEL
+AUTH_LEVEL = environ.get('OTREE_AUTH_LEVEL')
+
+# Consider '', None, and '0' to be empty/false
+DEBUG = (environ.get('OTREE_PRODUCTION') in {None, '', '0'})
+
