@@ -117,7 +117,7 @@ class QuestionOneB(Page):
         # ---------------------------------------------------------------------
         # Computer computes 12*[1- (u-l)/(Emax-Emin)] if positive and worth in [l,u] (worth is in interval); 0 otherwise
         player.confidence_value = 12.0*(1.0 - (float(player.max_worth - player.min_worth) / float(player.prep_emax - player.prep_emin)))
-        is_worth_within_interval = player.min_worth >= player.prep_worth <= player.max_worth
+        is_worth_within_interval = player.min_worth <= player.prep_worth <= player.max_worth
         if player.confidence_value > 0.0 and is_worth_within_interval:
             player.confidence_earnings = player.confidence_value
         else:
