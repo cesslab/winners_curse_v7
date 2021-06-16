@@ -1,8 +1,8 @@
 <div class="text-center">
   <h4>Your Answer</h4>
   <p>
-    Given your signal being highest, you estimated the lottery to be, on average, worth between {{updated_min_worth}}
-    and {{updated_max_worth}}. Your best guess was {{updated_worth}}.
+    Given your signal being highest, you estimated the lottery to be, on average, worth between <span class="credits">C</span>{{updated_min_worth}}
+    and <span class="credits">C</span>{{updated_max_worth}}. Your best guess was <span class="credits">C</span>{{updated_worth}}.
   </p>
  <h4>Correct Answer</h4>
   <p>
@@ -16,7 +16,7 @@
   <h4>Details</h4>
   <p>
     The actual lottery worth {% if guess_within_chosen_interval %} was {% else %} was not {% endif %} within your chosen
-    interval, therefore you get {{earnings_3b}}.
+    interval, therefore you get <span class="credits">C</span>{{earnings_3b}}.
   </p>
   <p>
     Given your best guess the probability of getting <span class="credits">C</span>12 was {{prob}}%. To compute your payoff the computer
