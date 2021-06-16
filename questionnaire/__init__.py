@@ -52,7 +52,7 @@ class Player(BasePlayer, BidHistoryPlayer):
     p2_q3 = models.IntegerField(min=0, max=100, label='3. How much would you bid for the lottery ticket show below?')
 
     p2_q4 = models.IntegerField(
-        label='4. Suppose that you could choose to play one of the following two lottery tickets. Which one would you prefer?',
+        label='4. Consider the following lottery ticket with known Selected Value. Suppose that you could choose to play one of the following two lottery tickets. Which one would you prefer?',
         choices=[
             [1, 'I prefer lottery A'],
             [2, 'I prefer lottery B'],
