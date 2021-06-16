@@ -3,96 +3,14 @@ from otree.api import Page
 
 class PartOne(Page):
     form_model = 'player'
-    form_fields = ['gender', 'age', 'major']
+    form_fields = ['p1_q1', 'p1_q2', 'p1_q3']
 
 
-class PartTwoA(Page):
+class PartTwo(Page):
     form_model = 'player'
-    form_fields = ['q1a', 'q1b', 'q1c', 'q1d', 'q1e', 'q1exp']
-
-    @staticmethod
-    def vars_for_template(player):
-        treatment = player.session.config['treatment']
-        if treatment != 'cp' and treatment != 'cv':
-            treatment = 'cp'
-
-        if treatment == 'cp':
-            template_vars = {
-                'q1_lottery': {'low': 60, 'high': 90, 'value': 75},
-
-            }
-        else:
-            template_vars = {
-                'q1_lottery': {'p': 75, 'low': 60, 'high': 90},
-            }
-
-        template_vars.update({
-            'treatment': treatment,
-            'q1a': {'s': 65, 'low': 61, 'high': 69},
-            'q1b': {'s': 70, 'low': 66, 'high': 74},
-            'q1c': {'s': 75, 'low': 71, 'high': 79},
-            'q1d': {'s': 80, 'low': 76, 'high': 84},
-            'q1e': {'s': 85, 'low': 81, 'high': 89},
-        })
-        return template_vars
-
-
-class PartTwoB(Page):
-    form_model = 'player'
-    form_fields = ['q2', 'q3', 'q3exp', 'q4']
-
-    @staticmethod
-    def vars_for_template(player):
-        treatment = player.session.config['treatment']
-        if treatment != 'cp' and treatment != 'cv':
-            treatment = 'cp'
-
-        if treatment == 'cp':
-            template_vars = {
-                'q2_lottery': {'low': 10, 'high': 40, 'value': 25},
-
-            }
-        else:
-            template_vars = {
-                'q2_lottery': {'p': 25, 'low': 10, 'high': 40},
-            }
-
-        template_vars.update({
-            'treatment': treatment,
-            'q2': {'s': 28, 'low': 24, 'high': 32},
-            'q3': {'s': 30, 'low': 26, 'high': 34},
-        })
-        return template_vars
-
-
-class PartTwoC(Page):
-    form_model = 'player'
-    form_fields = ['q5', 'q5exp', 'q6', 'q6exp']
-
-    @staticmethod
-    def vars_for_template(player):
-        treatment = player.session.config['treatment']
-        if treatment != 'cp' and treatment != 'cv':
-            treatment = 'cp'
-
-        if treatment == 'cp':
-            template_vars = {
-                'treatment': treatment,
-                'q5a_lottery': {'low': 60, 'high': 90, 'value': 75},
-                'q5b_lottery': {'p': 75, 'low': 60, 'high': 90},
-
-            }
-        else:
-            template_vars = {
-                'treatment': treatment,
-                'q5a_lottery': {'p': 75, 'low': 60, 'high': 90},
-                'q5b_lottery': {'low': 60, 'high': 90, 'value': 75},
-            }
-
-        return template_vars
+    form_fields = ['p2_q1', 'p2_q1_explain', 'p2_q2', 'p2_q3', 'p2_q4', 'p2_q4_explain', 'p2_q5']
 
 
 class PartThree(Page):
     form_model = 'player'
-    form_fields = ['q7', 'q8', 'q9']
-
+    form_fields = ['p3_q1', 'p3_q2', 'p3_q3']
