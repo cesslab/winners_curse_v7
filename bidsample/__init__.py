@@ -34,7 +34,7 @@ class Player(BasePlayer, BidHistoryPlayer):
     # Bid History
     bid_history_id = models.IntegerField(initial=0)
     previous_session_id = models.IntegerField(initial=0)
-    lottery_id = models.IntegerField(initial=0)
+    lottery_id = models.IntegerField(initial=1)
     treatment = models.StringField(choices=["cp", "cv"])
     lottery_round_number = models.IntegerField(initial=1)
     lottery_order = models.IntegerField(initial=1)
