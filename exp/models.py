@@ -1,15 +1,13 @@
-from otree.api import models, BasePlayer
-from .db import BidHistory, PlayerBidHistory
-from .constants import ExperimentConstants
+from exp.db import BidHistory, PlayerBidHistory
 
 
 class ExperimentSubSession:
-    def get_lottery_ids(self):
+    def get_lottery_ids(self, num_lotteries, prefix):
         return [
             int(self.session.config[lottery_key])
             for lottery_key in [
-                f"lottery_{key}"
-                for key in range(1, ExperimentConstants.NUM_LOTTERIES + 1)
+                f"{prefix}{key}"
+                for key in range(1, num_lotteries + 1)
             ]
         ]
 
@@ -19,8 +17,8 @@ class ExperimentSubSession:
         return treatment_code
 
 
-def save_bid_history_to_player(player, player_bid_history: PlayerBidHistory):
-    player.rounds_per_lottery = ExperimentConstants.ROUNDS_PER_LOTTERY
+def save_bid_history_to_player(player, rounds_per_lottery,  player_bid_history: PlayerBidHistory):
+    player.rounds_per_lottery = rounds_per_lottery
     bid_history: BidHistory = player_bid_history.bid_history
     # Player Bid History
     player.player_bid_history_id = player_bid_history.id
@@ -49,67 +47,49 @@ def save_bid_history_to_player(player, player_bid_history: PlayerBidHistory):
     player.be_bid = bid_history.be_bid
 
 
-def create_player_bid_histories(subsession, phase):
-    if subsession.round_number == 1:
-        BidHistory.excel_to_db()
-        PlayerBidHistory.create_db()
-        treatment_code = subsession.get_treatment_code()
+def create_player_bid_histories(treatment_code, players, lottery_ids, session_id, rounds_per_lottery, phase):
+    BidHistory.excel_to_db()
+    PlayerBidHistory.create_db()
 
-        for player in subsession.get_players():
-            lottery_ids = subsession.get_lottery_ids()
-            for index, lottery_id in enumerate(lottery_ids):
-                for lottery_round_number in range(
-                    1, ExperimentConstants.ROUNDS_PER_LOTTERY + 1
-                ):
-                    unused_bid_histories = BidHistory.get_unused_bid_histories(
-                        lottery_id,
-                        treatment_code,
-                        subsession.session.id,
-                        player.participant.id,
-                    )
-                    bid_history = unused_bid_histories[lottery_round_number - 1]
-                    PlayerBidHistory.add_bid_history(
-                        bid_history=bid_history,
-                        session_id=subsession.session.id,
-                        lottery_round_number=lottery_round_number,
-                        participant_id=player.participant.id,
-                        lottery_order=index + 1,
-                        phase=phase
-                    )
+    for player in players:
+        for index, lottery_id in enumerate(lottery_ids):
+            for lottery_round_number in range(1, rounds_per_lottery + 1):
+                unused_bid_histories = BidHistory.get_unused_bid_histories(
+                    lottery_id,
+                    treatment_code,
+                    session_id,
+                    player.participant.id,
+                )
+                print(f"Retrieved {len(unused_bid_histories)} out of {rounds_per_lottery} unused bid histories for participant {player.participant.id}.")
+
+                bid_history = unused_bid_histories[lottery_round_number - 1]
+
+                PlayerBidHistory.add_bid_history(
+                    bid_history=bid_history,
+                    session_id=session_id,
+                    lottery_round_number=lottery_round_number,
+                    participant_id=player.participant.id,
+                    lottery_order=index + 1,
+                    phase=phase
+                )
 
 
-def save_bid_history_for_all_players(players, phase):
+def save_bid_history_for_all_players(players, rounds_per_lottery, phase):
     for player in players:
         player_bid_history: PlayerBidHistory = PlayerBidHistory.get_player_bid_history(
             session_id=player.subsession.session.id,
-            lottery_round_number=player.get_lottery_round_number(),
-            lottery_order=player.get_lottery_order(),
+            lottery_round_number=player.get_lottery_round_number(rounds_per_lottery),
+            lottery_order=player.get_lottery_order(rounds_per_lottery),
             participant_id=player.participant.id,
             phase=phase
         )
-        save_bid_history_to_player(player, player_bid_history)
+        save_bid_history_to_player(player, rounds_per_lottery, player_bid_history)
 
 
 class BidHistoryPlayer:
-    def __repr__(self):
-        return f"""<Player(
-            bid_history_id={self.bid_history_id}, previous_session_id={self.previous_session_id},
-            lottery_id={self.lottery_id}, treatment={self.treatment}, lottery_round_number={self.lottery_round_number},
-            lottery_order={self.lottery_order}, lottery_round_number={self.lottery_round_number},
-            others_group_id={self.others_group_id}, others_player_id={self.others_player_id},
-            others_bid={self.others_bid}, signal={self.signal}, alpha={self.alpha},
-            beta={self.beta}, epsilon={self.epsilon}, ticket_value_before={self.ticket_value_before},
-            ticket_probability={self.ticket_probability}, fixed_value={self.fixed_value},
-            ticket_value_after={self.ticket_value_after}, previous_highest_bid={self.previous_highest_bid},
-            player_bid_history_id={self.player_bid_history_id},
-            lottery_order={self.lottery_order}, lottery_round_number={self.lottery_round_number},
-            rounds_per_lottery={self.rounds_per_lottery}, be_bid={self.be_bid}
-            )
-            """
-
-    def is_question_phase_payoff(self, question_number):
-        lottery_number = self.get_lottery_order()
-        round_number = self.get_lottery_round_number()
+    def is_question_phase_payoff(self, question_number, rounds_per_lottery):
+        lottery_number = self.get_lottery_order(rounds_per_lottery)
+        round_number = self.get_lottery_round_number(rounds_per_lottery)
         payoff_question_number = self.participant.vars['question_phase_payoff_question_number']
         payoff_round_number = self.participant.vars['question_phase_payoff_lottery_round_number']
         payoff_lottery_number = self.participant.vars['question_phase_payoff_lottery_number']
@@ -131,19 +111,17 @@ class BidHistoryPlayer:
     def question_three_data(self):
         return self.participant.vars['q3_data']
 
-    def get_lottery_round_number(self):
-        return (self.round_number - 1) % ExperimentConstants.ROUNDS_PER_LOTTERY + 1
+    def get_lottery_round_number(self, rounds_per_lottery):
+        # Calculates the relative round number given the oTree round number
+        return (self.round_number - 1) % rounds_per_lottery + 1
 
-    def get_lottery_order(self):
-        return ((self.round_number - 1) // ExperimentConstants.ROUNDS_PER_LOTTERY) + 1
+    def get_lottery_order(self, rounds_per_lottery):
+        # Calculates the lottery ID number given the oTree round number
+        return ((self.round_number - 1) // rounds_per_lottery) + 1
 
     @property
     def lottery_number(self):
         return self.get_lottery_order()
-
-    @property
-    def rounds_per_lottery(self):
-        return ExperimentConstants.ROUNDS_PER_LOTTERY
 
     @property
     def is_probability_treatment(self):

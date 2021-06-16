@@ -7,7 +7,7 @@
           <ul class="lottery-multi-step-list">
             {{ for i in num_lotteries }}
             <li class="lottery-multi-step-item
-          {{ if i < player.lottery_number }}current{{elif i == player.lottery_number}}actual{{ endif }}">
+          {{ if i < player.lottery_order }}current{{elif i == player.lottery_order}}actual{{ endif }}">
               <div class="item-wrap">
                 <p class="item-title">lottery {{ i }}</p>
               </div>

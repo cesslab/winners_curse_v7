@@ -28,13 +28,21 @@ Part Three
 
 
 def creating_session(subsession):
-    create_player_bid_histories(subsession, Phase.QUESTION_PHASE)
-    save_bid_history_for_all_players(subsession.get_players(), Phase.QUESTION_PHASE)
     if subsession.round_number == 1:
+        create_player_bid_histories(
+            subsession.get_treatment_code(),
+            subsession.get_players(),
+            subsession.get_lottery_ids(Constants.NUM_LOTTERIES, Constants.PREFIX),
+            subsession.session_id,
+            Constants.ROUNDS_PER_LOTTERY,
+            Phase.QUESTION_PHASE)
+
         for player in subsession.get_players():
             player.participant.vars['question_phase_payoff_lottery_number'] = random.randint(1, Constants.NUM_LOTTERIES)
             player.participant.vars['question_phase_payoff_lottery_round_number'] = random.randint(1, Constants.ROUNDS_PER_LOTTERY)
-            player.participant.vars['question_phase_payoff_question_number'] = random.randint(1, 3)
+            player.participant.vars['question_phase_payoff_question_number'] = random.randint(1, Constants.NUM_QUESTIONS)
+
+    save_bid_history_for_all_players(subsession.get_players(), Constants.ROUNDS_PER_LOTTERY, Phase.QUESTION_PHASE)
     close_db()
 
 

@@ -12,8 +12,8 @@ from exp.models import (
 
 from exp.db import close_db, Phase
 
-from .views import Instructions, Update, Bid, Outcome
-from .constants import Constants
+from bid.views import Instructions, Update, Bid, Outcome
+from bid.constants import Constants
 
 doc = """
 Part One
@@ -21,12 +21,20 @@ Part One
 
 
 def creating_session(subsession):
-    create_player_bid_histories(subsession, Phase.BID_PHASE)
-    save_bid_history_for_all_players(subsession.get_players(), Phase.BID_PHASE)
     if subsession.round_number == 1:
+        create_player_bid_histories(
+            subsession.get_treatment_code(),
+            subsession.get_players(),
+            subsession.get_lottery_ids(Constants.NUM_LOTTERIES, Constants.PREFIX),
+            subsession.session_id,
+            Constants.ROUNDS_PER_LOTTERY,
+            Phase.BID_PHASE)
+
         for player in subsession.get_players():
             player.participant.vars['payoff_lottery_number'] = random.randint(1, Constants.NUM_LOTTERIES)
             player.participant.vars['payoff_lottery_round_number'] = random.randint(1, Constants.ROUNDS_PER_LOTTERY)
+
+    save_bid_history_for_all_players(subsession.get_players(), Constants.ROUNDS_PER_LOTTERY, Phase.BID_PHASE)
     close_db()
 
 

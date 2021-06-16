@@ -123,7 +123,7 @@ class QuestionOneB(Page):
         else:
             player.confidence_earnings = 0
 
-        if player.is_question_phase_payoff(question_number=1):
+        if player.is_question_phase_payoff(question_number=1, rounds_per_lottery=Constants.ROUNDS_PER_LOTTERY):
             print("saving payoff data for question 1")
             player.payoff = cu(player.point_earnings + player.confidence_earnings)
             player.participant.vars['q1_data'] = {
@@ -205,7 +205,7 @@ class QuestionTwo(Page):
         # Computer pays 24 credits if L < K; 0 otherwise
         player.prob_earnings = 24 if player.prob_computed_loss < player.random_prob_k else 0
 
-        if player.is_question_phase_payoff(question_number=3):
+        if player.is_question_phase_payoff(question_number=3, rounds_per_lottery=Constants.ROUNDS_PER_LOTTERY):
             print("saving payoff data for question 2")
             player.payoff = cu(player.prob_earnings)
             player.participant.vars['q2_data'] = {
@@ -368,7 +368,7 @@ class QuestionThreeB(Page):
         player.earnings_3b = earnings_3b
         earnings_q3 = earnings_3a + earnings_3b
 
-        if player.is_question_phase_payoff(question_number=2):
+        if player.is_question_phase_payoff(question_number=2, rounds_per_lottery=Constants.ROUNDS_PER_LOTTERY):
             print("saving payoff data for question 3")
             player.payoff = cu(earnings_q3)
             player.participant.vars['q3_data'] = {
