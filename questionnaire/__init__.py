@@ -46,10 +46,10 @@ class Player(BasePlayer, BidHistoryPlayer):
     )
     p2_q1_explain = models.LongStringField(label="Specify Other", blank=True)
 
-    p2_q2 = models.StringField(
+    p2_q2 = models.LongStringField(
         label='2. What general bidding rule given a signal do you think other people followed in the experiment?')
 
-    p2_q3 = models.IntegerField(min=0, max=100, label='3. How much would you bid for this lottery ticket?')
+    p2_q3 = models.IntegerField(min=0, max=100, label='3. How much would you bid for the lottery ticket show below?')
 
     p2_q4 = models.IntegerField(
         label='4. Suppose that you could choose to play one of the following two lottery tickets. Which one would you prefer?',
@@ -63,7 +63,7 @@ class Player(BasePlayer, BidHistoryPlayer):
     p2_q4_explain = models.LongStringField(label="Explain your choice", blank=True)
 
     p2_q5 = models.IntegerField(
-        label='Suppose that you could choose to <b>bid</b> in an auction for one of the two lottery tickets displayed above. Which one would you prefer?',
+        label='5. Suppose that you could choose to <b>bid</b> in an auction for one of the following two lottery tickets displayed above. Which one would you prefer?',
         choices=[
             [1, 'I prefer to bid for lottery A'],
             [2, 'I prefer to bid for lottery B'],
@@ -71,6 +71,7 @@ class Player(BasePlayer, BidHistoryPlayer):
         ],
         widget=widgets.RadioSelect
     )
+    p2_q5_explain = models.LongStringField(label="Explain your choice", blank=True)
 
     p3_q1 = models.FloatField(label="A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?")
     p3_q2 = models.FloatField(label="If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?")
