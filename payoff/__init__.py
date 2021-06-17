@@ -26,7 +26,7 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer, BidHistoryPlayer):
-    pass
+    final_payoff_dollars = models.CurrencyField()
 
 
 # PAGES
@@ -74,6 +74,22 @@ class FinalPayoff(Page):
             "payoff_part_2_dollars": part_two_final_payoff_dollars,
             "final_payment": 10 + 12 + 0.5 * part_one_final_payoff_dollars + 0.5 * part_two_final_payoff_dollars,
         }
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        part_one_final_payoff_credits = player.participant.vars['bid_payoff_data']['earnings']
+        if player.payoff_question_number == 1:
+            part_two_final_payoff_credits = player.participant.vars['q1_data']['earnings_q1']
+        elif player.payoff_question_number == 2:
+            part_two_final_payoff_credits = player.participant.vars['q3_data']['earnings_q3']
+        else:
+            # TODO: replace prob_earnings with earnings_q2
+            part_two_final_payoff_credits = player.participant.vars['q2_data']['prob_earnings']
+
+        part_one_final_payoff_dollars = cu(part_one_final_payoff_credits).to_real_world_currency(player.session)
+        part_two_final_payoff_dollars = cu(part_two_final_payoff_credits).to_real_world_currency(player.session)
+        player.final_payoff_dollars = 10 + 12 + (0.5 * part_one_final_payoff_dollars) + (0.5 * part_two_final_payoff_dollars)
+        print(f"saving final payoff of {player.final_payoff_dollars}")
 
 
 class QuestionPayoffDebug(Page):
