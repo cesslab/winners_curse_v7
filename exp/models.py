@@ -1,3 +1,4 @@
+import random
 from exp.db import BidHistory, PlayerBidHistory
 
 
@@ -62,7 +63,8 @@ def create_player_bid_histories(treatment_code, players, lottery_ids, session_id
                 )
                 print(f"Retrieved {len(unused_bid_histories)} out of {rounds_per_lottery} unused bid histories for participant {player.participant.id}.")
 
-                bid_history = unused_bid_histories[lottery_round_number - 1]
+                # bid_history = unused_bid_histories[lottery_round_number - 1]
+                bid_history = random.choice(unused_bid_histories)
 
                 PlayerBidHistory.add_bid_history(
                     bid_history=bid_history,
