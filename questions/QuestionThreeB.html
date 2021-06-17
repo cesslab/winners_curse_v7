@@ -39,6 +39,9 @@
 
       <div id="task">
         <div>
+          <div class="pb-2">
+            <h5>What is the lottery, on average, worth if you learn that, among all four bidders, you have the highest signal?</h5>
+          </div>
           <div id="question">
             <h5>Choose an interval for your guess</h5>
           </div>
@@ -172,7 +175,7 @@
 
   let sliderTooltipFormatter = {
     to: function(value) {
-      return '$' + value;
+      return '<span class="credits">C</span>' + value;
     },
     from: function(value) {
       let dollar_value = value.split(" (")[0].slice(1)
@@ -198,7 +201,7 @@
       stepped: true,
       format: wNumb({
         decimals: 0,
-        prefix: '$',
+        prefix: '<span class="credits">C</span>',
       }),
     }
   });

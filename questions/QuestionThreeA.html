@@ -128,7 +128,7 @@ alertList.forEach(function (alert) {
 
   let sliderTooltipFormatter = {
     to: function(value) {
-      return '$' + value;
+      return '<span class="credits">C</span>' + value;
     },
     from: function(value) {
       let dollar_value = value.split(" (")[0].slice(1)
@@ -154,7 +154,7 @@ alertList.forEach(function (alert) {
       stepped: true,
       format: wNumb({
         decimals: 0,
-        prefix: '$',
+        prefix: '<span class="credits">C</span>',
       }),
     }
   });
