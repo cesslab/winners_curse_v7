@@ -142,7 +142,7 @@ class QuestionOneB(Page):
                 "is_probability_treatment": player.is_probability_treatment,
                 "is_value_treatment": player.is_value_treatment,
                 # Question 1 Variables
-                "prob": int((MAX_DISTANCE - player.computed_loss) / MAX_DISTANCE),
+                "prob": int(((MAX_DISTANCE - player.computed_loss) / MAX_DISTANCE)*100.0),
                 "prep_emax": player.prep_emax,
                 "prep_emin": player.prep_emin,
                 "earnings_q1a": player.point_earnings,
