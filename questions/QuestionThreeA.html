@@ -251,6 +251,12 @@ alertList.forEach(function (alert) {
     introJs().setOptions({
       steps: [
         {
+          title: 'Question',
+          intro: js_vars.question,
+          position: 'top',
+          element: document.querySelector(('#question'))
+        },
+        {
           title: 'Your task',
           intro: js_vars.your_task,
           position: 'top',

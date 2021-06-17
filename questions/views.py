@@ -293,6 +293,7 @@ class QuestionThreeA(Page):
             is_probability_treatment=player.is_probability_treatment,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
+            question=loader('QuestionIntro.html').render({"player": player}),
             your_task=loader('YourTaskHighestSignalIntro.html').render({"player": player}),
         )
 
