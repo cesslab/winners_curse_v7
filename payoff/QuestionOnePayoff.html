@@ -13,8 +13,15 @@
 
   <h4>Details</h4>
   <p>
-    The actual lottery worth {% if is_worth_within_interval %} was {% else %} was not {% endif %} within your chosen
-    interval, therefore you get {{earnings_q1b}}.
+    {% if is_worth_within_interval %}
+    {% if computed_value_non_zero %}
+    The actual lottery worth was within your chosen interval, and given your interval's width you get <span class="credits">C</span>{{earnings_q1b}}.
+    {% else %}
+    The actual lottery was within your chosen interval, but your interval was too wide. Therefore, you get <span class="credits">C</span>{{earnings_q1b}}.
+    {% endif %}
+    {% else %}
+    The actual lottery worth was not within your chosen interval, therefore you get <span class="credits">C</span>{{earnings_q1b}}.
+    {% endif %}
   </p>
   <p>
     Given your best guess the probability of getting 12 credits was {{ prob }}%. To compute your payoff the computer

@@ -118,7 +118,8 @@ class QuestionOneB(Page):
         # Computer computes 12*[1- (u-l)/(Emax-Emin)] if positive and worth in [l,u] (worth is in interval); 0 otherwise
         player.confidence_value = 12.0*(1.0 - (float(player.max_worth - player.min_worth) / float(player.prep_emax - player.prep_emin)))
         is_worth_within_interval = player.min_worth <= player.prep_worth <= player.max_worth
-        if player.confidence_value > 0.0 and is_worth_within_interval:
+        computed_value_non_zero = player.confidence_value > 0.0
+        if computed_value_non_zero and is_worth_within_interval:
             player.confidence_earnings = player.confidence_value
         else:
             player.confidence_earnings = 0
@@ -157,6 +158,7 @@ class QuestionOneB(Page):
                 "computed_loss": player.computed_loss,
                 "confidence_value": player.confidence_value,
                 "is_guess_sufficiently_close_to_worth": is_guess_sufficiently_close_to_worth,
+                "computed_value_non_zero": computed_value_non_zero,
             }
 
     @staticmethod
@@ -360,7 +362,8 @@ class QuestionThreeB(Page):
         # Computer computes 12*[1- (cu-cl)/(Emax-Emin)] if positive and worth in [cl,cu] (Cworth is in interval); 0 otherwise
         computed_3b = 12.0*(1.0 - float(c_upper-c_lower)/float(emax-emin))
         guess_within_chosen_interval = c_lower <= cworth <= c_upper
-        if computed_3b > 0 and guess_within_chosen_interval:
+        computed_value_non_zero = computed_3b > 0
+        if computed_value_non_zero and guess_within_chosen_interval:
             earnings_3b = computed_3b
         else:
             earnings_3b = 0
@@ -406,6 +409,7 @@ class QuestionThreeB(Page):
                 "earnings_q3": earnings_q3,
                 "guess_within_chosen_interval": guess_within_chosen_interval,
                 "prob": int(((MAX_DISTANCE - l_3a) / MAX_DISTANCE) * 100),
+                "computed_value_non_zero": computed_value_non_zero,
             }
 
     @staticmethod
