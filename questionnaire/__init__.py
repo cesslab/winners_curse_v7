@@ -49,10 +49,10 @@ class Player(BasePlayer, BidHistoryPlayer):
     p2_q2 = models.LongStringField(
         label='2. What general bidding rule given a signal do you think other people followed in the experiment?')
 
-    p2_q3 = models.IntegerField(min=0, max=100, label='3. How much would you bid for the lottery ticket show below?')
+    p2_q3 = models.IntegerField(min=0, max=100, label='3. Consider the following lottery ticket with known Selected Value shown below. How much would you bid for this lottery ticket?')
 
     p2_q4 = models.IntegerField(
-        label='4. Consider the following lottery ticket with known Selected Value. Suppose that you could choose to play one of the following two lottery tickets. Which one would you prefer?',
+        label='4. Suppose that you could choose to play one of the following two lottery tickets. Which one would you prefer?',
         choices=[
             [1, 'I prefer lottery A'],
             [2, 'I prefer lottery B'],
