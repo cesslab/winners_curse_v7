@@ -11,7 +11,6 @@ GENERIC_CONFIG = {
     "questions_lottery_2": "2",
     "questions_lottery_3": "3",
     "questions_lottery_4": "4",
-    "endowment_tokens": "100",
 }
 
 SESSION_CONFIGS = [
@@ -25,7 +24,7 @@ SESSION_CONFIGS = [
 # e.g. self.session.config['participation_fee']
 
 SESSION_CONFIG_DEFAULTS = dict(
-    real_world_currency_per_point=0.167, participation_fee=0.00, doc=""
+    real_world_currency_per_point=1.0, participation_fee=0.00, doc=""
 )
 
 # ISO-639 code
@@ -34,7 +33,7 @@ LANGUAGE_CODE = "en"
 
 # e.g. EUR, GBP, CNY, JPY
 REAL_WORLD_CURRENCY_CODE = "USD"
-USE_POINTS = True
+USE_POINTS = False
 
 ADMIN_USERNAME = "admin"
 # for security, best to set admin password in an environment variable
