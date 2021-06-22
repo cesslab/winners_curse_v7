@@ -54,6 +54,7 @@ class Player(BasePlayer, BidHistoryPlayer):
     earnings = models.IntegerField()
     new_highest_bid = models.IntegerField()
     highest_market_signal = models.BooleanField(initial=False)
+    is_payment_round = models.BooleanField(initial=False)
 
     payoff_round = models.BooleanField(initial=False)
     # Bid History

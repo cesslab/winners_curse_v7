@@ -66,6 +66,7 @@ class Player(BasePlayer, BidHistoryPlayer):
     probability_highest_signal = models.IntegerField(min=0, max=100)
     highest_market_signal = models.BooleanField(initial=False)
     confidence_value = models.FloatField(initial=0.0)
+    is_payment_round = models.BooleanField(initial=False)
     # Payoff
     prep_worth = models.FloatField()
     prep_emin = models.FloatField()
