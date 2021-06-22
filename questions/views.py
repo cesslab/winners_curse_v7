@@ -108,15 +108,15 @@ class QuestionOneB(Page):
         # Computer pays 12 credits if L<K ; 0 otherwise (in particular if L>1296)
         is_guess_sufficiently_close_to_worth = player.computed_loss < player.random_k
         if is_guess_sufficiently_close_to_worth:
-            player.point_earnings = 12
+            player.point_earnings = 12.0
         else:
-            player.point_earnings = 0
+            player.point_earnings = 0.0
 
         # ---------------------------------------------------------------------
         # Question 1b: confidence interval about worth of the lottery
         # ---------------------------------------------------------------------
         # Computer computes 12*[1- (u-l)/(Emax-Emin)] if positive and worth in [l,u] (worth is in interval); 0 otherwise
-        player.confidence_value = 12.0*(1.0 - (float(player.max_worth - player.min_worth) / float(player.prep_emax - player.prep_emin)))
+        player.confidence_value = round(12.0*(1.0 - (float(player.max_worth - player.min_worth) / float(player.prep_emax - player.prep_emin))), 2)
         is_worth_within_interval = player.min_worth <= player.prep_worth <= player.max_worth
         computed_value_non_zero = player.confidence_value > 0.0
         if computed_value_non_zero and is_worth_within_interval:
@@ -125,8 +125,7 @@ class QuestionOneB(Page):
             player.confidence_earnings = 0
 
         if player.is_question_phase_payoff(question_number=1, rounds_per_lottery=Constants.ROUNDS_PER_LOTTERY):
-            print("saving payoff data for question 1")
-            player.payoff = cu(player.point_earnings + player.confidence_earnings)
+            player.is_payment_round = True
             player.participant.vars['q1_data'] = {
                 # "previous_highest_bid": player.previous_highest_bid,
                 "fixed_value": player.fixed_value,
@@ -205,11 +204,10 @@ class QuestionTwo(Page):
         # Computer draws random number K ~ U[0,1]
         player.random_prob_k = random.uniform(0, 1)
         # Computer pays 24 credits if L < K; 0 otherwise
-        player.prob_earnings = 24 if player.prob_computed_loss < player.random_prob_k else 0
+        player.prob_earnings = 24.0 if player.prob_computed_loss < player.random_prob_k else 0.0
 
         if player.is_question_phase_payoff(question_number=3, rounds_per_lottery=Constants.ROUNDS_PER_LOTTERY):
-            print("saving payoff data for question 2")
-            player.payoff = cu(player.prob_earnings)
+            player.is_payment_round = True
             player.participant.vars['q2_data'] = {
                 "fixed_value": player.fixed_value,
                 "alpha": player.alpha,
@@ -343,9 +341,9 @@ class QuestionThreeB(Page):
         # Computer pays 12 credits if L<K ; 0 otherwise (in particular if L>1296).
         guess_sufficiently_close_to_estimate = l_3a < k_3a
         if guess_sufficiently_close_to_estimate:
-            earnings_3a = 12
+            earnings_3a = 12.0
         else:
-            earnings_3a = 0
+            earnings_3a = 0.0
 
         player.l_3a = l_3a
         player.k_3a = k_3a
@@ -360,7 +358,7 @@ class QuestionThreeB(Page):
         emax = player.prep_emax
         emin = player.prep_emin
         # Computer computes 12*[1- (cu-cl)/(Emax-Emin)] if positive and worth in [cl,cu] (Cworth is in interval); 0 otherwise
-        computed_3b = 12.0*(1.0 - float(c_upper-c_lower)/float(emax-emin))
+        computed_3b = round(12.0*(1.0 - float(c_upper-c_lower)/float(emax-emin)), 2)
         guess_within_chosen_interval = c_lower <= cworth <= c_upper
         computed_value_non_zero = computed_3b > 0
         if computed_value_non_zero and guess_within_chosen_interval:
@@ -373,7 +371,7 @@ class QuestionThreeB(Page):
         earnings_q3 = earnings_3a + earnings_3b
 
         if player.is_question_phase_payoff(question_number=2, rounds_per_lottery=Constants.ROUNDS_PER_LOTTERY):
-            print("saving payoff data for question 3")
+            player.is_payment_round = True
             player.payoff = cu(earnings_q3)
             player.participant.vars['q3_data'] = {
                 "fixed_value": player.fixed_value,

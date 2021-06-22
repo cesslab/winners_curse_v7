@@ -57,7 +57,7 @@ class Bid(Page):
             player.winner = player.win_tie_break
 
         if player.lottery_order == player.participant.vars['payoff_lottery_number'] and player.lottery_round_number == player.participant.vars['payoff_lottery_round_number']:
-            player.payoff = cu(player.earnings)
+            player.is_payment_round = True
             player.participant.vars['bid_payoff_data'] = {
                 "bid": player.bid,
                 "new_highest_bid": player.new_highest_bid,
