@@ -1,3 +1,6 @@
+import base64
+import json
+import hashlib
 from otree.api import *
 
 from exp.models import (
@@ -24,33 +27,54 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer, BidHistoryPlayer):
-    pass
+    confirmation_code = models.StringField(max_length=5)
 
 
 # PAGES
 class VenmoPayment(Page):
+    form_model = "player"
+    form_fields = ["confirmation_code"]
+
     @staticmethod
     def vars_for_template(player):
-        p1_payoff = player.participant.vars['bid_payoff_data']['earnings']
-        if player.payoff_question_number == 1:
-            p2_payoff = player.participant.vars['q1_data']['earnings_q1']
-        elif player.payoff_question_number == 2:
-            p2_payoff = player.participant.vars['q3_data']['earnings_q3']
-        else:
-            # TODO: replace prob_earnings with earnings_q2
-            p2_payoff = player.participant.vars['q2_data']['prob_earnings']
+        session_id = player.subsession.session.id
+        participant_id = player.participant.id
+        float_payoff = float(player.participant.payoff_plus_participation_fee())
+        payoff = player.participant.payoff_plus_participation_fee()
+        data = {"esid": session_id, "pid": participant_id, "po": float_payoff}
+        hasher = hashlib.sha256()
+        hasher.update(json.dumps(data).encode())
+        confirmation_code = hasher.hexdigest()[0:5]
+        data["cc"] = confirmation_code
+        data_json_byte_string = json.dumps(data).encode()
+        print(data["cc"])
 
-        final_payoff = 10 + 12 + 0.5 * (p1_payoff/6.0) + 0.5 * (p2_payoff/6.0)
-
-        p1_dollars = cu(p1_payoff).to_real_world_currency(player.session)
-        p2_dollars = cu(p2_payoff).to_real_world_currency(player.session)
-        payoff_dollars = 10 + 12 + 0.5 * p1_dollars + 0.5 * p2_dollars
+        encoded_data = base64.urlsafe_b64encode(data_json_byte_string).decode()
         return {
-            "esid": player.subsession.session.id,
-            "pid": player.participant.id,
-            "po": round(final_payoff, 2),
-            "payoff": payoff_dollars
+            "sid": session_id,
+            "pid": participant_id,
+            "po": float_payoff,
+            "encoded_data": encoded_data,
+            "payoff": payoff
         }
 
+    @staticmethod
+    def error_message(player, values):
+        session_id = player.subsession.session.id
+        participant_id = player.participant.id
+        float_payoff = float(player.participant.payoff_plus_participation_fee())
+        data = {"esid": session_id, "pid": participant_id, "po": float_payoff}
+        hasher = hashlib.sha256()
+        hasher.update(json.dumps(data).encode())
+        confirmation_code = hasher.hexdigest()[0:5]
+        print(confirmation_code)
 
-page_sequence = [VenmoPayment]
+        if values["confirmation_code"] != confirmation_code:
+            return f"Your confirmation code is invalid."
+
+
+class ExperimentComplete(Page):
+    pass
+
+
+page_sequence = [VenmoPayment, ExperimentComplete]
