@@ -74,7 +74,7 @@ class FinalPayoff(Page):
             "payoff_part_1_dollars": part_one_final_payoff_dollars,
             "payoff_part_2_credits": part_two_final_payoff_credits,
             "payoff_part_2_dollars": part_two_final_payoff_dollars,
-            "final_payment": player.participant.payoff_plus_participation_fee()
+            "final_payment": player.payoff
         }
 
 
