@@ -113,6 +113,30 @@ class BidHistoryPlayer:
     def question_three_data(self):
         return self.participant.vars['q3_data']
 
+    def get_part_one_payoff_data(self):
+        return self.participant.vars['bid_payoff_data']
+
+    def get_part_one_payoff(self):
+        return self.participant.vars['bid_payoff_data']['earnings']
+
+    def get_part_two_payoff(self):
+        if self.payoff_question_number == 1:
+            return self.participant.vars['q1_data']['earnings_q1']
+        elif self.payoff_question_number == 2:
+            return self.participant.vars['q3_data']['earnings_q3']
+        else:
+            # TODO: replace prob_earnings with earnings_q2
+            return self.participant.vars['q2_data']['prob_earnings']
+
+    def get_part_two_payoff_data(self):
+        if self.payoff_question_number == 1:
+            return self.participant.vars['q1_data']
+        elif self.payoff_question_number == 2:
+            return self.participant.vars['q3_data']
+        else:
+            # TODO: replace prob_earnings with earnings_q2
+            return self.participant.vars['q2_data']
+
     def get_lottery_round_number(self, rounds_per_lottery):
         # Calculates the relative round number given the oTree round number
         return (self.round_number - 1) % rounds_per_lottery + 1
@@ -136,6 +160,15 @@ class BidHistoryPlayer:
     @property
     def selected_value_text(self):
         return "Selected Value" if self.is_value_treatment else "Selected Probability"
+
+    @property
+    def selected_values_text(self):
+        return "Selected Values" if self.is_value_treatment else "Selected Probabilities"
+
+
+    @property
+    def treatment_suffix(self):
+        return "%" if self.is_probability_treatment else ""
 
     @property
     def session_treatment(self):
