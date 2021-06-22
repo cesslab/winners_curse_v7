@@ -1,5 +1,8 @@
 <p>
   The lottery is worth what you get, on average, if you play the lottery very often. The correct answer to that question
-  depends on the probability and the true {{ player.selected_value_text }} of the lottery ticket. Keep in mind that the lottery pays either
-  the {{ player.selected_value_text }} or nothing. Therefore, the lottery cannot be worth less than zero or more than the {{ player.selected_value_text }}.
+  depends on the {% if player.is_value_treatment %} probability {% else %} value {% endif %} and the true
+  {{ player.selected_value_text }} of the lottery ticket. Keep in mind that the lottery pays either
+  the {% if player.is_value_treatment %} Selected Value {% else %} value {% endif %} or nothing.
+  Therefore, the lottery cannot be worth less than zero or more than the
+  {% if player.is_value_treatment %} Selected Value {% else %} value{% endif %}.
 </p>

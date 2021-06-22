@@ -372,7 +372,6 @@ class QuestionThreeB(Page):
 
         if player.is_question_phase_payoff(question_number=2, rounds_per_lottery=Constants.ROUNDS_PER_LOTTERY):
             player.is_payment_round = True
-            player.payoff = cu(earnings_q3)
             player.participant.vars['q3_data'] = {
                 "fixed_value": player.fixed_value,
                 "alpha": player.alpha,

@@ -4,7 +4,8 @@
 <p>
   Part II has 12 rounds (3 rounds for each of the four types of lotteries). Like in Part I, in each round you will again see lotteries with
   an unknown {{ player.selected_value_text }}, about which you will receive a signal.
-  Remember that the {{ player.selected_value_text }} is no more than x = {{player.epsilon}} numbers away from your signal.
+  Remember that the {{ player.selected_value_text }} is no more than x = {{player.epsilon}}
+  {% if player.is_value_treatment %} numbers {% else %} percentage points {% endif %} away from your signal.
 </p>
 <p>
   Again, you will be randomly matched with three other participants from previous experiments. Remember that independently
