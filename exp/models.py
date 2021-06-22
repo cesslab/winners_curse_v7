@@ -162,6 +162,10 @@ class BidHistoryPlayer:
         return "Selected Value" if self.is_value_treatment else "Selected Probability"
 
     @property
+    def value_text(self):
+        return "value" if self.is_value_treatment else "probability"
+
+    @property
     def selected_values_text(self):
         return "Selected Values" if self.is_value_treatment else "Selected Probabilities"
 
