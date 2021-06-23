@@ -27,11 +27,11 @@
     <div class="two-column-container">
         <div class="item text-center">
             <h5>Your Bid</h5>
-            <p>{{ bid }}</p>
+            <p><span class="credits">C</span>{{ bid }}</p>
         </div>
         <div class="item text-center">
             <h5>Highest Bid</h5>
-            <span>{{ new_highest_bid }}</span>
+            <span><span class="credits">C</span>{{ new_highest_bid }}</span>
         </div>
     </div>
     <div class="text-center">
@@ -60,12 +60,12 @@
     {% include 'global/RealizedLottery.html' with  is_value_treatment=player.is_value_treatment %}
 
     <div id="played-outcome" class="text-center">
-      <p>The lottery was played and its outcome was {{ ticket_value_after }}.</p>
+      <p>The lottery was played and its outcome was <span class="credits">C</span>{{ ticket_value_after }}.</p>
     </div>
 
     <div id="earnings-header" class="text-center">
         <h4>Your Earnings</h4>
-        <p>Your earnings for this round were {{ earnings }}.</p>
+        <p>Your earnings for this round were <span class="credits">C</span>{{ earnings }}.</p>
     </div>
     {% next_button %}
 {% endblock %}
