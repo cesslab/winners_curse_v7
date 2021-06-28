@@ -16,6 +16,7 @@ ibis = ">=2.0.0rc4"
 pylint = "*"
 black = "*"
 pytest = "*"
+selenium = "*"
 
 [requires]
 python_version = "3.9"
