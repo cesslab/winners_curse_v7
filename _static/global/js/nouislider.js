@@ -470,7 +470,7 @@
             - The provided value for the option;
             - A reference to the options object;
             - The name for the option;
-    
+
         The testing function returns false when an error is detected,
         or true when everything is OK. It can also modify the option
         object, to make sure all values can be correctly looped elsewhere. */
@@ -1295,7 +1295,7 @@
                 if (data.hover && e.buttons) {
                     return false;
                 }
-                // 'supportsPassive' is only true if a browser also supports touch-action: none in CSS.
+                // 'supportsPassive' is only true if a driver also supports touch-action: none in CSS.
                 // iOS safari does not, so it doesn't get to benefit from passive scrolling. iOS does support
                 // touch-action: manipulation, but that allows panning, which breaks
                 // sliders after zooming/on non-responsive pages.
@@ -1720,17 +1720,17 @@
                     scope_Events[targetEvent].forEach(function (callback) {
                         callback.call(
                         // Use the slider public API as the scope ('this')
-                        scope_Self, 
+                        scope_Self,
                         // Return values as array, so arg_1[arg_2] is always valid.
-                        scope_Values.map(options.format.to), 
+                        scope_Values.map(options.format.to),
                         // Handle index, 0 or 1
-                        handleNumber, 
+                        handleNumber,
                         // Un-formatted slider values
-                        scope_Values.slice(), 
+                        scope_Values.slice(),
                         // Event is fired by tap, true or false
-                        tap || false, 
+                        tap || false,
                         // Left offset of the handle, in relation to the slider
-                        scope_Locations.slice(), 
+                        scope_Locations.slice(),
                         // add the slider public API to an accessible parameter when this is unavailable
                         scope_Self);
                     });
