@@ -1,0 +1,6 @@
+<p>To help you guess the {{ player.selected_value_text }}, we give you a signal.
+  Four independent signals about the {{ player.selected_value_text }} will be drawn, and you will be shown one of them.
+  The signal is a number that is
+  close to the {{ player.selected_value_text }}: Once you receive the signal, you can assume that the
+  {{ player.selected_value_text }} is no more than x = {{ player.epsilon}}
+  {% if player.is_value_treatment %} numbers {% else %} percentage points {% endif %} away.</p>

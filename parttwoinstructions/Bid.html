@@ -1,0 +1,93 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'global/css/bid.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/progress.css' %}">
+
+<link rel="stylesheet" href="{% static 'global/css/round_navbar.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/lottery_navbar.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/custom_font.css' %}">
+
+<link href='https://fonts.googleapis.com/css?family=Palanquin:500' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{% static 'global/css/font-awesome.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/introjs.css" integrity="sha512-i+WzzATeaDcwcfi5CfLn63qBxrKqiQvDLC+IChU1zVlaPguPgJlddOR07nU28XOoIOno9WPmJ+3ccUInpmHxBg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="{% static 'global/css/tooltip.css' %}">
+{% endblock %}
+
+  {% block content %}
+  {% include 'global/LotteryRoundNavbar.html' %}
+  <div class="grid-container">
+    <div id="general-remark">
+
+      {% include 'global/LotteryType.html' %}
+
+      {% include 'global/OneOfFourSignals.html' %}
+
+      {% include 'global/SignalInterpretation.html' %}
+  </div>
+
+  <div class="h-100 row">
+    <div id="lottery-bid" class="align-self-center">
+      <div class="text-center">
+        <h4>Your Bid</h4>
+      </div>
+      <div class="centered">
+        <div class="col-sm-6">
+          <input type="number" id="id_probability_highest_signal" name="bid" min="0" max="100" step="1"
+                 class="center-input form-control" value="" placeholder='Please click on "Next"'
+                 data-for="bid-selected-probability" readonly="readonly">
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div></div>
+  <div>
+    {% next_button %}
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/3.4.0/intro.min.js" integrity="sha512-QWPjvFqgUJv5X6Sq5NXmwJQSEzUEBxmCCcgqJd5/5luZnS6llRbshsChUNKrFlZ4bshKZEJxAHDB+WWdMsGvUA==" crossorigin="anonymous"></script>
+<script>
+  introJs().setOptions({
+  steps: [
+    {
+    title: 'Lottery Ticket',
+    intro: js_vars.lottery_ticket,
+    element: document.querySelector(('#lottery-ticket'))
+  },
+    {
+    title: 'The Signal',
+    intro: js_vars.your_signal,
+    element: document.querySelector(('#lottery-signal'))
+  },
+  {
+    title: 'Signal Interpretation',
+    intro: js_vars.signal_interpretation,
+    element: document.querySelector(('#lottery-signal-interpretation'))
+  },
+    {
+      title: 'Four Signals',
+      intro: js_vars.four_signals,
+      element: document.querySelector(('#general-remark'))
+    },
+    {
+      title: 'Lottery Types',
+      intro: js_vars.lottery_types,
+      element: document.querySelector(('#lottery-navbar'))
+    },
+    {
+      title: 'Your task',
+      intro: js_vars.your_task,
+      element: document.querySelector(('#general-remark'))
+    },
+  ]
+}).start();
+
+</script>
+
+{% endblock %}
