@@ -45,7 +45,7 @@ class Bid(Page):
             your_signal=loader('YourSignalIntro.html').render({"player": player}),
             signal_interpretation=loader('SignalInterpretationIntro.html').render({"player": player}),
             your_task=loader('YourTaskIntro.html').render({"player": player}),
-            general_remark=loader('GeneralRemarkIntro.html').render({"player": player}),
+            four_signals=loader('FourSignals.html').render({"player": player}),
             lottery_types=loader('LotteryTypesIntro.html').render({"player": player}),
         )
 

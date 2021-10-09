@@ -22,7 +22,7 @@
 
       {% include 'global/LotteryType.html' %}
 
-      {% include 'global/YourSignal.html' %}
+      {% include 'global/OneOfFourSignals.html' %}
 
       {% include 'global/SignalInterpretation.html' %}
   </div>
@@ -71,19 +71,19 @@
     element: document.querySelector(('#lottery-signal-interpretation'))
   },
     {
-      title: 'General Remark',
-      intro: js_vars.general_remark,
+      title: 'Four Signals',
+      intro: js_vars.four_signals,
       element: document.querySelector(('#general-remark'))
-    },
-    {
-      title: 'Your task',
-      intro: js_vars.your_task,
-      element: document.querySelector(('#lottery-bid'))
     },
     {
       title: 'Lottery Types',
       intro: js_vars.lottery_types,
       element: document.querySelector(('#lottery-navbar'))
+    },
+    {
+      title: 'Your task',
+      intro: js_vars.your_task,
+      element: document.querySelector(('#general-remark'))
     },
   ]
 }).start();

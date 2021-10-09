@@ -16,26 +16,18 @@ Quiz
     Select the correct answer. If you don’t understand why your answer is incorrect, please send a private message to the experimenter.
   </p>
 </div>
+<div>
+  <p>Following questions are based on the lottery ticket below:</p>
+</div>
 
 {% include 'global/Lottery.html' %}
 
 <div>
   {% if player.is_value_treatment %}
-  {{ formfield 'cv_q5'}}
+  {{ formfield 'cv_q1'}}
   {% else %}
-  {{ formfield 'cp_q5'}}
+  {{ formfield 'cp_q1'}}
   {% endif %}
-</div>
-<div>
-  {% if player.is_value_treatment %}
-  {{ formfield 'cv_q6'}}
-  {% else %}
-  {{ formfield 'cp_q6'}}
-  {% endif %}
-</div>
-
-<div>
-  {{ formfield 'q1'}}
 </div>
 <div>
   {% if player.is_value_treatment %}
@@ -44,13 +36,11 @@ Quiz
   {{ formfield 'cp_q2'}}
   {% endif %}
 </div>
+
 <div>
-  {% if player.is_value_treatment %}
-  {{ formfield 'cv_q3'}}
-  {% else %}
-  {{ formfield 'cp_q3'}}
-  {% endif %}
+  {{ formfield 'q3'}}
 </div>
+
 <div>
   {% if player.is_value_treatment %}
   {{ formfield 'cv_q4'}}
@@ -59,9 +49,6 @@ Quiz
   {% endif %}
 </div>
 
-<div>
-  <p>Following questions are based on the lottery ticket below:</p>
-</div>
 
 
 {{ next_button }}

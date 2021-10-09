@@ -68,7 +68,7 @@ class Player(BasePlayer, BidHistoryPlayer):
     )
 
     cp_q4 = models.IntegerField(
-        label='3. Which of the following alternatives is correct?',
+        label='4. Which of the following alternatives is correct?',
         choices=[
             [1, 'The four signals are all the same, so if you see one of them, you know all of them.'],
             [2, 'All four signals are possibly different but contain information about the same Selected Probabilities.'],
@@ -76,7 +76,7 @@ class Player(BasePlayer, BidHistoryPlayer):
         widget=widgets.RadioSelect
     )
     cv_q4 = models.IntegerField(
-        label='3. Which of the following alternatives is correct?',
+        label='4. Which of the following alternatives is correct?',
         choices=[
             [1, 'The four signals are all the same, so if you see one of them, you know all of them.'],
             [2,
@@ -103,64 +103,55 @@ class Quiz(Page):
     @staticmethod
     def get_form_fields(player: Player):
         if player.is_value_treatment:
-            return ['q1', 'cv_q2', 'cv_q3', 'cv_q4', 'cv_q5', 'cv_q6']
+            return ['cv_q1', 'cv_q2', 'q3', 'cv_q4']
         else:
-            return ['q1', 'cp_q2', 'cp_q3', 'cp_q4', 'cp_q5', 'cp_q6']
+            return ['cp_q1', 'cp_q2', 'q3', 'cp_q4']
 
 Error_Message = 'Incorrect answer. If you do not understand why your answer is wrong, please send a private message to the experimenter.'
 
-def q1_error_message(player: Player, value):
+
+def q1_error_message(value):
+    if value != 2:
+        return Error_Message
+
+
+def q2_error_message(value):
     if value != 3:
         return Error_Message
+
+
+def q3_error_message(player, value):
+    if value != 2:
+        return Error_Message
+
+
+def q4_error_message(value):
+    if value != 2:
+        return Error_Message
+
+
+def cv_q1_error_message(player: Player, value):
+    return q1_error_message(value)
+
+
+def cp_q1_error_message(player: Player, value):
+    return q1_error_message(value)
 
 
 def cv_q2_error_message(player: Player, value):
-    if value != 1:
-        return  Error_Message
+    return q2_error_message(value)
 
 
 def cp_q2_error_message(player: Player, value):
-    if value != 1:
-        return Error_Message
-
-def cv_q3_error_message(player: Player, value):
-    if value != 2:
-        return Error_Message
-
-
-def cp_q3_error_message(player: Player, value):
-    if value != 2:
-        return Error_Message
+    return q2_error_message(value)
 
 
 def cv_q4_error_message(player: Player, value):
-    if value != 2:
-        return Error_Message
+    return q4_error_message(value)
 
 
 def cp_q4_error_message(player: Player, value):
-    if value != 2:
-        return Error_Message
-
-
-def cv_q5_error_message(player: Player, value):
-    if value != 2:
-        return Error_Message
-
-
-def cp_q5_error_message(player: Player, value):
-    if value != 2:
-        return Error_Message
-
-
-def cv_q6_error_message(player: Player, value):
-    if value != 3:
-        return Error_Message
-
-
-def cp_q6_error_message(player: Player, value):
-    if value != 3:
-        return Error_Message
+    return q4_error_message(value)
 
 
 page_sequence = [Quiz]
