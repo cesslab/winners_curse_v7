@@ -57,4 +57,4 @@ class Player(BasePlayer, BidHistoryPlayer):
     be_bid = models.IntegerField()
 
 
-page_sequence = [Instructions, Bid, Outcome, Payoff]
+page_sequence = [Instructions, Bid, Payoff]

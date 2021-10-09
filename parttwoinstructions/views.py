@@ -41,11 +41,11 @@ class Bid(Page):
             max_signal=player.max_signal,
             is_cv_treatment=player.is_value_treatment,
             selected_value_text=player.selected_value_text,
-            lottery_ticket=loader('LotteryTicketIntro.html').render({"player": player}),
+            the_prize=loader('ThePrize.html').render({"player": player}),
+            four_bidders=loader('FourBidders.html').render({"player": player}),
+            your_task=loader('YourTaskIntro.html').render({"player": player}),
             your_signal=loader('YourSignalIntro.html').render({"player": player}),
             signal_interpretation=loader('SignalInterpretationIntro.html').render({"player": player}),
-            your_task=loader('YourTaskIntro.html').render({"player": player}),
-            four_signals=loader('FourSignals.html').render({"player": player}),
             lottery_types=loader('LotteryTypesIntro.html').render({"player": player}),
         )
 

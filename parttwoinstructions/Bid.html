@@ -22,7 +22,7 @@
 
       {% include 'global/LotteryType.html' %}
 
-      {% include 'global/OneOfFourSignals.html' %}
+      {% include 'global/YourSignal.html' %}
 
       {% include 'global/SignalInterpretation.html' %}
   </div>
@@ -56,34 +56,24 @@
   introJs().setOptions({
   steps: [
     {
-    title: 'Lottery Ticket',
-    intro: js_vars.lottery_ticket,
+    title: 'What is the prize?',
+    intro: js_vars.the_prize,
     element: document.querySelector(('#lottery-ticket'))
   },
     {
-    title: 'The Signal',
-    intro: js_vars.your_signal,
-    element: document.querySelector(('#lottery-signal'))
-  },
-  {
-    title: 'Signal Interpretation',
-    intro: js_vars.signal_interpretation,
-    element: document.querySelector(('#lottery-signal-interpretation'))
-  },
-    {
-      title: 'Four Signals',
-      intro: js_vars.four_signals,
+      title: 'Four Bidders',
+      intro: js_vars.four_bidders,
       element: document.querySelector(('#general-remark'))
+    },
+    {
+      title: 'Your task',
+      intro: js_vars.your_task,
+      element: document.querySelector(('#lottery-bid'))
     },
     {
       title: 'Lottery Types',
       intro: js_vars.lottery_types,
       element: document.querySelector(('#lottery-navbar'))
-    },
-    {
-      title: 'Your task',
-      intro: js_vars.your_task,
-      element: document.querySelector(('#general-remark'))
     },
   ]
 }).start();
