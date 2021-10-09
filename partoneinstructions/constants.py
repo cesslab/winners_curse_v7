@@ -2,7 +2,7 @@ from otree.api import BaseConstants
 
 
 class Constants(BaseConstants):
-    name_in_url = 'bidsample'
+    name_in_url = 'partoneinstructions'
     num_rounds = 1
     NUM_LOTTERIES = 4
     ROUNDS_PER_LOTTERY = 10
