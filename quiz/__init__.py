@@ -71,8 +71,8 @@ class Player(BasePlayer, BidHistoryPlayer):
         label='4. Which of the following alternatives is correct?',
         choices=[
             [1, 'The four signals are all the same, so if you see one of them, you know all of them.'],
-            [2, 'All four signals are possibly different but contain information about the same Selected Probabilities.'],
-            [3, 'The four signals are all different because each one of them is about a different Selected Probabilities.']],
+            [2, 'All four signals are possibly different but contain information about the same Selected Probability.'],
+            [3, 'The four signals are all different because each one of them is about a different Selected Probability.']],
         widget=widgets.RadioSelect
     )
     cv_q4 = models.IntegerField(
