@@ -1,5 +1,11 @@
-<p>
+{% if player.is_value_treatment %}
 In every round a prize will be auctioned off. The prize will be a lottery ticket like the ones you have seen in Part I.
-Like in Part I, in each round you will again see lotteries with an unknown {{ player.selected_values_text }}, about which you will receive
+Like in Part I, in each round you will again see lotteries with an unknown Selected Value, about which you will receive
 a signal. Remember that the Selected Value is no more than x numbers away from your signal.
-</p>
+{% else %}
+In every round a prize will be auctioned off. The prize will be a lottery ticket like the ones you have seen in Part I.
+Like in Part I, in each round you will again see lotteries with an unknown Selected Probability, about which you will receive
+a signal. Remember that the Selected Probability is no more than x numbers away from your signal.
+{% endif %}
+<p>
+

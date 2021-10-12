@@ -15,7 +15,7 @@
   {% include 'global/LotteryRoundNavbar.html' %}
 
   <div class="grid-container">
-    <div>
+    <div id="left-side">
       <div class="lottery-header">
         <h4 class="text-center"><u>Lottery of type {{ player.lottery_order }}</u></h4>
       </div>
@@ -35,7 +35,7 @@
     </div>
 
     <div>
-      <div>
+      <div id="question-numbers">
         <div>
           <ul class="list-unstyled multi-steps">
             <li class="is-active">Question 1</li>
@@ -261,6 +261,18 @@ let alertList = document.querySelectorAll('.alert')
   if (js_vars.display_intro) {
     introJs().setOptions({
       steps: [
+        {
+          title: 'Lottery Ticket',
+          intro: 'In every round you will find information about the lottery ticket on the left side',
+          position: 'right',
+          element: document.querySelector(('#left-side'))
+        },
+        {
+          title: 'Lottery Three Features',
+          intro: 'In every round, we ask you questions about three features of the lottery.',
+          position: 'right',
+          element: document.querySelector(('#question-numbers'))
+        },
         {
           title: 'What is the lottery, on average, worth?',
           intro: js_vars.lottery_worth,

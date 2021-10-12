@@ -16,7 +16,7 @@
   </div>
   <div class="text-center">
     <span>
-      Your Payoff in Part I was: <b>{{ payoff_part_1_dollars }} (<span class="credits">C</span>{{payoff_part_1_credits}})</b>.
+      Your Payoff in Part I was: <b>{{ payoff_part_2_dollars }} (<span class="credits">C</span>{{payoff_part_2_credits}})</b>.
     </span>
   </div>
 
@@ -24,10 +24,11 @@
     <h2 class="text-center">Part II Payoff</h2>
   </div>
   <div class="text-center">
-    <span>
-      Your Payoff in Part II was: <b>{{ payoff_part_2_dollars }} (<span class="credits">C</span>{{payoff_part_2_credits}})</b>.
-    </span>
+      <span>
+        Your Payoff in Part II was: <b>{{ payoff_part_1_dollars }} (<span class="credits">C</span>{{payoff_part_1_credits}})</b>.
+      </span>
   </div>
+
 
 <div class="outcome-header lottery-header">
   <h2 class="text-center">Total Payoff</h2>
@@ -38,8 +39,8 @@
       It consists of:<br>
       $10 Participation fee
       + $12 endowment
-      + (0.5 x {{ payoff_part_1_dollars }})
       + (0.5 x {{ payoff_part_2_dollars }})
+      + (0.5 x {{ payoff_part_1_dollars }})
     </p>
 </div>
 {% next_button %}

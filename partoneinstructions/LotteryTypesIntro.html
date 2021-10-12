@@ -1,8 +1,17 @@
+{% if player.is_value_treatment %}
 <p>
- There will be four different types of lotteries where a lottery type is defined by a {{ player.selected_value_text }}
-  and a probability of receiving that {{ player.selected_value_text }}. For each type of lottery, the computer will
-  produce independently of each other 3 different lottery tickets and in each round you will see one of them.
-  Moving from round to round will involve a change in the Selected Value holding the range of possible
-  {{ player.selected_values_text }} and the probability fixed, while a new type of lottery may involve a change in
-  both the range of {{ player.selected_values_text }} and the probability.
+  There will be four different types of lotteries where a lottery type is defined by a Selected Value and a
+  probability of receiving that Selected Value. For each type of lottery, the computer will produce independently
+  from each other 3 different lottery tickets and in each round you will see one of them. Moving from round to round
+  will involve a change in the Selected Value holding the range of possible Selected Values and the probability fixed,
+  while a new type of lottery may involve a change in both the range of Selected Values and the probability.
 </p>
+{% else %}
+<p>
+  There will be four different types of lotteries where a lottery type is defined by a value and a
+  Selected Probability of receiving that value. For each type of lottery, the computer will produce independently
+  from each other 3 different lottery tickets and in each round you will see one of them. Moving from round to round
+  will involve a change in the Selected Probability holding the range of possible Selected Probabilities and the value
+  fixed, while a new type of lottery may involve a change in both the range of Selected Probabilities and the value.
+</p>
+{% endif %}
